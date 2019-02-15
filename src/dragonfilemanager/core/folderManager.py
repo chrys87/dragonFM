@@ -1,5 +1,6 @@
 import sys, os, time
 import curses
+from os.path import expanduser
 
 class folderManager():
     def __init__(self, screen):
@@ -9,10 +10,11 @@ class folderManager():
         self.message = 'test'
         self.messageTime = time.time()
         self.setScreen(screen)
-        self.location = ''
+        self.location = expanduser("~")
         self.selection = []
         self.index = []
-        self.folderList = ['this','ist','eein ','orgadsfga']
+        self.folderList = []
+        self.loadFolder(self.location)
     def enter(self):
         self.clear()
     def leave(self):
@@ -24,10 +26,17 @@ class folderManager():
         for e in self.folderList:
             if i == self.height - 1:
                 break
-            self.screen.addstr(i, 0, e)
+            self.screen.addstr(i, 0, e['name'])
             i += 1
         self.showMessage()
         self.refresh()
+
+    def loadFolder(self, path)
+        self.folderList = []
+        elements = os.listdir(path)
+        for e in elements:
+            entry = {'name': e}
+            self.folderList.append(entry)
 
     def handleInput(self, key):
         self.setMessage(key)
