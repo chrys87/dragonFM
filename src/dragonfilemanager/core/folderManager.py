@@ -15,7 +15,6 @@ class folderManager():
         self.loadFolder(self.location)
         self.headerOffset = 1
         self.footerOffset = 1
-        self.page = 0
         self.timer = threading.Timer(0.5, self.resetMessage)
 
     def enter(self):
@@ -35,11 +34,19 @@ class folderManager():
     def getFolderArea(self):
         return self.height - self.headerOffset- self.footerOffset
     def openElement(self):
-        self.index.append(0)
-        if not self.location.endswith('/'):
-            self.location += '/'
-        self.location += self.folderList[self.getCurrentIndex()]['name']
-        self.loadFolder(self.location)
+        location = self.location
+        if not location.endswith('/'):
+            location += '/'
+        location += self.folderList[self.getCurrentIndex()]['name']
+        if os.path.isdir(location):
+            if self.loadFolder(location):
+                self.index.append(0)
+        else:
+            self.openFile(location)
+    def openFile(self, path):
+        pass
+    def getPositionForIndex(self):
+        return self.getCurrentIndex()
     def draw(self):
         #self.screen.scroll(self.getFolderArea())
         self.clear()
@@ -51,16 +58,22 @@ class folderManager():
                 break
             self.screen.addstr(i, 0, e['name'])
             i += 1
-        self.screen.move(self.getCurrentIndex(), 0)
+        self.screen.move(self.getPositionForIndex(), 0)
         self.refresh()
 
 
     def loadFolder(self, path):
-        self.folderList = []
+        if not os.access(path, os.R_OK):
+            return False
+        folderList = []
         elements = os.listdir(path)
         for e in elements:
             entry = {'name': e}
-            self.folderList.append(entry)
+            folderList.append(entry)
+        # sort folderList here
+        self.folderList = folderList
+        self.location = path
+        return True
 
     def handleInput(self, key):
         #self.setMessage(key)
