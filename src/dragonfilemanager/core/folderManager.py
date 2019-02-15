@@ -3,8 +3,12 @@ import curses
 
 class folderManager():
     def __init__(self):
-        pass
-    def draw(self):
-        print('folderManager')
+        self.screen = None
+    def draw(self, activeScreen):
+        self.activeScreen = activeScreen
+    def drawWrapper(self):
+        curses.wrapper(self.draw)
     def handleInput(self):
         pass
+    def getScreen(self):
+        return self.screen

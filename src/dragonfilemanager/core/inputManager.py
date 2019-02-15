@@ -3,6 +3,11 @@ import curses
 
 class inputManager():
     def __init__(self):
-        pass
+        self.screen = None
     def get(self):
-        pass
+        if not self.screen:
+            return None
+    def setScreen(self, screen)
+        if screen ==  self.screen:
+            return
+        self.screen = screen

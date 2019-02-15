@@ -15,5 +15,8 @@ class dragonfmManager():
         self.settingsManager = settingsManager.settingsManager()
         self.debugManager = debugManager.debugManager()
     def proceed(self):
+        self.viewManager.update()
         while self.running:
-            viewManager.update()
+            self.inputManager.setScreen(self.viewManager.getScreen())
+            self.inputManager.get()
+            self.viewManager.update()

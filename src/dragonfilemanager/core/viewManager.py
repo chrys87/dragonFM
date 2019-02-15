@@ -12,6 +12,16 @@ class viewManager():
         self.mode = 0 # 0: folder, 1: menu
     def update(self):
         if self.mode == 0:
-            self.tabs[self.currentTab].draw()
+            self.tabs[self.currentTab].drawWrapper()
         elif self.mode == 1:
-            self.menu.draw()
+            self.menu.drawWrapper()
+    def handleInput(self, key):
+        if self.mode == 0:
+            self.tabs[self.currentTab].handleInput(key)
+        elif self.mode == 1:
+            self.menu.handleInput(key)
+    def getScreen(self):
+        if self.mode == 0:
+            return self.tabs[self.currentTab].getScreen(key)
+        elif self.mode == 1:
+            return self.menu.getScreen(key)
