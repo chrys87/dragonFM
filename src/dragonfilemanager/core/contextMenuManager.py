@@ -16,9 +16,10 @@ class contextMenuManager():
         self.screen.addstr(0, 0, 'Menu')
     def handleInput(self, key):
         return False
+    def refresh(self):
+        self.screen.refresh()
     def clear(self):
         self.screen.clear()
-        self.screen.refresh()
     def setScreen(self, screen):
         if not screen:
             return
