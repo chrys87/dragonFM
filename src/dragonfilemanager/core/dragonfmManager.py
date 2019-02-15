@@ -10,13 +10,23 @@ from dragonfilemanager.core import inputManager
 class dragonfmManager():
     def __init__(self):
         self.running = True
-        self.inputManager = inputManager.inputManager()
-        self.viewManager = viewManager.viewManager()
+        self.screen = None
         self.settingsManager = settingsManager.settingsManager()
         self.debugManager = debugManager.debugManager()
-    def proceed(self):
+    def start(self):
+        curses.wrapper(self.proceed)
+    def proceed(self, screen):
+        self.screen = screen
+        self.inputManager = inputManager.inputManager(self.screen)
+        self.viewManager = viewManager.viewManager(self.screen)
         self.viewManager.update()
         while self.running:
-            self.inputManager.setScreen(self.viewManager.getScreen())
-            self.inputManager.get()
+            key = self.inputManager.get()
+            if not self.handleInput(key):
+                self.viewManager.handleInput(key)
             self.viewManager.update()
+    def handleInput(self, key):
+        return False
+    def stop(self):
+        self.running = False
+

@@ -12,8 +12,8 @@ from dragonfilemanager.core import dragonfmManager
 
 def main():
     app = dragonfmManager.dragonfmManager()
-    app.proceed()
+    app.start()
     del app
 
 if __name__ == "__main__":
-    main()     
+    main()
