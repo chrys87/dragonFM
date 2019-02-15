@@ -1,6 +1,6 @@
 import sys,os
 import curses
 
-class menuManager():
+class folderManager():
     def __init__(self):
         pass

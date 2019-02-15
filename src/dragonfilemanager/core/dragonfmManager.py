@@ -1,7 +1,11 @@
- 
+from dragonfilemanager.core import i18n
+from dragonfilemanager.core import settingsManager
+from dragonfilemanager.core import menuManager
+from dragonfilemanager.core import folderManager
+from dragonfilemanager.core import debugManager
+
 import sys,os
 import curses
-
 
 class dragonfmManager():
     def __init__(self):

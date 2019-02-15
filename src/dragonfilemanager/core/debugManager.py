@@ -1,6 +1,5 @@
 import sys,os
-import curses
 
-class menuManager():
+class debugManager():
     def __init__(self):
         pass
