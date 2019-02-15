@@ -12,7 +12,7 @@ class folderManager():
         self.location = ''
         self.selection = []
         self.index = []
-        self.folderList = []
+        self.folderList = ['this','ist','eein ','orgadsfga']
     def enter(self):
         self.clear()
     def leave(self):
@@ -25,6 +25,7 @@ class folderManager():
             if i == self.height - 1:
                 break
             self.screen.addstr(i, 0, e)
+            i += 1
         self.showMessage()
         self.refresh()
 

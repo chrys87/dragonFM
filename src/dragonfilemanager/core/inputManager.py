@@ -8,5 +8,6 @@ class inputManager():
         if not self.screen:
             return None
         return self.screen.getkey()
+
     def setScreen(self, screen):
         self.screen = screen
