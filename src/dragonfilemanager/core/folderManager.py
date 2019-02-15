@@ -1,5 +1,4 @@
-import sys, os, time
-import curses
+import sys, os, time, threading, curses
 from os.path import expanduser
 
 class folderManager():
@@ -7,31 +6,56 @@ class folderManager():
         self.screen = None
         self.height = 0
         self.width = 0
-        self.message = 'test'
-        self.messageTime = time.time()
+        self.message = ''
         self.setScreen(screen)
         self.location = expanduser("~")
         self.selection = []
-        self.index = []
+        self.index = [0]
         self.folderList = []
         self.loadFolder(self.location)
+        self.headerOffset = 1
+        self.footerOffset = 1
+        self.page = 0
+        self.timer = threading.Timer(0.5, self.resetMessage)
+
     def enter(self):
-        self.clear()
+        self.draw()
     def leave(self):
         pass
+    def getCurrentLevel(self):
+        return len(self.index) - 1
+    def getCurrentIndex(self):
+        return self.index[len(self.index) - 1]
+    def prevElement(self):
+        if self.index[self.getCurrentLevel()] > 0:
+            self.index[self.getCurrentLevel()] -= 1
+    def nextElement(self):
+        if self.index[self.getCurrentLevel()] < len(self.folderList) - 1:
+            self.index[self.getCurrentLevel()] += 1
+    def getFolderArea(self):
+        return self.height - self.headerOffset- self.footerOffset
+    def openElement(self):
+        self.index.append(0)
+        if not self.location.endswith('/'):
+            self.location += '/'
+        self.location += self.folderList[self.getCurrentIndex()]['name']
+        self.loadFolder(self.location)
     def draw(self):
+        #self.screen.scroll(self.getFolderArea())
         self.clear()
         self.screen.addstr(0, 0, 'Folder')
-        i = 1
+        self.showMessage()
+        i = self.headerOffset
         for e in self.folderList:
-            if i == self.height - 1:
+            if i == self.height - self.footerOffset:
                 break
             self.screen.addstr(i, 0, e['name'])
             i += 1
-        self.showMessage()
+        self.screen.move(self.getCurrentIndex(), 0)
         self.refresh()
 
-    def loadFolder(self, path)
+
+    def loadFolder(self, path):
         self.folderList = []
         elements = os.listdir(path)
         for e in elements:
@@ -39,7 +63,15 @@ class folderManager():
             self.folderList.append(entry)
 
     def handleInput(self, key):
-        self.setMessage(key)
+        #self.setMessage(key)
+        if key == 'KEY_UP':
+            self.prevElement()
+            return True
+        elif key == 'KEY_DOWN':
+            self.nextElement()
+            return True
+        elif key == 'r':
+            self.openElement()
         return False
     def refresh(self):
         self.screen.refresh()
@@ -57,17 +89,19 @@ class folderManager():
             return [self.getEntry()]
         return self.selection
     def getLocation(self):
-        return ''
+        return self.location
     def showMessage(self):
         if self.isMessage():
-            self.screen.addstr(self.height - 1, 0, self.message)
+            self.screen.addstr(self.height - self.footerOffset, 0, self.message)
     def isMessage(self):
-        if self.message != '':
-            if time.time() - self.messageTime > 1:
-                self.resetMessage()
         return self.message != ''
     def resetMessage(self):
         self.message = ''
+        self.draw()
     def setMessage(self, message):
+        #try:
+        #    self.timer.cancel()
+        #except:
+        #    pass
         self.message = message
-        self.messageTime = time.time()
+        self.timer.start()

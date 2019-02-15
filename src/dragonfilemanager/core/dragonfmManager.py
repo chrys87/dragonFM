@@ -1,4 +1,4 @@
-import sys, os, threading, curses, time, signal
+import sys, os, threading, curses, time
 from dragonfilemanager.core import i18n
 from dragonfilemanager.core import settingsManager
 from dragonfilemanager.core import debugManager
@@ -8,7 +8,6 @@ from dragonfilemanager.core import inputManager
 class dragonfmManager():
     def __init__(self):
         self.running = True
-        self.timer = threading.Thread(target=self.timerTrigger)
         self.screen = None
         self.settingsManager = settingsManager.settingsManager()
         self.debugManager = debugManager.debugManager()
@@ -17,38 +16,29 @@ class dragonfmManager():
         curses.wrapper(self.proceed)
     def proceed(self, screen):
         curses.raw()
+        curses.curs_set(1)
         self.screen = screen
+        self.screen.leaveok(0)
         self.viewManager = viewManager.viewManager(self.screen)
         self.viewManager.update()
         self.inputManager = inputManager.inputManager(self.screen)
-        self.timer.start()
         while self.running:
             key = self.inputManager.get()
             if key:
                 if not self.handleInput(key):
                     self.viewManager.handleInput(key)
-            self.viewUpdate()
+            self.viewManager.update()
         self.shutdown()
     def handleInput(self, key):
         if key == 'q':
             self.stop()
             return True
         return False
-    def viewUpdate(self):
-        try:
-            self.viewManager.update()
-        except:
-            pass
-    def timerTrigger(self):
-        while self.running:
-            time.sleep(0.25)
-            self.viewUpdate()
 
     def stop(self):
         self.running = False
     def shutdown(self):
-        if self.timer:
-            self.timer.join()
+        pass
 
     def setProcessName(self, name = 'dragonFM'):
         """Attempts to set the process name to 'dragonFM'."""
