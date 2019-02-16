@@ -19,9 +19,9 @@ class dragonfmManager():
         curses.curs_set(1)
         self.screen = screen
         self.screen.leaveok(0)
-        self.viewManager = viewManager.viewManager(self.screen)
+        self.viewManager = viewManager.viewManager(self.screen, self.settingsManager)
         self.viewManager.update()
-        self.inputManager = inputManager.inputManager(self.screen)
+        self.inputManager = inputManager.inputManager(self.screen, self.settingsManager)
         while self.running:
             key = self.inputManager.get()
             if key:

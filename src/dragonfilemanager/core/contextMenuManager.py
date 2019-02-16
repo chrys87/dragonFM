@@ -2,8 +2,9 @@ import sys,os
 import curses
 
 class contextMenuManager():
-    def __init__(self, screen):
+    def __init__(self, screen, settingsManager):
         self.screen = None
+        self.settingsManager = settingsManager
         self.height = 0
         self.width = 0
         self.setScreen(screen)

@@ -6,14 +6,16 @@ from dragonfilemanager.core import contextMenuManager
 from dragonfilemanager.core import folderManager
 
 class viewManager():
-    def __init__(self, screen):
+    def __init__(self, screen, settingsManager):
         self.screen = None
+        self.settingsManager = settingsManager
         self.height = 0
         self.width = 0
         self.setScreen(screen)
-        self.tabs = [folderManager.folderManager(self.screen)]
-        self.mainMenu = mainMenuManager.mainMenuManager(self.screen)
-        self.contextMenu = contextMenuManager.contextMenuManager(self.screen)
+        self.tabs = []
+        self.tabs.append(folderManager.folderManager(len(self.tabs) + 1, self.screen, self.settingsManager))
+        self.mainMenu = mainMenuManager.mainMenuManager(self.screen, self.settingsManager)
+        self.contextMenu = contextMenuManager.contextMenuManager(self.screen, self.settingsManager)
         self.currentTab = 0
         self.mode = 0 # 0: folder, 1: Main Menu, 2: context menu
         self.tabs[self.currentTab].enter()

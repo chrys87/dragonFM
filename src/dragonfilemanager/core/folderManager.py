@@ -2,8 +2,10 @@ import sys, os, time, threading, curses
 from os.path import expanduser
 
 class folderManager():
-    def __init__(self, screen):
+    def __init__(self, id, screen, settingsManager):
         self.screen = None
+        self.id = id
+        self.settingsManager = settingsManager
         self.height = 0
         self.width = 0
         self.message = ''
@@ -50,7 +52,7 @@ class folderManager():
     def draw(self):
         #self.screen.scroll(self.getFolderArea())
         self.clear()
-        self.screen.addstr(0, 0, 'Folder')
+        self.screen.addstr(0, 0, _('Tab: {0} Folder: {1}').format(self.id, self.location))
         self.showMessage()
         i = self.headerOffset
         for e in self.folderList:
@@ -66,9 +68,21 @@ class folderManager():
         if not os.access(path, os.R_OK):
             return False
         folderList = []
+        if not path.endswith('/'):
+            path += '/'
         elements = os.listdir(path)
         for e in elements:
-            entry = {'name': e}
+            fullPath = path + e
+            info = None
+            try:
+                info = os.stat(fullPath)
+            except:
+                pass
+            entry = {'name': e,
+             'full': fullPath,
+             'path': path,
+             'info': info
+            }
             folderList.append(entry)
         # sort folderList here
         self.folderList = folderList
@@ -76,7 +90,7 @@ class folderManager():
         return True
 
     def handleInput(self, key):
-        #self.setMessage(key)
+        self.setMessage(key)
         if key == 'KEY_UP':
             self.prevElement()
             return True
@@ -112,9 +126,11 @@ class folderManager():
         self.message = ''
         self.draw()
     def setMessage(self, message):
-        #try:
-        #    self.timer.cancel()
-        #except:
-        #    pass
+        if self.timer.is_alive():
+            self.timer.cancel()
+        self.timer = threading.Timer(0.5, self.resetMessage)
+
         self.message = message
-        self.timer.start()
+        self.draw()
+        if not self.timer.is_alive():
+            self.timer.start()
