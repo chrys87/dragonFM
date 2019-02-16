@@ -17,12 +17,16 @@ class folderManager():
         self.loadFolder(self.location)
         self.headerOffset = 1
         self.footerOffset = 1
-        self.timer = threading.Timer(0.5, self.resetMessage)
-
+        self.messageTimer = None
+        self.needRefresh = True
     def enter(self):
+        self.setNeedRefresh()
         self.draw()
     def leave(self):
         pass
+    def setNeedRefresh(self):
+        self.needRefresh = True
+
     def getCurrentLevel(self):
         return len(self.index) - 1
     def getCurrentIndex(self):
@@ -43,6 +47,7 @@ class folderManager():
         if os.path.isdir(location):
             if self.loadFolder(location):
                 self.index.append(0)
+                self.setNeedRefresh()
         else:
             self.openFile(location)
     def openFile(self, path):
@@ -50,16 +55,16 @@ class folderManager():
     def getPositionForIndex(self):
         return self.getCurrentIndex()
     def draw(self):
-        #self.screen.scroll(self.getFolderArea())
-        self.clear()
-        self.screen.addstr(0, 0, _('Tab: {0} Folder: {1}').format(self.id, self.location))
-        self.showMessage()
-        i = self.headerOffset
-        for e in self.folderList:
-            if i == self.height - self.footerOffset:
-                break
-            self.screen.addstr(i, 0, e['name'])
-            i += 1
+        if self.needRefresh:
+            self.clear()
+            self.screen.addstr(0, 0, _('Tab: {0} Folder: {1}').format(self.id, self.location))
+            i = self.headerOffset
+            for e in self.folderList:
+                if i == self.height - self.footerOffset:
+                    break
+                self.screen.addstr(i, 0, e['name'])
+                i += 1
+            self.showMessage()
         self.screen.move(self.getPositionForIndex(), 0)
         self.refresh()
 
@@ -90,7 +95,7 @@ class folderManager():
         return True
 
     def handleInput(self, key):
-        self.setMessage(key)
+        #self.setMessage(key)
         if key == 'KEY_UP':
             self.prevElement()
             return True
@@ -124,13 +129,15 @@ class folderManager():
         return self.message != ''
     def resetMessage(self):
         self.message = ''
+        self.setNeedRefresh()
         self.draw()
     def setMessage(self, message):
-        if self.timer.is_alive():
-            self.timer.cancel()
-        self.timer = threading.Timer(0.5, self.resetMessage)
+        if self.messageTimer:
+            if self.messageTimer.is_alive():
+                self.messageTimer.cancel()
+        self.messageTimer = threading.Timer(0.5, self.resetMessage)
 
         self.message = message
+        self.setNeedRefresh()
         self.draw()
-        if not self.timer.is_alive():
-            self.timer.start()
+        self.messageTimer.start()
