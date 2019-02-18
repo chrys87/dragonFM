@@ -1,32 +1,41 @@
-import sys, os, time, threading, curses
+import sys, os, time, threading, curses, math
 from os.path import expanduser
 
 class folderManager():
-    def __init__(self, id, screen, settingsManager):
-        self.screen = None
+    def __init__(self, id, dragonfmManager):
+        self.dragonfmManager = dragonfmManager
+        self.screen = self.dragonfmManager.getScreen()
+        self.settingsManager = self.dragonfmManager.getSettingsManager()
         self.id = id
-        self.settingsManager = settingsManager
-        self.height = 0
-        self.width = 0
         self.message = ''
-        self.setScreen(screen)
         self.location = expanduser("~")
         self.selection = []
         self.index = [0]
         self.folderList = []
-        self.loadFolder(self.location)
-        self.headerOffset = 1
+        self.loadFolder(self.getLocation())
+        self.headerOffset = 3
         self.footerOffset = 1
         self.messageTimer = None
         self.needRefresh = True
+        self.height = self.dragonfmManager.getScreenHeight()
+        self.page = 0
     def enter(self):
         self.setNeedRefresh()
         self.draw()
+        self.move(0, 0)
     def leave(self):
         pass
     def setNeedRefresh(self):
         self.needRefresh = True
-
+    def move(self, y, x):
+        self.screen.move(y, x)
+    def updatePage(self):
+        index = self.getCurrentIndex()
+        size = self.getFolderAreaSize()
+        page = int(index / size)
+        if page != self.page:
+            self.setNeedRefresh()
+            self.page = page
     def getCurrentLevel(self):
         return len(self.index) - 1
     def getCurrentIndex(self):
@@ -37,10 +46,9 @@ class folderManager():
     def nextElement(self):
         if self.index[self.getCurrentLevel()] < len(self.folderList) - 1:
             self.index[self.getCurrentLevel()] += 1
-    def getFolderArea(self):
+    def getFolderAreaSize(self):
         return self.height - self.headerOffset- self.footerOffset
-    def openElement(self):
-        location = self.location
+    def openElement(self, location):
         if not location.endswith('/'):
             location += '/'
         location += self.folderList[self.getCurrentIndex()]['name']
@@ -53,22 +61,39 @@ class folderManager():
     def openFile(self, path):
         pass
     def getPositionForIndex(self):
-        return self.getCurrentIndex()
+        index = self.getCurrentIndex()
+        size = self.getFolderAreaSize()
+        page = self.getPage()
+        # page to index
+        screenIndex = index - page * size
+        # header bar
+        screenIndex += self.headerOffset
+        return screenIndex
     def draw(self):
+        self.updatePage()
+        screenIndex = self.getPositionForIndex()
         if self.needRefresh:
-            self.clear()
-            self.screen.addstr(0, 0, _('Tab: {0} Folder: {1}').format(self.id, self.location))
-            i = self.headerOffset
-            for e in self.folderList:
+            self.screen.clear()
+            self.screen.addstr(0, 0, _('Tab: {0}').format(self.getID()))
+            self.screen.addstr(1, 0, _('Folder: {0}').format(self.getLocation()))
+            self.screen.addstr(2, 0, _('Page: {0}').format(self.getPage() + 1))
+
+            for i in range(self.getFolderAreaSize()):
                 if i == self.height - self.footerOffset:
                     break
-                self.screen.addstr(i, 0, e['name'])
+                if self.getPage() * self.getFolderAreaSize() + i >= len(self.folderList):
+                    break
+                e = self.folderList[self.getPage() * self.getFolderAreaSize() + i]
+
+                self.screen.addstr(i + self.headerOffset, 0, e['name'] + ' ' + e['type'] )
                 i += 1
             self.showMessage()
-        self.screen.move(self.getPositionForIndex(), 0)
-        self.refresh()
-
-
+        self.move(screenIndex, 0)
+        self.screen.refresh()
+    def getID(self):
+        return self.id
+    def getPage(self):
+        return self.page
     def loadFolder(self, path):
         if not os.access(path, os.R_OK):
             return False
@@ -88,6 +113,11 @@ class folderManager():
              'path': path,
              'info': info
             }
+            if os.path.isfile(fullPath):
+                entry['type'] = _('file')
+            elif os.path.isdir(fullPath):
+                entry['type'] = _('folder')
+
             folderList.append(entry)
         # sort folderList here
         self.folderList = folderList
@@ -103,17 +133,8 @@ class folderManager():
             self.nextElement()
             return True
         elif key == 'r':
-            self.openElement()
+            self.openElement(self.getLocation())
         return False
-    def refresh(self):
-        self.screen.refresh()
-    def clear(self):
-        self.screen.clear()
-    def setScreen(self, screen):
-        if not screen:
-            return
-        self.screen = screen
-        self.height, self.width = self.screen.getmaxyx()
     def getEntry(self):
         return self.index[len(self.index) - 1]
     def getSelection(self):

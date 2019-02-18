@@ -3,7 +3,8 @@ import os
 from dragonfilemanager.core import defaultSettings
 
 class settingsManager():
-    def __init__(self):
+    def __init__(self, dragonfmManager):
+        self.dragonfmManager = dragonfmManager
         self.settings = None
         self.reset()
     def getDefaultSettingsPath():

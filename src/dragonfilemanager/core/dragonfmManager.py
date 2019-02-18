@@ -7,21 +7,29 @@ from dragonfilemanager.core import inputManager
 
 class dragonfmManager():
     def __init__(self):
-        self.running = True
+        self.running = False
         self.screen = None
-        self.settingsManager = settingsManager.settingsManager()
-        self.debugManager = debugManager.debugManager()
-    def start(self):
+        self.settingsManager = None
+        self.debugManager = None
+        self.height = 0
+        self.width = 0
         self.setProcessName()
+    def start(self):
+        self.running = True
         curses.wrapper(self.proceed)
+    # main process
     def proceed(self, screen):
+        self.setScreen(screen)
+        if not screen:
+            return
+        self.debugManager = debugManager.debugManager(self)
+        self.settingsManager = settingsManager.settingsManager(self)
+        self.screen.leaveok(0)
         curses.raw()
         curses.curs_set(1)
-        self.screen = screen
-        self.screen.leaveok(0)
-        self.viewManager = viewManager.viewManager(self.screen, self.settingsManager)
+        self.viewManager = viewManager.viewManager(self)
+        self.inputManager = inputManager.inputManager(self)
         self.viewManager.update()
-        self.inputManager = inputManager.inputManager(self.screen, self.settingsManager)
         while self.running:
             key = self.inputManager.get()
             if key:
@@ -39,7 +47,11 @@ class dragonfmManager():
         self.running = False
     def shutdown(self):
         pass
-
+    def setScreen(self, screen):
+        if not screen:
+            return
+        self.screen = screen
+        self.height, self.width = self.screen.getmaxyx()
     def setProcessName(self, name = 'dragonFM'):
         """Attempts to set the process name to 'dragonFM'."""
         # Disabling the import error of setproctitle.
@@ -63,4 +75,22 @@ class dragonfmManager():
             pass
 
         return False
-
+    def refresh(self):
+        self.screen.refresh()
+    def clear(self):
+        self.screen.clear()
+    # getter
+    def getScreenWidth(self):
+        return self.width
+    def getScreenHeight(self):
+        return self.height
+    def getSettingsManager(self):
+        return self.settingsManager
+    def getViewManager(self):
+        return self.viewManager
+    def getInputManager(self):
+        return self.inputManager
+    def getDebugManager(self):
+        return self.debugManager
+    def getScreen(self):
+        return self.screen

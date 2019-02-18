@@ -6,16 +6,14 @@ from dragonfilemanager.core import contextMenuManager
 from dragonfilemanager.core import folderManager
 
 class viewManager():
-    def __init__(self, screen, settingsManager):
-        self.screen = None
-        self.settingsManager = settingsManager
-        self.height = 0
-        self.width = 0
-        self.setScreen(screen)
+    def __init__(self, dragonfmManager):
+        self.dragonfmManager = dragonfmManager
+        self.screen = self.dragonfmManager.getScreen()
+        self.settingsManager = self.dragonfmManager.getSettingsManager()
         self.tabs = []
-        self.tabs.append(folderManager.folderManager(len(self.tabs) + 1, self.screen, self.settingsManager))
-        self.mainMenu = mainMenuManager.mainMenuManager(self.screen, self.settingsManager)
-        self.contextMenu = contextMenuManager.contextMenuManager(self.screen, self.settingsManager)
+        self.tabs.append(folderManager.folderManager(len(self.tabs) + 1, self.dragonfmManager))
+        self.mainMenu = mainMenuManager.mainMenuManager(self.dragonfmManager)
+        self.contextMenu = contextMenuManager.contextMenuManager(self.dragonfmManager)
         self.currentTab = 0
         self.mode = 0 # 0: folder, 1: Main Menu, 2: context menu
         self.tabs[self.currentTab].enter()
@@ -65,9 +63,3 @@ class viewManager():
             self.tabs[self.currentTab].handleInput(key)
         elif self.mode == 1:
             self.mainMenu.handleInput(key)
-
-    def setScreen(self, screen):
-        if not screen:
-            return
-        self.screen = screen
-        self.height, self.width = self.screen.getmaxyx()
