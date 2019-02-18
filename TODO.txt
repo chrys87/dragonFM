@@ -1,0 +1,94 @@
+% F123 File Manager
+
+# Problem
+
+We do not yet have a file manager which behaves in the same or very similar way to those used in Windows and other GUI interfaces.
+
+# Desired Solution
+
+We use an existing and well maintained application such as NNN, to do all the file management work for us, while we focus on interface optimizations by using all that Fenrir has to offer. This way we do not fork NNN, and keep our maintenance costs down in the long-term.
+
+It is similar to what we are doing with nano, where we use its configurations and our Virtual Menus, to make it much more friendly while not actually forking it and giving us extra work in the long-term.
+
+# Requirements
+
+It is essential that whatever we use be Unicode-compatible, because we will have both left to right and right to left languages, as well as languages with non-Western alphabets. It must also be console-based and work well and efficiently on a Raspberry Pi 3B Plus running Arch Linux.
+
+**I am placing requirements more or less in order of priority:**
+
+-Tracks cursor and displays files and directories in a list
+
+If displaying files in a list is possible, then it is more usable for screen reader users. When we move up or down with arrow keys, only one file should be read by Fenrir. The closer the behavior is to the virtual menu, the better.
+
+-It should allow user to modify how much information is shown for each file.
+
+Just name, or also file size, or date of last modification, etc. if this is not user configurable, then it should be easy for developer to change what is shown and we can later make scripts to allow non-technical users to easily change how much is shown. Important that file manager have the option of just showing filename.
+
+Initially, we can just have file manager show the filename, and using Shift+10, and selecting "properties", user can see file size, date of last modification, owner, permissions, etc.
+
+* We need to change things so that the same key bindings used in Nautilus and Windows Explorer can be setup. Specifically, we want these behaviors:
+
+-Pressing Enter or right arrow will open directory or file.
+
+-Search by Typing: Typing makes cursor jump to file beginning in letter or letters that were typed by user.
+
+-Arrow keys to move up and down on current directory list or down and up on directory tree.
+
+-Sorting of file list of any directory you open can be alphabetically or by date of last modification. Other criteria would be nice, but this is the minimum.
+
+-Left arrow can take you back to last directory, right arrow can open directory you have selected.
+-Home and End takes you to top of current directory or bottom.
+-F2 to rename whatever the current file or directory is.
+-F1 for help if file manager has one, or customizable so we can write our own help file.
+
+-Shift+F10 should give you menu of things you can do to current file or directory, like rename, compress, uncompress, zip and email, open-with, etc. It should vary according to file type.
+
+-control shift n, to create a new directory in current directory.
+-control alt n to create a new text file in current directory. Equivalent of touch command.
+-alt plus home should go directly to home folder.
+-Alt+up arrow should go to parent directory, like in pcmanfm etc.
+
+* Control+x, Control+c, and Control+v, should cut, copy, and paste just like in GUI interfaces. Control+Z could be un-do, but this is not so important.
+
+* Shift+F10 should be customizable by user or at least by one of our scripts.
+
+Shift+F10 usually gives you options like compressing file or directory, open, open-with, e-mailing as an attachment, uncompressing, etc. It should be different depending on file type, and we need to be able to modify this on a conf file or something.
+
+The priority right now is that options that show-up with Shift+F10 be accessible. After pressing Shift+F10, Fenrir should read each option, and nothing else, when we move it up and down with arrow keys.
+
+It should also be possible to activate the option one wants by pressing a letter which we define as the shortcut letter, just like we do with main menu etc on pdmenu. So in a menu of any kind where you can hear:
+
+Compress (Z)
+Rename (F2)
+
+We can activate the corresponding option with the key indicated at the end of each string.
+
+-F10 should take you to menu of file manager if it has one. If not, maybe it can take you to our Static Menu, if we are not using Virtual menu.
+
+* Find a file (Control+f)
+
+and
+Find a file containing (Control+Shift+F)
+
+The first looks for a file based on the filename or filename segment you are prompted to type, and the second does a search for files which contain the string which you are prompted to type. Ideal situation here would be to use Recoll, which is apparently an excellent cli search engine, and is already installed in F123Light, but needs a nice easy way to use it.
+
+Searches are performed on current directory and all sub directories by default.
+
+## Lower Priority functionality:
+
+-Control+T to open a new tab, just like in pcmanfm.
+-Control+Tab and Control+Shift+Tab to move from one tab to another.
+
+* When we talk about Tabs, they need not look like a tab on Firefox, for example, but it would be nice if we could quickly jump between entirely unrelated directories, like we jump between different web sites we have opened. So visually, they need not be side-by-side, they can entirely replace each other on the screen or not even show visually. The important thing is the functionality.
+
+-Alt+number to jump from one tab to another, if multiple ones are opened, just like in Firefox.
+-F5 to refresh, in case it is a remote directory.
+
+* Control+q to quit file manager.
+
+* Control+w to close current tab if there are multiple tabs opened, or close entire file manager if just one tab is opened, just like Firefox.
+
+* F4 or an option in the menu should open command line in current directory, just like in pcmanfm.
+
+* Lastly, it would be great for us to be able to deal with remote directories, i.e. via sftp, sshFS, etc, in basically the same interface we use for local directories.
+
