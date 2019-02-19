@@ -6,13 +6,55 @@ class settingsManager():
     def __init__(self, dragonfmManager):
         self.dragonfmManager = dragonfmManager
         self.settings = None
+        self.args = None
+        self.parser = None
+        self.loadedSettingFile = ''
         self.reset()
-    def getDefaultSettingsPath():
-        return '/tmp'
+    def getSettingsPath(self):
+        path = '~/.config/dragonFM/settings.conf'
+        if os.access(path, R_OK):
+            return path
+        path = '/etc/dragonFM/settings.conf'
+        if os.access(path, R_OK):
+            return path
+        path = '/../../config/settings.conf'
+        if os.access(path, R_OK):
+            return path
+        return ''
     def load(self, path):
-        pass
+        if not os.access(path,os.R_OK):
+            return False
+        try
+            self.configParser = ConfigParser()
+            self.configParser.read(path)
+            self.loadedSettingFile = path
+            return True
+        except:
+            pass
+        return False
     def save(self, path):
-        pass
+        if not os.access(path, os.W_OK):
+            return False
+        try:
+            configFile = open(path, 'w')
+            self.parser.write(configFile)
+            configFile.close()
+            return True
+        except:
+            pass
+        return False
+        
+    def parseCliArgs(self):
+        args = None
+        self.parser = argparse.ArgumentParser(description="dragonFM Help")
+        parser.add_argument('-s', '--setting', metavar='SETTING-FILE', default='~/.config/dragonFM/settings.conf', help='Use a specified settingsfile')
+        try:
+            args = parser.parse_args()
+        except Exception as e:
+            parser.print_help()
+            return False
+        self.args = args
+        return True
 
     def reset(self):
         self.settings = defaultSettings.settings
