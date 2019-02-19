@@ -73,8 +73,10 @@ class dragonfmManager():
             return True
         except:
             pass
-
         return False
+
+    def move(self, y, x):
+        self.screen.move(y, x)
     def refresh(self):
         self.screen.refresh()
     def clear(self):
