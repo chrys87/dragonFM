@@ -14,10 +14,19 @@ class viewManager():
         self.tabs.append(folderManager.folderManager(len(self.tabs) + 1, self.dragonfmManager))
         self.mainMenu = mainMenuManager.mainMenuManager(self.dragonfmManager)
         self.contextMenu = contextMenuManager.contextMenuManager(self.dragonfmManager)
-        self.currentTab = 0
+        self.currentTab = -1
         self.mode = 0 # 0: folder, 1: Main Menu, 2: context menu
         self.tabs[self.currentTab].enter()
+    def addTab(self, changeToNew = True):
+        self.tabs.append(folderManager.folderManager(len(self.tabs) + 1, self.dragonfmManager))
+        if changeToNew:
+            self.changeTab(self, len(self.tabs) - 1)
 
+    def closeTab(self, tab):
+        if len(self.tabs) > 1:
+            if tab == self.currentTab:
+                self.changeTab(len(self.tabs) - 2)
+            del(self.tabs[tab])
     def changeMode(self, mode):
         if self.mode == mode:
             return
@@ -47,7 +56,8 @@ class viewManager():
         if currentTab >= len(self.tabs):
             currentTab = 0
         # old
-        self.tabs[self.currentTab].leave()
+        if self.currentTab != -1:
+            self.tabs[self.currentTab].leave()
         # new
         self.tabs[currentTab].enter()
         self.currentTab = currentTab
