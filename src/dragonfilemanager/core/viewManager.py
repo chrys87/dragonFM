@@ -2,7 +2,6 @@ import sys,os
 import curses
 
 from dragonfilemanager.core import mainMenuManager
-from dragonfilemanager.core import contextMenuManager
 from dragonfilemanager.core import folderManager
 
 class viewManager():
@@ -10,22 +9,27 @@ class viewManager():
         self.dragonfmManager = dragonfmManager
         self.screen = self.dragonfmManager.getScreen()
         self.settingsManager = self.dragonfmManager.getSettingsManager()
-        self.tabs = []
+        self.tabs = {}
         self.mainMenu = mainMenuManager.mainMenuManager(self.dragonfmManager)
-        self.contextMenu = contextMenuManager.contextMenuManager(self.dragonfmManager)
         self.currentTab = -1
         self.mode = 0 # 0: folder, 1: Main Menu, 2: context menu
         self.addTab()
     def addTab(self, changeToNew = True):
-        self.tabs.append(folderManager.folderManager(len(self.tabs) + 1, self.dragonfmManager))
+        if mode != 0:
+            return
+        id = len(self.tabs)
+        self.tabs[id] = folderManager.folderManager(id, self.dragonfmManager)
         if changeToNew:
-            self.changeTab(self, len(self.tabs) - 1)
+            self.changeTab(self, id)
 
     def closeTab(self, tab):
+        if mode != 0:
+            return
         if len(self.tabs) > 1:
             if tab == self.currentTab:
                 self.changeTab(len(self.tabs) - 2)
             del(self.tabs[tab])
+            self.changeTab(0)
     def changeMode(self, mode):
         if self.mode == mode:
             return
@@ -33,15 +37,11 @@ class viewManager():
             self.tabs[self.currentTab].leave()
         elif self.mode == 1:
             self.mainMenu.leave()
-        elif self.mode == 2:
-            self.contextMenu.leave()
 
         if mode == 0:
             self.tabs[self.currentTab].enter()
         elif mode == 1:
             self.mainMenu.enter()
-        elif mode == 2:
-            self.contextMenu.enter()
 
         self.mode = mode
 
