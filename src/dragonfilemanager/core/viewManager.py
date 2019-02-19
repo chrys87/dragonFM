@@ -27,9 +27,8 @@ class viewManager():
             return
         if len(self.tabs) > 1:
             if tab == self.currentTab:
-                self.changeTab(len(self.tabs) - 2)
+                self.changeTab(0)
             del(self.tabs[tab])
-            self.changeTab(0)
     def changeMode(self, mode):
         if self.mode == mode:
             return
