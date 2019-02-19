@@ -15,15 +15,15 @@ class viewManager():
         self.mode = 0 # 0: folder, 1: Main Menu, 2: context menu
         self.addTab()
     def addTab(self, changeToNew = True):
-        if mode != 0:
+        if self.mode != 0:
             return
         id = len(self.tabs)
         self.tabs[id] = folderManager.folderManager(id, self.dragonfmManager)
         if changeToNew:
-            self.changeTab(self, id)
+            self.changeTab(id)
 
     def closeTab(self, tab):
-        if mode != 0:
+        if self.mode != 0:
             return
         if len(self.tabs) > 1:
             if tab == self.currentTab:
@@ -45,7 +45,7 @@ class viewManager():
         self.mode = mode
 
     def changeTab(self, currentTab):
-        if mode != 0:
+        if self.mode != 0:
             return
         if self.currentTab == currentTab:
             return

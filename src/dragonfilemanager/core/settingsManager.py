@@ -24,7 +24,7 @@ class settingsManager():
     def load(self, path):
         if not os.access(path,os.R_OK):
             return False
-        try
+        try:
             self.configParser = ConfigParser()
             self.configParser.read(path)
             self.loadedSettingFile = path
