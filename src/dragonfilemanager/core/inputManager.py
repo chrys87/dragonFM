@@ -1,5 +1,4 @@
-import sys,os
-import curses
+import sys, os, curses
 
 class inputManager():
     def __init__(self, dragonfmManager):
