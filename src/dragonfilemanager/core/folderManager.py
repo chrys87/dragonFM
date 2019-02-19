@@ -27,8 +27,6 @@ class folderManager():
         pass
     def setNeedRefresh(self):
         self.needRefresh = True
-    def move(self, y, x):
-        self.screen.move(y, x)
     def updatePage(self):
         index = self.getCurrentIndex()
         size = self.getFolderAreaSize()
@@ -70,26 +68,15 @@ class folderManager():
         screenIndex += self.headerOffset
         return screenIndex
     def draw(self):
-        self.updatePage()
-        screenIndex = self.getPositionForIndex()
         if self.needRefresh:
             self.screen.clear()
-            self.screen.addstr(0, 0, _('Tab: {0}').format(self.getID()))
-            self.screen.addstr(1, 0, _('Folder: {0}').format(self.getLocation()))
-            self.screen.addstr(2, 0, _('Page: {0}').format(self.getPage() + 1))
-
-            for i in range(self.getFolderAreaSize()):
-                if i == self.height - self.footerOffset:
-                    break
-                if self.getPage() * self.getFolderAreaSize() + i >= len(self.folderList):
-                    break
-                e = self.folderList[self.getPage() * self.getFolderAreaSize() + i]
-
-                self.screen.addstr(i + self.headerOffset, 0, e['name'] + ' ' + e['type'] )
-                i += 1
-            self.showMessage()
-        self.move(screenIndex, 0)
-        self.screen.refresh()
+            self.updatePage()
+            self.drawHeader()
+            self.drawFolderList()
+            self.drawFooter()
+        screenIndex = self.getPositionForIndex()
+        self.dragonfmManager.move(screenIndex, 0)
+        #self.screen.refresh()
     def getID(self):
         return self.id
     def getPage(self):
@@ -117,7 +104,17 @@ class folderManager():
                 entry['type'] = _('file')
             elif os.path.isdir(fullPath):
                 entry['type'] = _('folder')
-
+            '''
+            / 	Directory
+            * 	Executable
+            | 	Fifo
+            = 	Socket
+            @ 	Symbolic Link
+            @/ 	Symbolic Link to directory
+            b 	Block Device
+            c 	Character Device
+            ? 	Unknown
+            '''
             folderList.append(entry)
         # sort folderList here
         self.folderList = folderList
@@ -162,3 +159,20 @@ class folderManager():
         self.setNeedRefresh()
         self.draw()
         self.messageTimer.start()
+    def drawHeader(self):
+        self.screen.addstr(0, 0, _('Tab: {0}').format(self.getID()))
+        self.screen.addstr(1, 0, _('Folder: {0}').format(self.getLocation()))
+        self.screen.addstr(2, 0, _('Page: {0}').format(self.getPage() + 1))
+    
+    def drawFolderList(self):
+        for i in range(self.getFolderAreaSize()):
+            if i == self.height - self.footerOffset:
+                break
+            if self.getPage() * self.getFolderAreaSize() + i >= len(self.folderList):
+                break
+            e = self.folderList[self.getPage() * self.getFolderAreaSize() + i]
+            self.screen.addstr(i + self.headerOffset, 0, e['name'] + ' ' + e['type'] )
+            i += 1
+        
+    def drawFooter(self):
+        self.showMessage()
