@@ -11,12 +11,11 @@ class viewManager():
         self.screen = self.dragonfmManager.getScreen()
         self.settingsManager = self.dragonfmManager.getSettingsManager()
         self.tabs = []
-        self.tabs.append(folderManager.folderManager(len(self.tabs) + 1, self.dragonfmManager))
         self.mainMenu = mainMenuManager.mainMenuManager(self.dragonfmManager)
         self.contextMenu = contextMenuManager.contextMenuManager(self.dragonfmManager)
         self.currentTab = -1
         self.mode = 0 # 0: folder, 1: Main Menu, 2: context menu
-        self.tabs[self.currentTab].enter()
+        self.addTab()
     def addTab(self, changeToNew = True):
         self.tabs.append(folderManager.folderManager(len(self.tabs) + 1, self.dragonfmManager))
         if changeToNew:
