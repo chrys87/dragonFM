@@ -22,7 +22,6 @@ class folderManager():
     def enter(self):
         self.setNeedRefresh()
         self.draw()
-        self.move(0, 0)
     def leave(self):
         pass
     def setNeedRefresh(self):
