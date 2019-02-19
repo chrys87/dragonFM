@@ -12,6 +12,11 @@ It is essential that whatever we use be Unicode-compatible, because we will have
 (TODO): Search by Typing: Typing makes cursor jump to file beginning in letter or letters that were typed by user.
 (TODO): Sorting of file list of any directory you open can be alphabetically or by date of last modification. Other criteria would be nice, but this is the minimum.
 
+start programm
+>>> os.execlp('ssh', 'ssh', 127.0.0.1)
+  File "<stdin>", line 1
+    os.execlp('ssh', 'ssh', 127.0.0.1)
+
 (TODO): Left arrow can take you back to last directory, right arrow can open directory you have selected.
 (TODO): Home and End takes you to top of current directory or bottom.
 (TODO): F2 to rename whatever the current file or directory is.
