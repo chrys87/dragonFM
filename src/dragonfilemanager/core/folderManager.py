@@ -13,8 +13,8 @@ class folderManager():
         self.index = [0]
         self.folderList = []
         self.loadFolder(self.getLocation())
-        self.headerOffset = 3
-        self.footerOffset = 1
+        self.headerOffset = 0
+        self.footerOffset = 0
         self.messageTimer = None
         self.needRefresh = True
         self.height = self.dragonfmManager.getScreenHeight()
@@ -69,14 +69,14 @@ class folderManager():
         return screenIndex
     def draw(self):
         if self.needRefresh:
-            self.screen.clear()
-            self.updatePage()
+            self.dragonfmManager.clear()
             self.drawHeader()
-            self.drawFolderList()
             self.drawFooter()
+            self.updatePage()
+            self.drawFolderList()
         screenIndex = self.getPositionForIndex()
         self.dragonfmManager.move(screenIndex, 0)
-        #self.screen.refresh()
+        self.dragonfmManager.refresh()
     def getID(self):
         return self.id
     def getPage(self):
@@ -160,9 +160,14 @@ class folderManager():
         self.draw()
         self.messageTimer.start()
     def drawHeader(self):
-        self.screen.addstr(0, 0, _('Tab: {0}').format(self.getID()))
-        self.screen.addstr(1, 0, _('Folder: {0}').format(self.getLocation()))
-        self.screen.addstr(2, 0, _('Page: {0}').format(self.getPage() + 1))
+        self.headerOffset = 0
+        # paint header
+        self.screen.addstr(self.headerOffset, 0, _('Tab: {0}').format(self.getID()))
+        self.headerOffset += 1
+        self.screen.addstr(self.headerOffset, 0, _('Folder: {0}').format(self.getLocation()))
+        self.headerOffset += 1
+        self.screen.addstr(self.headerOffset, 0, _('Page: {0}').format(self.getPage() + 1))
+        self.headerOffset += 1
     
     def drawFolderList(self):
         for i in range(self.getFolderAreaSize()):
@@ -175,4 +180,7 @@ class folderManager():
             i += 1
         
     def drawFooter(self):
+        self.footerOffset = 0
+        self.footerOffset += 1
         self.showMessage()
+        
