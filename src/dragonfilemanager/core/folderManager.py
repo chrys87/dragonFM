@@ -55,9 +55,7 @@ class folderManager():
                 self.index.append(0)
                 self.setNeedRefresh()
         else:
-            self.openFile(location)
-    def openFile(self, path):
-        pass
+            self.fileManager.openFile(location)
     def getPositionForIndex(self):
         index = self.getCurrentIndex()
         size = self.getFolderAreaSize()
