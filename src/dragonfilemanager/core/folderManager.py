@@ -6,6 +6,7 @@ class folderManager():
         self.dragonfmManager = dragonfmManager
         self.screen = self.dragonfmManager.getScreen()
         self.settingsManager = self.dragonfmManager.getSettingsManager()
+        self.fileManager = self.dragonfmManager.getFileManager()
         self.id = id
         self.message = ''
         self.location = expanduser("~")
@@ -89,31 +90,7 @@ class folderManager():
         elements = os.listdir(path)
         for e in elements:
             fullPath = path + e
-            info = None
-            try:
-                info = os.stat(fullPath)
-            except:
-                pass
-            entry = {'name': e,
-             'full': fullPath,
-             'path': path,
-             'info': info
-            }
-            if os.path.isfile(fullPath):
-                entry['type'] = _('file')
-            elif os.path.isdir(fullPath):
-                entry['type'] = _('folder')
-            '''
-            / 	Directory
-            * 	Executable
-            | 	Fifo
-            = 	Socket
-            @ 	Symbolic Link
-            @/ 	Symbolic Link to directory
-            b 	Block Device
-            c 	Character Device
-            ? 	Unknown
-            '''
+            entry = self.fileManager.getFileInfo(fullPath)
             folderList.append(entry)
         # sort folderList here
         self.folderList = folderList
