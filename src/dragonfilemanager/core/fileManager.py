@@ -21,10 +21,16 @@ class fileManager():
             return None
         if not os.path.exists(fullPath):
             return None
+        pathObject = None
+        try:
+            pathObject = Path(fullPath)
+        except:
+            return None
         # basic
         name = os.path.basename(fullPath)
         path = os.path.dirname(fullPath)
         entry = {'name': name,
+         'object': pathObject,
          'full': fullPath,
          'path': path,
          'marked': False,
@@ -45,41 +51,60 @@ class fileManager():
         }
         # type
 
-        if os.path.isfile(fullPath):
+        if pathObject.is_file():
             entry['type'] = 'file'
-            '''
-            stat.S_ISBLK(os.stat(path).st_mode)            
-            inode/blockdevice
-            inode/chardevice
-            stat.S_ISFIFO(os.stat(path).st_mode)
-            inode/fifo
-            S_ISSOCK
-            stat.S_ISSOCK(os.stat(path).st_mode)
-            inode/socket
-            '''
-        elif os.path.isdir(fullPath):
+            # mime is detected more below
+        elif pathObject.is_symlink():
+            entry['type'] = 'link'
+            # mime is detected more below
+        elif pathObject.is_dir():
             entry['type'] = 'directory'
             entry['mime'] = 'inode/directory'
-        elif os.path.islink(fullPath):
-            entry['type'] = 'link'
-            entry['mime'] = 'inode/symlink'
-        elif os.path.ismount(fullPath):
+        elif pathObject.is_mount():
             entry['type'] = 'mountpoint'
             entry['mime'] = 'inode/mount-point'
-            
+        elif pathObject.is_socket():
+            entry['type'] = 'socket'
+            entry['mime'] = 'inode/socket'
+        elif pathObject.is_fifo():
+            entry['type'] = 'fifo'
+            entry['mime'] = 'inode/fifo'
+        elif pathObject.is_block_device():
+            entry['type'] = 'block'
+            entry['mime'] = 'inode/blockdevice'
+        elif pathObject.is_char_device():
+            entry['type'] = 'char'
+            entry['mime'] = 'inode/chardevice'
         # mimetype
-        try: 
-            entry['mime'] = self.magicMime.from_file(fullPath)
-        except:
-            try:
-                entry['mime'] = self.mime.guess_type(fullPath)[0]
-            except:
-                entry['mime'] = 'application/octet-stream'
+        if entry['mime'] == None:
+            if pathObject.is_file() or pathObject.is_symlink():
+                try: 
+                    mime = None
+                    mime = self.magicMime.from_file(fullPath)
+                    if mime != None:
+                        if mime != '':
+                            entry['mime'] = mime
+                except:
+                    pass
+                if entry['mime'] == None:
+                    try:
+                        mime = None
+                        mime = self.mime.guess_type(fullPath)[0]  
+                        if mime != None:
+                            if mime != '':
+                                entry['mime'] = mime
+                    except:
+                        pass
+                if entry['mime'] == None:
+                    if pathObject.is_symlink():
+                        entry['mime'] = 'inode/symlink'                
+                    else:
+                        entry['mime'] = 'application/octet-stream'
         
         # details
         info = None
         try:
-            info = os.stat(fullPath)
+            info = pathObject.stat()
             entry['mode'] = info.st_mode
             entry['ino'] = 2 ** 32 + info.st_ino + 1  # Ensure st_ino > 2 ** 32
             entry['dev'] = info.st_dev
