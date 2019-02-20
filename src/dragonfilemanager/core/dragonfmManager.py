@@ -4,13 +4,14 @@ from dragonfilemanager.core import settingsManager
 from dragonfilemanager.core import debugManager
 from dragonfilemanager.core import viewManager
 from dragonfilemanager.core import inputManager
-
+from dragonfilemanager.core import fileManager
 class dragonfmManager():
     def __init__(self):
         self.running = False
         self.screen = None
         self.settingsManager = None
         self.debugManager = None
+        self.fileManager = None
         self.height = 0
         self.width = 0
         self.setProcessName()
@@ -24,6 +25,7 @@ class dragonfmManager():
             return
         self.debugManager = debugManager.debugManager(self)
         self.settingsManager = settingsManager.settingsManager(self)
+        self.fileManager = fileManager.fileManager(self)
         self.screen.leaveok(0)
         curses.raw()
         curses.curs_set(1)
@@ -88,6 +90,8 @@ class dragonfmManager():
         return self.height
     def getSettingsManager(self):
         return self.settingsManager
+    def getFileManager(self):
+        return self.fileManager
     def getViewManager(self):
         return self.viewManager
     def getInputManager(self):
