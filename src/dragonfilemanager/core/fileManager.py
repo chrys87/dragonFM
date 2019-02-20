@@ -14,7 +14,11 @@ class fileManager():
         self.dragonfmManager = dragonfmManager
         self.screen = self.dragonfmManager.getScreen()
         self.settingsManager = self.dragonfmManager.getSettingsManager()
-        self.magicMime = magic.Magic(mime=True)
+        self.magicMime = None
+        try:
+            self.magicMime = magic.Magic(mime=True)
+        except
+            pass
         self.mime = mimetypes.MimeTypes()
     def getInfo(self, fullPath):
         if fullPath == '':
@@ -78,14 +82,15 @@ class fileManager():
         # mimetype
         if entry['mime'] == None:
             if pathObject.is_file() or pathObject.is_symlink():
-                try: 
-                    mime = None
-                    mime = self.magicMime.from_file(fullPath)
-                    if mime != None:
-                        if mime != '':
-                            entry['mime'] = mime
-                except:
-                    pass
+                if self.magicMime:
+                    try: 
+                        mime = None
+                        mime = self.magicMime.from_file(fullPath)
+                        if mime != None:
+                            if mime != '':
+                                entry['mime'] = mime
+                    except:
+                        pass
                 if entry['mime'] == None:
                     try:
                         mime = None
