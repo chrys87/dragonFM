@@ -90,7 +90,7 @@ class folderManager():
         elements = os.listdir(path)
         for e in elements:
             fullPath = path + e
-            entry = self.fileManager.getFileInfo(fullPath)
+            entry = self.fileManager.getInfo(fullPath)
             folderList.append(entry)
         # sort folderList here
         self.folderList = folderList
