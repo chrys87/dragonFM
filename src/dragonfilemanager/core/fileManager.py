@@ -1,4 +1,6 @@
-import sys, os, pwd, grp, curses, mimetypes 
+import sys, os, pwd, grp, curses, mimetypes
+from pathlib import Path
+
 magicAvailable = False
 try:
     import magic
@@ -42,14 +44,29 @@ class fileManager():
          'mime': None,
         }
         # type
+
         if os.path.isfile(fullPath):
             entry['type'] = 'file'
+            '''
+            stat.S_ISBLK(os.stat(path).st_mode)            
+            inode/blockdevice
+            inode/chardevice
+            stat.S_ISFIFO(os.stat(path).st_mode)
+            inode/fifo
+            S_ISSOCK
+            stat.S_ISSOCK(os.stat(path).st_mode)
+            inode/socket
+            '''
         elif os.path.isdir(fullPath):
             entry['type'] = 'directory'
+            entry['mime'] = 'inode/directory'
         elif os.path.islink(fullPath):
             entry['type'] = 'link'
+            entry['mime'] = 'inode/symlink'
         elif os.path.ismount(fullPath):
             entry['type'] = 'mountpoint'
+            entry['mime'] = 'inode/mount-point'
+            
         # mimetype
         try: 
             entry['mime'] = self.magicMime.from_file(fullPath)
