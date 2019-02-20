@@ -1,4 +1,5 @@
 import sys, os, time, threading, curses, math
+from pathlib import Path
 from os.path import expanduser
 
 class folderManager():
@@ -9,7 +10,9 @@ class folderManager():
         self.fileManager = self.dragonfmManager.getFileManager()
         self.id = id
         self.message = ''
-        self.location = expanduser("~")
+        self.location = ''
+        sef.Path = None
+        self.setLocation(expanduser("~"))
         self.selection = []
         self.index = [0]
         self.folderList = []
@@ -27,6 +30,14 @@ class folderManager():
         pass
     def setNeedRefresh(self):
         self.needRefresh = True
+    def setLocation(self, location):
+        if location == '':
+            return None
+        if not os.path.exists(location):
+            return None
+        sef.Path = Path(location)
+        self.location = location
+return None
     def updatePage(self):
         index = self.getCurrentIndex()
         size = self.getFolderAreaSize()
@@ -46,12 +57,20 @@ class folderManager():
             self.index[self.getCurrentLevel()] += 1
     def getFolderAreaSize(self):
         return self.height - self.headerOffset- self.footerOffset
+    def closeElement(self):
+        location = self.path.parent
+        if os.path.isdir(location):
+            if self.loadFolder(location):
+                self.setLocation(location)
+                del self.index[-1]
+                self.setNeedRefresh()  
     def openElement(self, location):
         if not location.endswith('/'):
             location += '/'
         location += self.folderList[self.getCurrentIndex()]['name']
         if os.path.isdir(location):
-            if self.loadFolder(location):
+            if self.
+            lder(location):
                 self.index.append(0)
                 self.setNeedRefresh()
         else:
@@ -93,7 +112,7 @@ class folderManager():
                 folderList.append(entry)
         # sort folderList here
         self.folderList = folderList
-        self.location = path
+        self.setLocation(path)
         return True
 
     def handleInput(self, key):
@@ -104,8 +123,12 @@ class folderManager():
         elif key == 'KEY_DOWN':
             self.nextElement()
             return True
-        elif key == 'r':
+        elif key == 'KEY_RIGHT':
             self.openElement(self.getLocation())
+            return True
+        elif key == 'KEY_LEFT':
+            self.closeElement(self.getLocation())
+            return True
         return False
     def getEntry(self):
         return self.index[len(self.index) - 1]
