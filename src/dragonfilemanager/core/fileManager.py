@@ -5,17 +5,26 @@ class fileManager():
         self.dragonfmManager = dragonfmManager
         self.screen = self.dragonfmManager.getScreen()
         self.settingsManager = self.dragonfmManager.getSettingsManager()
-    def getInfo(fullPath):
+    def self.getInfo(fullPath):
+        info = None
+        cleanFullPath = fullPath
+        if cleanFullPath.endswith('/'):
+            cleanFullPath = cleanFullPath[:-1]
+        name = os.path.basename(cleanFullPath)
+        entry = {'name': name,
+         'full': fullPath,
+         'path': path,
+        }
         info = None
         try:
             info = os.stat(fullPath)
         except:
-            pass
-        entry = {'name': e,
-         'full': fullPath,
-         'path': path,
-         'info': info
-        }
+            info = None
+        if info:
+            try:
+                entry['info'] = info
+            except:
+                pass
         if os.path.isfile(fullPath):
             entry['type'] = 'file'
         elif os.path.isdir(fullPath):
@@ -24,14 +33,3 @@ class fileManager():
             entry['type'] = 'link'
         elif os.path.ismount(fullPath):
             entry['type'] = 'mountpoint'
-        '''
-        / 	Directory
-        * 	Executable
-        | 	Fifo
-        = 	Socket
-        @ 	Symbolic Link
-        @/ 	Symbolic Link to directory
-        b 	Block Device
-        c 	Character Device
-        ? 	Unknown
-        '''
