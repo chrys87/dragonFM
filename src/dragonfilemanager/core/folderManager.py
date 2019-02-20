@@ -89,7 +89,8 @@ class folderManager():
         for e in elements:
             fullPath = path + e
             entry = self.fileManager.getInfo(fullPath)
-            folderList.append(entry)
+            if entry != None:
+                folderList.append(entry)
         # sort folderList here
         self.folderList = folderList
         self.location = path
