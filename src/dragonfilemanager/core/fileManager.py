@@ -140,3 +140,29 @@ class fileManager():
         except:
             return False
         return True
+    def getMimeType(self, pathObject):
+        mime = None
+        path = str(pathObject)
+        if self.magicMime != None:
+            try: 
+                mime = self.magicMime.from_file(path)
+                if mime != None:
+                    if mime != '':
+                        return mime
+            except:
+                pass
+        try:
+            mime = self.mime.guess_type(path)[0]  
+            if mime != None:
+                if mime != '':
+                    return mime
+        except:
+            pass
+        # be a badass?
+        #mime = subprocess.Popen("/usr/bin/file --mime PATH", shell=True, \
+        #    stdout=subprocess.PIPE).communicate()[0]                    
+        if pathObject.is_symlink():
+            mime = 'inode/symlink'                
+        else:
+            mime = 'application/octet-stream'
+        return mime
