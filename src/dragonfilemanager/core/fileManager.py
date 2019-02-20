@@ -1,10 +1,19 @@
-import sys, os, curses
+import sys, os, pwd, grp, curses, mimetypes 
+magicAvailable = False
+try:
+    import magic
+    magicAvailable = True
+except:
+    pass
+    
 
 class fileManager():
     def __init__(self, dragonfmManager):
         self.dragonfmManager = dragonfmManager
         self.screen = self.dragonfmManager.getScreen()
         self.settingsManager = self.dragonfmManager.getSettingsManager()
+        self.magicMime = magic.Magic(mime=True)
+        self.mime = mimetypes.MimeTypes()
     def getInfo(self, fullPath):
         if fullPath == '':
             return None
@@ -30,6 +39,7 @@ class fileManager():
          'atime', None,
          'mtime', None,
          'ctime', None,
+         'mime': None,
         }
         # type
         if os.path.isfile(fullPath):
@@ -40,6 +50,15 @@ class fileManager():
             entry['type'] = 'link'
         elif os.path.ismount(fullPath):
             entry['type'] = 'mountpoint'
+        # mimetype
+        try: 
+            entry['mime'] = self.magicMime.from_file(fullPath)
+        except:
+            try:
+                entry['mime'] = self.mime.guess_type(fullPath)[0]
+            except:
+                entry['mime'] = 'application/octet-stream'
+        
         # details
         info = None
         try:
@@ -49,9 +68,15 @@ class fileManager():
             entry['dev'] = info.st_dev
             entry['nlink'] = info.st_nlink
             entry['uid'] = info.st_uid
-            entry['uname'] = username
+            try:
+                entry['uname'] = pwd.getpwuid( info.st_uid ).pw_name
+            except:
+                pass
             entry['gid'] = info.st_gid
-            entry['gname'] = groupname
+            try:
+                entry['gname'] = grp.getgrgid( info.st_gid ).gr_name
+            except:
+                pass
             entry['size'] = info.st_size
             entry['atime'] = info.st_atime
             entry['mtime'] = info.st_mtime
