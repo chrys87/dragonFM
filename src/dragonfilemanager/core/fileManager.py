@@ -105,6 +105,9 @@ class fileManager():
                         entry['mime'] = 'inode/symlink'                
                     else:
                         entry['mime'] = 'application/octet-stream'
+                # be a badass?
+                #mime = subprocess.Popen("/usr/bin/file --mime PATH", shell=True, \
+                #    stdout=subprocess.PIPE).communicate()[0]                        
         
         # details
         info = None
