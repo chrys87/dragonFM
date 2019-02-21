@@ -1,10 +1,13 @@
-import sys, os, threading, curses, time
+import sys, os, threading, curses, time, inspect
+
 from dragonfilemanager.core import i18n
 from dragonfilemanager.core import settingsManager
 from dragonfilemanager.core import debugManager
 from dragonfilemanager.core import viewManager
 from dragonfilemanager.core import inputManager
 from dragonfilemanager.core import fileManager
+from dragonfilemanager.core import commandManager
+
 class dragonfmManager():
     def __init__(self):
         self.running = False
@@ -12,9 +15,13 @@ class dragonfmManager():
         self.settingsManager = None
         self.debugManager = None
         self.fileManager = None
+        self.commandManager = None
         self.height = 0
         self.width = 0
         self.setProcessName()
+        self.currentdir = os.path.dirname(os.path.realpath(os.path.abspath(inspect.getfile(inspect.currentframe()))))
+        self.dragonFmPath = os.path.dirname(self.currentdir)
+
     def start(self):
         self.running = True
         curses.wrapper(self.proceed)
@@ -26,6 +33,7 @@ class dragonfmManager():
         self.debugManager = debugManager.debugManager(self)
         self.settingsManager = settingsManager.settingsManager(self)
         self.fileManager = fileManager.fileManager(self)
+        self.commandManager = commandManager.commandManager(self)        
         self.screen.leaveok(0)
         curses.raw()
         curses.curs_set(1)
@@ -49,6 +57,11 @@ class dragonfmManager():
         self.running = False
     def shutdown(self):
         pass
+    def refresh(self):
+        self.screen.refresh()
+    def clear(self):
+        self.screen.clear()
+    # Set
     def setScreen(self, screen):
         if not screen:
             return
@@ -77,13 +90,9 @@ class dragonfmManager():
             pass
         return False
 
-    def move(self, y, x):
-        self.screen.move(y, x)
-    def refresh(self):
-        self.screen.refresh()
-    def clear(self):
-        self.screen.clear()
-    # getter
+    def setCursor(self, y, x):
+        self.screen.move(y, x)    
+    # Get
     def getScreenWidth(self):
         return self.width
     def getScreenHeight(self):
@@ -100,3 +109,5 @@ class dragonfmManager():
         return self.debugManager
     def getScreen(self):
         return self.screen
+    def getDragonFmPath(self):
+        return self.dragonFmPath
