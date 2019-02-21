@@ -1,7 +1,7 @@
 import sys,os
 import curses
 
-from dragonfilemanager.core import mainMenuManager
+from dragonfilemanager.core import contextMenuManager
 from dragonfilemanager.core import folderManager
 
 class tabManager():
@@ -10,7 +10,7 @@ class tabManager():
         self.screen = self.dragonfmManager.getScreen()
         self.settingsManager = self.dragonfmManager.getSettingsManager()
         self.tabs = {}
-        self.mainMenu = mainMenuManager.mainMenuManager(self.dragonfmManager)
+        self.contextMenuManager = contextMenuManager.contextMenuManager(self.dragonfmManager)
         self.currentTab = -1
         self.mode = 0 # 0: folder, 1: context menu
         self.addTab()
