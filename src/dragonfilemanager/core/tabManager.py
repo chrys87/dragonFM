@@ -10,25 +10,12 @@ class tabManager():
         self.screen = self.dragonfmManager.getScreen()
         self.settingsManager = self.dragonfmManager.getSettingsManager()
         self.tabs = {}
+        self.folderManager = folderManager.folderManager(id, self.dragonfmManager)        
         self.contextMenuManager = contextMenuManager.contextMenuManager(self.dragonfmManager)
         self.currentTab = -1
         self.mode = 0 # 0: folder, 1: context menu
         self.addTab()
-    def addTab(self, changeToNew = True):
-        if self.mode != 0:
-            return
-        id = len(self.tabs)
-        self.tabs[id] = folderManager.folderManager(id, self.dragonfmManager)
-        if changeToNew:
-            self.changeTab(id)
 
-    def closeTab(self, tab):
-        if self.mode != 0:
-            return
-        if len(self.tabs) > 1:
-            if tab == self.currentTab:
-                self.changeTab(0)
-            del(self.tabs[tab])
     def changeMode(self, mode):
         if self.mode == mode:
             return
