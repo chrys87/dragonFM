@@ -37,7 +37,7 @@ class folderManager():
             return None
         sef.Path = Path(location)
         self.location = location
-return None
+
     def updatePage(self):
         index = self.getCurrentIndex()
         size = self.getFolderAreaSize()
@@ -92,7 +92,7 @@ return None
             self.updatePage()
             self.drawFolderList()
         screenIndex = self.getPositionForIndex()
-        self.dragonfmManager.move(screenIndex, 0)
+        self.dragonfmManager.setCursor(screenIndex, 0)
         self.dragonfmManager.refresh()
     def getID(self):
         return self.id
