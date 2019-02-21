@@ -25,6 +25,7 @@ class dragonfmManager():
         self.setProcessName()
 
     def start(self):
+        #return
         curses.wrapper(self.proceed)
 
     # main process
@@ -37,22 +38,23 @@ class dragonfmManager():
         curses.curs_set(1)
         self.viewManager = viewManager.viewManager(self)
         self.inputManager = inputManager.inputManager(self)
-        self.viewManager.update()
+        self.update()
         while self.running:
             shortcut = self.inputManager.get()
             if shortcut:
-                if not self.handleInput(shortcut):
-                    self.viewManager.handleInput(shortcut)
-            self.viewManager.update()
+                self.handleInput(shortcut)
+            self.update()
         self.shutdown()
-    def handleInput(self, shortcut):
+    def update(self):
+        self.viewManager.update()
+    def handleApplicationInput(self, shortcut):
         command = self.settingsManager.getShortcut('application-keyboard', shortcut)
         if command == '':
             return False
-        if command == 'quit':
-            self.stop()
-            return True
-        return False
+        return self.commandManager.runCommand('application', command)
+    def handleInput(self, shortcut):
+        if not self.handleApplicationInput(shortcut):
+            return self.viewManager.handleInput(shortcut)
 
     def stop(self):
         self.running = False

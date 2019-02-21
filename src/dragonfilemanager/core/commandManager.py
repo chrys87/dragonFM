@@ -1,4 +1,4 @@
-import os
+import os, glob
 
 from dragonfilemanager.utils import module_utils
 
@@ -7,7 +7,14 @@ class commandManager():
         self.dragonfmManager = dragonfmManager
         self.screen = self.dragonfmManager.getScreen()
         self.settingsManager = self.dragonfmManager.getSettingsManager()
-
+        self.commands = {}
+        self.loadCommands('application')
+        self.loadCommands('menu')
+        self.loadCommands('help')
+        self.loadCommands('view')
+        self.loadCommands('tab')
+        self.loadCommands('folder')
+        self.loadCommands('context')
     def loadFile(self, filepath = ''):
         if filepath == '':
             return None
@@ -29,3 +36,65 @@ class commandManager():
         except Exception as e:
             pass
         return None
+
+    def loadCommands(self, section ,commandPath=''):
+        if commandPath =='':
+            commandPath = self.dragonfmManager.getDragonFmPath() + '/commands/'
+        if not commandPath.endswith('/'):
+            commandPath += '/'
+        commandFolder = commandPath + section +"/"
+        if not os.path.exists(commandFolder):
+            return   
+        if not os.path.isdir(commandFolder):
+            return
+        if not os.access(commandFolder, os.R_OK):
+            return
+        self.commands[section.upper()] = {}
+        commandList = glob.glob(commandFolder+'*')
+        for command in commandList:
+            try:
+                if command == '':
+                    continue
+                if not os.path.exists(command):
+                    continue
+                if os.path.isdir(command):
+                    continue
+                if not os.access(command, os.R_OK):
+                    continue
+                fileName, fileExtension = os.path.splitext(command)
+                fileName = fileName.split('/')[-1]
+                if fileName.startswith('__'):
+                    continue
+                if fileExtension.lower() != '.py':
+                    continue
+                command_mod = module_utils.importModule(fileName, command)
+                self.commands[section.upper()][fileName.upper()] = command_mod.command(self.dragonfmManager)
+            except Exception as e:
+                continue
+
+    def commandExist(self, section, command):
+        try:
+            c = self.getCommand(section, command)
+            if not c:
+                return False
+        except KeyError:
+            return False
+        return True
+    def getCommand(self, section, command):
+        try:
+            c = self.commands[section.upper()][command.upper()]
+            return c
+        except Exception as e:
+            return None
+        return None
+
+    def runCommand(self, section, command, callback = None):
+        if not self.commandExist(section, command):
+            return False
+        c = self.getCommand(section, command)
+        try:
+            c.run(callback)
+            return True
+        except Exception as e:
+            pass
+        return False

@@ -69,7 +69,7 @@ class viewManager():
         command = self.settingsManager.getShortcut('view-keyboard', shortcut)
         if command == '':
             return False
-        return False
+        return self.commandManager.runCommand('view', command)
     def handleInput(self, shortcut):
         if not self.handleVeiwInput(shortcut):
             if self.mode == 0:

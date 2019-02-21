@@ -21,7 +21,7 @@ class contextMenuManager():
         command = self.settingsManager.getShortcut('context-keyboard', shortcut)
         if command == '':
             return False
-        return False
+        return self.commandManager.runCommand('context', command)
     def handleInput(self, shortcut):
         return self.handleContextInput(shortcut)
 

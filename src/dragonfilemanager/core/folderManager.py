@@ -97,6 +97,8 @@ class folderManager():
         return self.id
     def getPage(self):
         return self.page
+    def reloadFolder(self):
+        self.loadFolder(self.getLocation())
     def loadFolder(self, path):
         if not os.access(path, os.R_OK):
             return False
@@ -117,9 +119,11 @@ class folderManager():
         self.setLocation(path)
         return True
     def handleFolderInput(self, shortcut):
-        command = self.settingsManager.getShortcut('tab-keyboard', shortcut)
+        command = self.settingsManager.getShortcut('folder-keyboard', shortcut)
         #if command == '':
         #    return False
+        #return self.commandManager.runCommand('folder', command)
+
         #self.setMessage(key)
         if shortcut == 'KEY_UP':
             self.prevElement()
