@@ -1,35 +1,40 @@
 from configparser import ConfigParser
-import os
+import os, argparse
 from dragonfilemanager.core import defaultSettings
 
 class settingsManager():
     def __init__(self, dragonfmManager):
         self.dragonfmManager = dragonfmManager
+        self.configParser = None
         self.settings = None
         self.args = None
-        self.parser = None
-        self.loadedSettingFile = ''
+        self.argParser = None
+        self.settingFile = ''
         self.reset()
     def getSettingsPath(self):
         path = '~/.config/dragonFM/settings.conf'
-        if os.access(path, R_OK):
+        if os.access(path, os.R_OK):
             return path
         path = '/etc/dragonFM/settings.conf'
-        if os.access(path, R_OK):
+        if os.access(path, os.R_OK):
             return path
-        path = '/../../config/settings.conf'
-        if os.access(path, R_OK):
+        path = self.dragonfmManager.getDragonFmPath() + '/../../config/settings.conf'
+        if os.access(path, os.R_OK):
             return path
         return ''
+    def loadSettings(self):
+        settingsFile = self.getSettingsPath()
+        if settingsFile != '':
+            self.load(settingsFile)
     def load(self, path):
-        if not os.access(path,os.R_OK):
+        if not os.access(path, os.R_OK):
             return False
         try:
             self.configParser = ConfigParser()
             self.configParser.read(path)
             self.loadedSettingFile = path
             return True
-        except:
+        except Exception as e:
             pass
         return False
     def save(self, path):
@@ -37,21 +42,21 @@ class settingsManager():
             return False
         try:
             configFile = open(path, 'w')
-            self.parser.write(configFile)
+            self.argParser.write(configFile)
             configFile.close()
             return True
         except:
             pass
         return False
-        
+
     def parseCliArgs(self):
         args = None
-        self.parser = argparse.ArgumentParser(description="dragonFM Help")
-        parser.add_argument('-s', '--setting', metavar='SETTING-FILE', default='~/.config/dragonFM/settings.conf', help='Use a specified settingsfile')
+        self.argParser = argparse.ArgumentParser(description="dragonFM Help")
+        self.argParser.add_argument('-s', '--setting', metavar='SETTING-FILE', default='~/.config/dragonFM/settings.conf', help='Use a specified settingsfile')
         try:
-            args = parser.parse_args()
+            args = self.argParser.parse_args()
         except Exception as e:
-            parser.print_help()
+            self.argParser.print_help()
             return False
         self.args = args
         return True
@@ -82,15 +87,25 @@ class settingsManager():
     def get(self, section, setting):
         value = ''
         try:
-            value = self.settings.get(section, setting)
+            value = self.configParser.get(section, setting)
         except:
             value = str(self.settings[section][setting])
+        return value
+    def getShortcut(self, section, setting):
+        value = ''
+        try:
+            value = self.configParser.get(section, setting)
+        except:
+            try:
+                value = str(self.settings[section][setting])    
+            except:
+                pass
         return value
 
     def getInt(self, section, setting):
         value = 0
         try:
-            value = self.settings.getint(section, setting)
+            value = self.configParser.getint(section, setting)
         except:
             value = self.settings[section][setting]
         return value
@@ -98,7 +113,7 @@ class settingsManager():
     def getFloat(self, section, setting):
         value = 0.0
         try:
-            value = self.settings.getfloat(section, setting)
+            value = self.configParser.getfloat(section, setting)
         except:
             value = self.settings[section][setting]
         return value
@@ -106,7 +121,7 @@ class settingsManager():
     def getBool(self, section, setting):
         value = False
         try:
-            value = self.settings.getboolean(section, setting)
+            value = self.configParser.getboolean(section, setting)
         except:
             value = self.settings[section][setting]
         return value

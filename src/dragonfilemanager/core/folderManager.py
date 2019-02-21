@@ -11,7 +11,7 @@ class folderManager():
         self.id = id
         self.message = ''
         self.location = ''
-        sef.Path = None
+        self.Path = None
         self.setLocation(expanduser("~"))
         self.selection = []
         self.index = [0]
@@ -25,7 +25,7 @@ class folderManager():
         self.page = 0
     def enter(self):
         self.setNeedRefresh()
-        self.draw()
+        self.update()
     def leave(self):
         pass
     def setNeedRefresh(self):
@@ -35,7 +35,7 @@ class folderManager():
             return None
         if not os.path.exists(location):
             return None
-        sef.Path = Path(location)
+        self.Path = Path(location)
         self.location = location
 
     def updatePage(self):
@@ -69,8 +69,7 @@ class folderManager():
             location += '/'
         location += self.folderList[self.getCurrentIndex()]['name']
         if os.path.isdir(location):
-            if self.
-            lder(location):
+            if self.loadFolder(location):
                 self.index.append(0)
                 self.setNeedRefresh()
         else:
@@ -84,7 +83,7 @@ class folderManager():
         # header bar
         screenIndex += self.headerOffset
         return screenIndex
-    def draw(self):
+    def update(self):
         if self.needRefresh:
             self.dragonfmManager.clear()
             self.drawHeader()
@@ -106,6 +105,9 @@ class folderManager():
             path += '/'
         elements = os.listdir(path)
         for e in elements:
+            if e.startswith('.'):
+                if not self.settingsManager.getBool('folder', 'showHidden'):
+                    continue
             fullPath = path + e
             entry = self.fileManager.getInfo(fullPath)
             if entry != None:
@@ -114,22 +116,26 @@ class folderManager():
         self.folderList = folderList
         self.setLocation(path)
         return True
-
-    def handleInput(self, key):
+    def handleFolderInput(self, shortcut):
+        command = self.settingsManager.getShortcut('tab-keyboard', shortcut)
+        #if command == '':
+        #    return False
         #self.setMessage(key)
-        if key == 'KEY_UP':
+        if shortcut == 'KEY_UP':
             self.prevElement()
             return True
-        elif key == 'KEY_DOWN':
+        elif shortcut == 'KEY_DOWN':
             self.nextElement()
             return True
-        elif key == 'KEY_RIGHT':
+        elif shortcut == 'KEY_RIGHT':
             self.openElement(self.getLocation())
             return True
-        elif key == 'KEY_LEFT':
+        elif shortcut == 'KEY_LEFT':
             self.closeElement(self.getLocation())
             return True
         return False
+    def handleInput(self, shortcut):
+        return self.handleFolderInput(shortcut)
     def getEntry(self):
         return self.index[len(self.index) - 1]
     def getSelection(self):

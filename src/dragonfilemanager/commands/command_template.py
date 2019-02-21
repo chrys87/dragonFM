@@ -6,11 +6,15 @@ class command():
     def shutdown(self):
         pass
     def getName(self):
-        return 'No description found'
+        return _('No description found')
     def getDescription(self):
-        return 'No description found'         
+        return _('No description found')
     def active(self):
         return True
-    def run(self, callback):
+    def getValue(self):
+        return None
+    def getShortcut(self):
+        return None
+    def run(self, callback = None):
         if callback:
           callback()

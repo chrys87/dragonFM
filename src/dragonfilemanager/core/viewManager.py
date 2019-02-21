@@ -4,7 +4,7 @@ import curses
 from dragonfilemanager.core import mainMenuManager
 from dragonfilemanager.core import tabManager
 
-class tabManager():
+class viewManager():
     def __init__(self, dragonfmManager):
         self.dragonfmManager = dragonfmManager
         self.screen = self.dragonfmManager.getScreen()
@@ -65,11 +65,14 @@ class tabManager():
             self.tabs[self.currentTab].update()
         elif self.mode == 1:
             self.mainMenuManager.update()
-    def handleVeiwInput(self, key):
+    def handleVeiwInput(self, shortcut):
+        command = self.settingsManager.getShortcut('view-keyboard', shortcut)
+        if command == '':
+            return False
         return False
-    def handleInput(self, key):
-        if not self.handleVeiwInput(key):
+    def handleInput(self, shortcut):
+        if not self.handleVeiwInput(shortcut):
             if self.mode == 0:
-                self.tabs[self.currentTab].handleInput(key)
+                self.tabs[self.currentTab].handleInput(shortcut)
             elif self.mode == 1:
-                self.mainMenuManager.handleInput(key)
+                self.mainMenuManager.handleInput(shortcut)

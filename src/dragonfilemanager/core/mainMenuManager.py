@@ -10,8 +10,12 @@ class mainMenuManager():
         self.screen.clear()
     def leave(self):
         pass
-    def draw(self):
+    def update(self):
         self.screen.addstr(0, 0, 'Menu')
-    def handleInput(self, key):
+    def handleMainInput(self, shortcut):
+        command = self.settingsManager.getShortcut('main-keyboard', shortcut)
+        if command == '':
+            return False
         return False
-
+    def handleInput(self, shortcut):
+        return self.handleMainInput(shortcut)

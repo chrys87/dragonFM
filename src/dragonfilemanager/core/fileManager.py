@@ -17,7 +17,7 @@ class fileManager():
         self.magicMime = None
         try:
             self.magicMime = magic.Magic(mime=True)
-        except
+        except:
             pass
         self.mime = mimetypes.MimeTypes()
     def getInfo(self, fullPath):
@@ -39,18 +39,18 @@ class fileManager():
          'path': path,
          'marked': False,
          'type': None,
-         'mode', None,
-         'ino', None,
-         'dev', None,
-         'nlink', None,
-         'uid', None,
+         'mode': None,
+         'ino': None,
+         'dev': None,
+         'nlink': None,
+         'uid': None,
          'uname': None,
-         'gid', None,
+         'gid': None,
          'gname': None,
-         'size', None,
-         'atime', None,
-         'mtime', None,
-         'ctime', None,
+         'size': None,
+         'atime': None,
+         'mtime': None,
+         'ctime': None,
          'mime': None,
         }
         # type
@@ -108,7 +108,7 @@ class fileManager():
                 # be a badass?
                 #mime = subprocess.Popen("/usr/bin/file --mime PATH", shell=True, \
                 #    stdout=subprocess.PIPE).communicate()[0]                        
-        
+
         # details
         info = None
         try:

@@ -10,30 +10,28 @@ from dragonfilemanager.core import commandManager
 
 class dragonfmManager():
     def __init__(self):
-        self.running = False
+        self.running = True
         self.screen = None
-        self.settingsManager = None
-        self.debugManager = None
-        self.fileManager = None
-        self.commandManager = None
         self.height = 0
         self.width = 0
-        self.setProcessName()
         self.currentdir = os.path.dirname(os.path.realpath(os.path.abspath(inspect.getfile(inspect.currentframe()))))
         self.dragonFmPath = os.path.dirname(self.currentdir)
+        self.settingsManager = settingsManager.settingsManager(self)
+        self.settingsManager.parseCliArgs()
+        self.settingsManager.loadSettings()
+        self.debugManager = debugManager.debugManager(self)
+        self.fileManager = fileManager.fileManager(self)
+        self.commandManager = commandManager.commandManager(self)
+        self.setProcessName()
 
     def start(self):
-        self.running = True
         curses.wrapper(self.proceed)
+
     # main process
     def proceed(self, screen):
         self.setScreen(screen)
         if not screen:
             return
-        self.debugManager = debugManager.debugManager(self)
-        self.settingsManager = settingsManager.settingsManager(self)
-        self.fileManager = fileManager.fileManager(self)
-        self.commandManager = commandManager.commandManager(self)        
         self.screen.leaveok(0)
         curses.raw()
         curses.curs_set(1)
@@ -41,14 +39,17 @@ class dragonfmManager():
         self.inputManager = inputManager.inputManager(self)
         self.viewManager.update()
         while self.running:
-            key = self.inputManager.get()
-            if key:
-                if not self.handleInput(key):
-                    self.viewManager.handleInput(key)
+            shortcut = self.inputManager.get()
+            if shortcut:
+                if not self.handleInput(shortcut):
+                    self.viewManager.handleInput(shortcut)
             self.viewManager.update()
         self.shutdown()
-    def handleInput(self, key):
-        if key == 'q':
+    def handleInput(self, shortcut):
+        command = self.settingsManager.getShortcut('application-keyboard', shortcut)
+        if command == '':
+            return False
+        if command == 'quit':
             self.stop()
             return True
         return False
