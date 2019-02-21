@@ -29,9 +29,9 @@ class viewManager():
 
     def update(self):
         if self.mode == 0:
-            self.tabManager.draw()
+            self.tabManager.update()
         elif self.mode == 1:
-            self.mainMenuManager.draw()
+            self.mainMenuManager.update()
     def handleViewInput(self, key):
         return False
     def handleInput(self, key):
