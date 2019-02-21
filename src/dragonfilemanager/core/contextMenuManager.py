@@ -1,5 +1,7 @@
-import sys,os
-import curses
+import sys, os, time, inspect, curses
+
+currentdir = os.path.dirname(os.path.realpath(os.path.abspath(inspect.getfile(inspect.currentframe()))))
+dragonFmPath = os.path.dirname(currentdir)
 
 class contextMenuManager():
     def __init__(self, dragonfmManager):
