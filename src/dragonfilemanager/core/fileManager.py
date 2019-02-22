@@ -55,30 +55,31 @@ class fileManager():
         }
         # type
 
-        if pathObject.is_file():
-            entry['type'] = 'file'
-            # mime is detected more below
-        elif pathObject.is_symlink():
-            entry['type'] = 'link'
-            # mime is detected more below
-        elif pathObject.is_dir():
-            entry['type'] = 'directory'
-            entry['mime'] = 'inode/directory'
-        elif pathObject.is_mount():
+
+        if pathObject.is_mount():
             entry['type'] = 'mountpoint'
             entry['mime'] = 'inode/mount-point'
-        elif pathObject.is_socket():
-            entry['type'] = 'socket'
-            entry['mime'] = 'inode/socket'
         elif pathObject.is_fifo():
             entry['type'] = 'fifo'
             entry['mime'] = 'inode/fifo'
+        elif pathObject.is_socket():
+            entry['type'] = 'socket'
+            entry['mime'] = 'inode/socket'
         elif pathObject.is_block_device():
             entry['type'] = 'block'
             entry['mime'] = 'inode/blockdevice'
         elif pathObject.is_char_device():
             entry['type'] = 'char'
             entry['mime'] = 'inode/chardevice'
+        elif pathObject.is_symlink():
+            entry['type'] = 'link'
+            # mime is detected more below
+        elif pathObject.is_file():
+            entry['type'] = 'file'
+            # mime is detected more below
+        elif pathObject.is_dir():
+            entry['type'] = 'directory'
+            entry['mime'] = 'inode/directory'            
         # mimetype
         if entry['mime'] == None:
             if pathObject.is_file() or pathObject.is_symlink():
