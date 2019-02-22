@@ -1,6 +1,5 @@
 from configparser import ConfigParser
 import os, argparse
-from dragonfilemanager.core import defaultSettings
 
 class settingsManager():
     def __init__(self, dragonfmManager):
