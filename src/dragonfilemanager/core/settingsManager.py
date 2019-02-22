@@ -5,13 +5,16 @@ from dragonfilemanager.core import defaultSettings
 class settingsManager():
     def __init__(self, dragonfmManager):
         self.dragonfmManager = dragonfmManager
-        self.configParser = None
         self.settings = None
+        self.reset()
+        self.configParser = None
         self.args = None
         self.argParser = None
         self.settingFile = ''
-        self.reset()
     def getSettingsPath(self):
+        path = self.args.setting
+        if os.access(path, os.R_OK):
+            return path        
         path = '~/.config/dragonFM/settings.conf'
         if os.access(path, os.R_OK):
             return path
@@ -42,7 +45,7 @@ class settingsManager():
             return False
         try:
             configFile = open(path, 'w')
-            self.argParser.write(configFile)
+            self.configParser.write(configFile)
             configFile.close()
             return True
         except:
@@ -62,7 +65,7 @@ class settingsManager():
         return True
 
     def reset(self):
-        self.settings = defaultSettings.settings
+        self.settings = self.getDefaultSettings()
 
     def set(self, section, setting, value):
         try:
@@ -125,3 +128,7 @@ class settingsManager():
         except:
             value = self.settings[section][setting]
         return value
+    def getDefaultSettings(self):
+        return {
+        }.copy()
+                           
