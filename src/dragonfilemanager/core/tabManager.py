@@ -1,5 +1,4 @@
-import sys,os
-import curses
+import sys, os, curses
 
 from dragonfilemanager.core import contextMenuManager
 from dragonfilemanager.core import folderManager
