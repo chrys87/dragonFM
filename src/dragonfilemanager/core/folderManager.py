@@ -14,9 +14,10 @@ class folderManager():
         self.Path = None
         self.setLocation(expanduser("~"))
         self.selection = []
-        self.index = [0]
-        self.folderList = []
-        self.loadFolder(self.getLocation())
+        self.index = 0
+        self.entries = {}
+        self.keys = []
+        self.loadentriesFromFolder(self.getLocation())
         self.headerOffset = 0
         self.footerOffset = 0
         self.messageTimer = None
@@ -30,53 +31,64 @@ class folderManager():
         pass
     def setNeedRefresh(self):
         self.needRefresh = True
-    def setLocation(self, location):
+    def setLocation(self, location, entryName = None):
         if location == '':
-            return None
+            return False
         if not os.path.exists(location):
-            return None
+            return False
         self.Path = Path(location)
         self.location = location
-
+        self.indext = 0
+        if entryName != None:        
+            try:
+                self.index = self.entries.keys().index(entryName)
+            except:
+                pass
+        return True
+    def getKeyByIndex(self, index):
+        try:
+            return self.keys[index]
+        except Exception as e:
+            return str(e)   
+            pass
+        return None
     def updatePage(self):
-        index = self.getCurrentIndex()
-        size = self.getFolderAreaSize()
+        index = self.getIndex()
+        size = self.getEntryAreaSize()
         page = int(index / size)
         if page != self.page:
             self.setNeedRefresh()
             self.page = page
-    def getCurrentLevel(self):
-        return len(self.index) - 1
-    def getCurrentIndex(self):
-        return self.index[len(self.index) - 1]
+
+    def getIndex(self):
+        return self.index
     def prevElement(self):
-        if self.index[self.getCurrentLevel()] > 0:
-            self.index[self.getCurrentLevel()] -= 1
+        if self.index > 0:
+            self.index -= 1
     def nextElement(self):
-        if self.index[self.getCurrentLevel()] < len(self.folderList) - 1:
-            self.index[self.getCurrentLevel()] += 1
-    def getFolderAreaSize(self):
+        if self.index < len(self.entries) - 1:
+            self.index += 1
+    def getEntryAreaSize(self):
         return self.height - self.headerOffset- self.footerOffset
-    def closeElement(self):
-        location = self.path.parent
-        if os.path.isdir(location):
-            if self.loadFolder(location):
-                self.setLocation(location)
-                del self.index[-1]
-                self.setNeedRefresh()  
-    def openElement(self, location):
-        if not location.endswith('/'):
-            location += '/'
-        location += self.folderList[self.getCurrentIndex()]['name']
-        if os.path.isdir(location):
-            if self.loadFolder(location):
-                self.index.append(0)
+    def upperElement(self):
+        entry = self.getCurrentEntry()
+        parent = self.fileManager.getInfo(entry['path'])
+        path = parent['full']
+        entryName = parent['name']
+        self.openElement(path, entryName)
+        self.setNeedRefresh()  
+    def openElement(self, path, entryName=None):
+        if os.path.isdir(path):
+            if self.loadentriesFromFolder(path):
+                self.setLocation(path, entryName)
                 self.setNeedRefresh()
         else:
-            self.fileManager.openFile(location)
+            self.fileManager.openFile(path)
+    def getCurrentEntry(self):
+        return self.entries[self.getKeyByIndex(self.getIndex())]
     def getPositionForIndex(self):
-        index = self.getCurrentIndex()
-        size = self.getFolderAreaSize()
+        index = self.getIndex()
+        size = self.getEntryAreaSize()
         page = self.getPage()
         # page to index
         screenIndex = index - page * size
@@ -89,7 +101,7 @@ class folderManager():
             self.drawHeader()
             self.drawFooter()
             self.updatePage()
-            self.drawFolderList()
+            self.drawEntryList()
         screenIndex = self.getPositionForIndex()
         self.dragonfmManager.setCursor(screenIndex, 0)
         self.dragonfmManager.refresh()
@@ -98,14 +110,14 @@ class folderManager():
     def getPage(self):
         return self.page
     def reloadFolder(self):
-        self.loadFolder(self.getLocation())
-    def loadFolder(self, path):
+        self.loadentriesFromFolder(self.getLocation())
+    def loadentriesFromFolder(self, path):
         if not os.access(path, os.R_OK):
             return False
-        folderList = []
         if not path.endswith('/'):
             path += '/'
         elements = os.listdir(path)
+        entries = {}
         for e in elements:
             if e.startswith('.'):
                 if not self.settingsManager.getBool('folder', 'showHidden'):
@@ -113,9 +125,10 @@ class folderManager():
             fullPath = path + e
             entry = self.fileManager.getInfo(fullPath)
             if entry != None:
-                folderList.append(entry)
-        # sort folderList here
-        self.folderList = folderList
+                entries[e] = entry
+        # sort entries here
+        self.entries = entries
+        self.keys = list(entries.keys())
         self.setLocation(path)
         return True
     def handleFolderInput(self, shortcut):
@@ -132,16 +145,14 @@ class folderManager():
             self.nextElement()
             return True
         elif shortcut == 'KEY_RIGHT':
-            self.openElement(self.getLocation())
+            self.openElement(self.getCurrentEntry()['full'])
             return True
         elif shortcut == 'KEY_LEFT':
-            self.closeElement(self.getLocation())
+            self.upperElement()
             return True
         return False
     def handleInput(self, shortcut):
         return self.handleFolderInput(shortcut)
-    def getEntry(self):
-        return self.index[len(self.index) - 1]
     def getSelection(self):
         if self.selection == []:
             return [self.getEntry()]
@@ -156,7 +167,7 @@ class folderManager():
     def resetMessage(self):
         self.message = ''
         self.setNeedRefresh()
-        self.draw()
+        self.update()
     def setMessage(self, message):
         if self.messageTimer:
             if self.messageTimer.is_alive():
@@ -165,7 +176,7 @@ class folderManager():
 
         self.message = message
         self.setNeedRefresh()
-        self.draw()
+        self.update()
         self.messageTimer.start()
     def drawHeader(self):
         self.headerOffset = 0
@@ -177,13 +188,13 @@ class folderManager():
         self.screen.addstr(self.headerOffset, 0, _('Page: {0}').format(self.getPage() + 1))
         self.headerOffset += 1
     
-    def drawFolderList(self):
-        for i in range(self.getFolderAreaSize()):
+    def drawEntryList(self):
+        for i in range(self.getEntryAreaSize()):
             if i == self.height - self.footerOffset:
                 break
-            if self.getPage() * self.getFolderAreaSize() + i >= len(self.folderList):
+            if self.getPage() * self.getEntryAreaSize() + i >= len(self.entries):
                 break
-            e = self.folderList[self.getPage() * self.getFolderAreaSize() + i]
+            e = self.entries[self.getKeyByIndex(self.getPage() * self.getEntryAreaSize() + i)]
             self.screen.addstr(i + self.headerOffset, 0, e['name'] + ' ' + e['type'] )
             i += 1
         
