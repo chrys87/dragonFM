@@ -38,10 +38,10 @@ class folderManager():
             return False
         self.Path = Path(location)
         self.location = location
-        self.indext = 0
-        if entryName != None:        
+        self.index = 0
+        if entryName != None:
             try:
-                self.index = self.entries.keys().index(entryName)
+                self.index = self.keys.index(entryName)
             except:
                 pass
         return True
@@ -49,7 +49,7 @@ class folderManager():
         try:
             return self.keys[index]
         except Exception as e:
-            return str(e)   
+            return str(e)
             pass
         return None
     def updatePage(self):
@@ -71,21 +71,30 @@ class folderManager():
     def getEntryAreaSize(self):
         return self.height - self.headerOffset- self.footerOffset
     def upperElement(self):
-        entry = self.getCurrentEntry()
-        parent = self.fileManager.getInfo(entry['path'])
-        path = parent['full']
-        entryName = parent['name']
+        location = self.getLocation()
+        if location.endswith('/'):
+            location = location[:-1]
+        if location == '':
+            return False
+        path = os.path.dirname(location)
+        if path == '':
+            return False
+        entryName = os.path.basename(location)
         self.openElement(path, entryName)
-        self.setNeedRefresh()  
-    def openElement(self, path, entryName=None):
-        if os.path.isdir(path):
+        self.setNeedRefresh()
+        return True
+    def openElement(self, path, entryName=None, force = False):
+        if os.path.isdir(path) or force:
             if self.loadentriesFromFolder(path):
                 self.setLocation(path, entryName)
                 self.setNeedRefresh()
         else:
             self.fileManager.openFile(path)
     def getCurrentEntry(self):
-        return self.entries[self.getKeyByIndex(self.getIndex())]
+        try:
+            return self.entries[self.getKeyByIndex(self.getIndex())]
+        except:
+            return None
     def getPositionForIndex(self):
         index = self.getIndex()
         size = self.getEntryAreaSize()
@@ -131,6 +140,7 @@ class folderManager():
         self.keys = list(entries.keys())
         self.setLocation(path)
         return True
+
     def handleFolderInput(self, shortcut):
         command = self.settingsManager.getShortcut('folder-keyboard', shortcut)
         #if command == '':
@@ -187,7 +197,7 @@ class folderManager():
         self.headerOffset += 1
         self.screen.addstr(self.headerOffset, 0, _('Page: {0}').format(self.getPage() + 1))
         self.headerOffset += 1
-    
+
     def drawEntryList(self):
         for i in range(self.getEntryAreaSize()):
             if i == self.height - self.footerOffset:
@@ -197,9 +207,8 @@ class folderManager():
             e = self.entries[self.getKeyByIndex(self.getPage() * self.getEntryAreaSize() + i)]
             self.screen.addstr(i + self.headerOffset, 0, e['name'] + ' ' + e['type'] )
             i += 1
-        
+
     def drawFooter(self):
         self.footerOffset = 0
         self.footerOffset += 1
         self.showMessage()
-        
