@@ -24,6 +24,10 @@ class folderManager():
         self.needRefresh = True
         self.height = self.dragonfmManager.getScreenHeight()
         self.page = 0
+        self.columns = self.settingsManager.getShortcut('folder', 'columns')
+        if self.columns == '':
+            self.columns = name
+        self.columns = self.columns.split(',')
     def enter(self):
         self.setNeedRefresh()
         self.update()
@@ -193,19 +197,28 @@ class folderManager():
         # paint header
         self.screen.addstr(self.headerOffset, 0, _('Tab: {0}').format(self.getID()))
         self.headerOffset += 1
-        self.screen.addstr(self.headerOffset, 0, _('Folder: {0}').format(self.getLocation()))
+        self.screen.addstr(self.headerOffset, 0, _('Location: {0}').format(self.getLocation()))
         self.headerOffset += 1
         self.screen.addstr(self.headerOffset, 0, _('Page: {0}').format(self.getPage() + 1))
         self.headerOffset += 1
+        pos = 0
+        for c in self.columns:
+            self.screen.addstr(self.headerOffset, pos, c )
+            pos += len(c) + 3
+        self.headerOffset += 1
 
     def drawEntryList(self):
+
         for i in range(self.getEntryAreaSize()):
             if i == self.height - self.footerOffset:
                 break
             if self.getPage() * self.getEntryAreaSize() + i >= len(self.entries):
                 break
             e = self.entries[self.getKeyByIndex(self.getPage() * self.getEntryAreaSize() + i)]
-            self.screen.addstr(i + self.headerOffset, 0, e['name'] + ' ' + e['type'] )
+            pos = 0
+            for c in self.columns:
+                self.screen.addstr(i + self.headerOffset, pos, e[c] )
+                pos += len(e[c]) + 3
             i += 1
 
     def drawFooter(self):
