@@ -7,6 +7,8 @@ from dragonfilemanager.core import viewManager
 from dragonfilemanager.core import inputManager
 from dragonfilemanager.core import fileManager
 from dragonfilemanager.core import commandManager
+from dragonfilemanager.core import clipboardManager
+from dragonfilemanager.core import startUpManager
 
 class dragonfmManager():
     def __init__(self):
@@ -19,6 +21,8 @@ class dragonfmManager():
         self.settingsManager = settingsManager.settingsManager(self)
         self.settingsManager.parseCliArgs()
         self.settingsManager.loadSettings()
+        self.startUpManager = startUpManager.startUpManager(self)
+        self.clipboardManager = clipboardManager.clipboardManager(self)
         self.debugManager = debugManager.debugManager(self)
         self.fileManager = fileManager.fileManager(self)
         self.commandManager = commandManager.commandManager(self)
@@ -27,7 +31,7 @@ class dragonfmManager():
     def start(self):
         #return
         curses.wrapper(self.proceed)
-
+        self.startUpManager.execPostProcessStartup()
     # main process
     def proceed(self, screen):
         self.setScreen(screen)
@@ -100,6 +104,10 @@ class dragonfmManager():
         return self.width
     def getScreenHeight(self):
         return self.height
+    def getClipboardManager(self):
+        return self.clipboardManager
+    def getStartUpManager(self):
+        return self.startUpManager
     def getSettingsManager(self):
         return self.settingsManager
     def getFileManager(self):

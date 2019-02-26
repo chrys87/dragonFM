@@ -8,6 +8,7 @@ class folderManager():
         self.screen = self.dragonfmManager.getScreen()
         self.settingsManager = self.dragonfmManager.getSettingsManager()
         self.fileManager = self.dragonfmManager.getFileManager()
+        self.startUpManager = self.dragonfmManager.getStartUpManager()
         self.id = id
         self.message = ''
         self.location = ''
@@ -66,15 +67,15 @@ class folderManager():
 
     def getIndex(self):
         return self.index
-    def prevElement(self):
+    def prevEntry(self):
         if self.index > 0:
             self.index -= 1
-    def nextElement(self):
+    def nextEntry(self):
         if self.index < len(self.entries) - 1:
             self.index += 1
     def getEntryAreaSize(self):
         return self.height - self.headerOffset- self.footerOffset
-    def upperElement(self):
+    def parentEntry(self):
         location = self.getLocation()
         if location.endswith('/'):
             location = location[:-1]
@@ -87,7 +88,7 @@ class folderManager():
         self.openElement(path, entryName)
         self.setNeedRefresh()
         return True
-    def openElement(self, path, entryName=None, force = False):
+    def openEntry(self, path, entryName=None, force = False):
         if os.path.isdir(path) or force:
             if self.loadentriesFromFolder(path):
                 self.setLocation(path, entryName)
@@ -153,16 +154,16 @@ class folderManager():
 
         #self.setMessage(key)
         if shortcut == 'KEY_UP':
-            self.prevElement()
+            self.prevEntry()
             return True
         elif shortcut == 'KEY_DOWN':
-            self.nextElement()
+            self.nextEntry()
             return True
         elif shortcut == 'KEY_RIGHT':
-            self.openElement(self.getCurrentEntry()['full'])
+            self.openEntry(self.getCurrentEntry()['full'])
             return True
         elif shortcut == 'KEY_LEFT':
-            self.upperElement()
+            self.parentEntry()
             return True
         return False
     def handleInput(self, shortcut):

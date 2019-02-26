@@ -14,6 +14,7 @@ class fileManager():
         self.dragonfmManager = dragonfmManager
         self.screen = self.dragonfmManager.getScreen()
         self.settingsManager = self.dragonfmManager.getSettingsManager()
+        self.startUpManager = self.dragonfmManager.getStartUpManager()
         self.magicMime = None
         try:
             self.magicMime = magic.Magic(mime=True)
@@ -136,11 +137,10 @@ class fileManager():
             pass
         return entry.copy()
     def openFile(self, fullPath):
-        try:
-            os.execlp('nano', 'nano', fullPath)
-        except:
-            return False
-        return True
+        application = 'nano'
+        self.startUpManager.setPostProcessStartup(application, [fullPath])
+        self.dragonfmManager.stop()
+
     def getMimeType(self, pathObject):
         mime = None
         path = str(pathObject)
@@ -163,7 +163,7 @@ class fileManager():
         #mime = subprocess.Popen("/usr/bin/file --mime PATH", shell=True, \
         #    stdout=subprocess.PIPE).communicate()[0]                    
         if pathObject.is_symlink():
-            mime = 'inode/symlink'                
+            mime = 'inode/symlink'
         else:
             mime = 'application/octet-stream'
         return mime
