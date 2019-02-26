@@ -85,7 +85,7 @@ class folderManager():
         if path == '':
             return False
         entryName = os.path.basename(location)
-        self.openElement(path, entryName)
+        self.openEntry(path, entryName)
         self.setNeedRefresh()
         return True
     def openEntry(self, path, entryName=None, force = False):
