@@ -67,12 +67,23 @@ class folderManager():
 
     def getIndex(self):
         return self.index
+    def firstEntry(self):
+        if self.index = 0
+    def lastEntry(self):
+        if len(self.entries) - 1 >= 0:
+            self.index = len(self.entries) - 1
+        else:
+            self.index = 0
     def prevEntry(self):
         if self.index > 0:
             self.index -= 1
+        else:
+            self.firstEntry()           
     def nextEntry(self):
         if self.index < len(self.entries) - 1:
             self.index += 1
+        else:
+            self.lastEntry()
     def getEntryAreaSize(self):
         return self.height - self.headerOffset- self.footerOffset
     def parentEntry(self):
@@ -164,6 +175,12 @@ class folderManager():
             return True
         elif shortcut == 'KEY_LEFT':
             self.parentEntry()
+            return True
+        elif shortcut == '1':
+            self.firstEntry()
+            return True
+        elif shortcut == '2':
+            self.lastEntry()
             return True
         return False
     def handleInput(self, shortcut):
