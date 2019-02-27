@@ -1,10 +1,10 @@
 It is essential that whatever we use be Unicode-compatible, because we will have both left to right and right to left languages, as well as languages with non-Western alphabets. It must also be console-based and work well and efficiently on a Raspberry Pi 3B Plus running Arch Linux.
-(TODO): displaying files in a list is possible, then it is more usable for screen reader users.
-(TODO): When we move up or down with arrow keys, only one file should be read by Fenrir. 
-(TODO): Arrow keys to move up and down on current directory list or down and up on directory tree.
-(TODO): Tracks cursor and displays files and directories in a list
+(DONE): displaying files in a list is possible, then it is more usable for screen reader users.
+(DONE): When we move up or down with arrow keys, only one file should be read by Fenrir. 
+(DONE): Arrow keys to move up and down on current directory list or down and up on directory tree.
+(DONE): Tracks cursor and displays files and directories in a list
 (TODO): It should allow user to modify how much information is shown for each file.
-(TODO): we can just have file manager show the filename, 
+(DONE): we can just have file manager show the filename, 
 (TODO): properties / Context menu: Shift+10, and selecting "properties", user can see file size, date of last modification, owner, permissions, etc.
 (TODO): Context menu: Shift+F10 should give you menu of things you can do to current file or directory, like rename, compress, uncompress, zip and email, open-with, etc. It should vary according to file type.
 (TODO): Keybindings similar to nautilus
@@ -17,13 +17,13 @@ start programm
   File "<stdin>", line 1
     os.execlp('ssh', 'ssh', 127.0.0.1)
 
-(TODO): Left arrow can take you back to last directory, right arrow can open directory you have selected.
+(DONE): Left arrow can take you back to last directory, right arrow can open directory you have selected.
 (TODO): Home and End takes you to top of current directory or bottom.
 (TODO): F2 to rename whatever the current file or directory is.
 (TODO): F1 for help if file manager has one, or customizable so we can write our own help file.
 
 (TODO): control shift n, to create a new directory in current directory.
-(TODO):control alt n to create a new text file in current directory. Equivalent of touch command.
+(TODO): control alt n to create a new text file in current directory. Equivalent of touch command.
 (TODO): alt plus home should go directly to home folder.
 (TODO): Alt+up arrow should go to parent directory, like in pcmanfm etc.
 (TODO):Control+x Cut
