@@ -6,7 +6,7 @@ It is essential that whatever we use be Unicode-compatible, because we will have
 (DONE): It should allow user to modify how much information is shown for each file.
 (DONE): we can just have file manager show the filename, 
 (DONE): Left arrow can take you back to last directory, right arrow can open directory you have selected.
-(TODO): Home and End takes you to top of current directory or bottom.
+(DONE): Home and End takes you to top of current directory or bottom.
 
 (TODO): properties / Context menu: Shift+10, and selecting "properties", user can see file size, date of last modification, owner, permissions, etc.
 (TODO): Context menu: Shift+F10 should give you menu of things you can do to current file or directory, like rename, compress, uncompress, zip and email, open-with, etc. It should vary according to file type.
