@@ -68,7 +68,7 @@ class folderManager():
     def getIndex(self):
         return self.index
     def firstEntry(self):
-        if self.index = 0
+        self.index = 0
     def lastEntry(self):
         if len(self.entries) - 1 >= 0:
             self.index = len(self.entries) - 1
