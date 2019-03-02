@@ -99,11 +99,10 @@ class dragonfmManager():
     def enter(self):
         screen = curses.initscr()
         #curses.nonl()
+        curses.start_color()
         curses.noecho()
         curses.cbreak()
         self.original_sigint_handler = signal.signal(signal.SIGINT, signal.SIG_IGN)
-        #signal.signal(signal.SIGINT, self.captureSignal)
-        #signal.signal(signal.SIGTERM, self.captureSignal)
         self.setScreen(screen)
     def captureSignal(self, siginit, frame):
         pass
@@ -114,7 +113,7 @@ class dragonfmManager():
         self.screen.keypad(False)
         curses.endwin()
         sys.stdout.flush()
-        signal.signal(signal.SIGINT, self.original_sigint_handler)             
+        signal.signal(signal.SIGINT, self.original_sigint_handler)
 
     def setCursor(self, y, x):
         self.screen.move(y, x)    
