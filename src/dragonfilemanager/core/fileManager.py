@@ -140,9 +140,16 @@ class fileManager():
         if not entry:
             return
         try:
-            application = self.settingsManager.get('mime', entry['mime']).format(entry['full'])
+            application = self.settingsManager.get('mime', entry['mime'])
             if application == '':
-                application = 'nano,{0}'
+                slashpos = entry['mime'].find('/')
+                if slashpos != -1:
+                    category = entry['mime'][:slashpos] + '/*'
+                    application = self.settingsManager.get('mime', category)
+            try:
+                application = application.format(entry['full'])
+            except:
+                pass
             application = application.split(',')
         except:
             return
