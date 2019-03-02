@@ -109,8 +109,8 @@ class dragonfmManager():
     def leave(self):
         curses.echo()
         curses.nocbreak()
-        self.screen.clear()
         self.screen.keypad(False)
+        self.clear()
         curses.endwin()
         sys.stdout.flush()
         signal.signal(signal.SIGINT, self.original_sigint_handler)
