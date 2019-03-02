@@ -1,4 +1,4 @@
-import sys, os, pwd, grp, curses, mimetypes
+import sys, os, pwd, grp, curses, mimetypes, shlex
 from pathlib import Path
 
 magicAvailable = False
@@ -147,14 +147,12 @@ class fileManager():
                     category = entry['mime'][:slashpos] + '/*'
                     application = self.settingsManager.get('mime', category)
             try:
-                application = application.format(entry['full'])
+                application = application.format(shlex.quote(entry['full']))
             except:
                 pass
-            application = application.split(',')
         except:
             return
-        self.startUpManager.setPostProcessStartup(application)
-        self.dragonfmManager.stop()
+        self.startUpManager.start(application)
 
     def getMimeType(self, pathObject):
         mime = None

@@ -1,4 +1,4 @@
-import sys, os, threading, curses, time, inspect
+import sys, os, threading, curses, time, inspect, signal
 
 from dragonfilemanager.core import i18n
 from dragonfilemanager.core import settingsManager
@@ -30,16 +30,14 @@ class dragonfmManager():
 
     def start(self):
         #return
-        curses.wrapper(self.proceed)
-        self.startUpManager.execPostProcessStartup()
+        self.enter()
+        try:
+            self.proceed()
+        except:
+            pass
+        self.leave()
     # main process
-    def proceed(self, screen):
-        self.setScreen(screen)
-        if not screen:
-            return
-        self.screen.leaveok(0)
-        curses.raw()
-        curses.curs_set(1)
+    def proceed(self):
         self.viewManager = viewManager.viewManager(self)
         self.inputManager = inputManager.inputManager(self)
         self.update()
@@ -74,6 +72,8 @@ class dragonfmManager():
             return
         self.screen = screen
         self.height, self.width = self.screen.getmaxyx()
+        self.screen.keypad(True)
+
     def setProcessName(self, name = 'dragonFM'):
         """Attempts to set the process name to 'dragonFM'."""
         # Disabling the import error of setproctitle.
@@ -96,6 +96,25 @@ class dragonfmManager():
         except:
             pass
         return False
+    def enter(self):
+        screen = curses.initscr()
+        #curses.nonl()
+        curses.noecho()
+        curses.cbreak()
+        self.original_sigint_handler = signal.signal(signal.SIGINT, signal.SIG_IGN)
+        #signal.signal(signal.SIGINT, self.captureSignal)
+        #signal.signal(signal.SIGTERM, self.captureSignal)
+        self.setScreen(screen)
+    def captureSignal(self, siginit, frame):
+        pass
+    def leave(self):
+        curses.echo()
+        curses.nocbreak()
+        self.screen.clear()
+        self.screen.keypad(False)
+        curses.endwin()
+        sys.stdout.flush()
+        signal.signal(signal.SIGINT, self.original_sigint_handler)             
 
     def setCursor(self, y, x):
         self.screen.move(y, x)    
