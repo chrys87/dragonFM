@@ -139,11 +139,13 @@ class fileManager():
     def openFile(self, entry):
         if not entry:
             return
-
-        application = self.settingsManager.get('mime', entry['mime']).format(entry['full'])
-        if application == '':
-            application = 'nano {0}'
-
+        try:
+            application = self.settingsManager.get('mime', entry['mime']).format(entry['full'])
+            if application == '':
+                application = 'nano,{0}'
+            application = application.split(',')
+        except:
+            return
         self.startUpManager.setPostProcessStartup(application)
         self.dragonfmManager.stop()
 

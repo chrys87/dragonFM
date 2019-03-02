@@ -8,13 +8,16 @@ class startUpManager():
         self.application = ''
         self.parameters = []
     def setPostProcessStartup(self, application):
-        if application == '':
+        if len(application) == 0:
             return False
-        self.application = application
+        self.application = application[0]
+        self.parameters = []
+        if len(application) > 1:
+            self.parameters = application
         return True
     def execPostProcessStartup(self):
         if self.application == '':
             return
         sys.stdout.flush()
-        #os.execvp(self.application, self.parameters)
-        os.system(self.application)
+        os.execvp(self.application, self.parameters)
+        #os.system(self.application)
