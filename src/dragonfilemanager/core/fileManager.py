@@ -136,9 +136,15 @@ class fileManager():
         except:
             pass
         return entry.copy()
-    def openFile(self, fullPath):
-        application = 'nano'
-        self.startUpManager.setPostProcessStartup(application, [fullPath])
+    def openFile(self, entry):
+        if not entry:
+            return
+
+        application = self.settingsManager.get('mime', entry['mime']).format(entry['full'])
+        if application == '':
+            application = 'nano {0}'
+
+        self.startUpManager.setPostProcessStartup(application)
         self.dragonfmManager.stop()
 
     def getMimeType(self, pathObject):

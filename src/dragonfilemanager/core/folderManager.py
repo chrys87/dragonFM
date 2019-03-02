@@ -25,7 +25,7 @@ class folderManager():
         self.needRefresh = True
         self.height = self.dragonfmManager.getScreenHeight()
         self.page = 0
-        self.columns = self.settingsManager.getShortcut('folder', 'columns')
+        self.columns = self.settingsManager.get('folder', 'columns')
         if self.columns == '':
             self.columns = name
         self.columns = self.columns.split(',')
@@ -78,7 +78,7 @@ class folderManager():
         if self.index > 0:
             self.index -= 1
         else:
-            self.firstEntry()           
+            self.firstEntry()
     def nextEntry(self):
         if self.index < len(self.entries) - 1:
             self.index += 1
@@ -99,13 +99,17 @@ class folderManager():
         self.openEntry(path, entryName)
         self.setNeedRefresh()
         return True
-    def openEntry(self, path, entryName=None, force = False):
+    def openEntry(self, path, entryName=None, force = False, entry = None):
+        if not path:
+            return
+        if path == '':
+            return
         if os.path.isdir(path) or force:
             if self.loadentriesFromFolder(path):
                 self.setLocation(path, entryName)
                 self.setNeedRefresh()
         else:
-            self.fileManager.openFile(path)
+            self.fileManager.openFile(entry)
     def getCurrentEntry(self):
         try:
             return self.entries[self.getKeyByIndex(self.getIndex())]
@@ -171,8 +175,11 @@ class folderManager():
             self.nextEntry()
             return True
         elif shortcut == 'KEY_RIGHT':
-            self.openEntry(self.getCurrentEntry()['full'])
+            #try:
+            self.openEntry(self.getCurrentEntry()['full'], entry=self.getCurrentEntry())
             return True
+            #except:
+            #    pass
         elif shortcut == 'KEY_LEFT':
             self.parentEntry()
             return True
@@ -226,7 +233,6 @@ class folderManager():
         self.headerOffset += 1
 
     def drawEntryList(self):
-
         for i in range(self.getEntryAreaSize()):
             if i == self.height - self.footerOffset:
                 break

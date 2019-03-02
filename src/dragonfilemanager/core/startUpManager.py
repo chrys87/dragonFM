@@ -7,12 +7,14 @@ class startUpManager():
         self.settingsManager = self.dragonfmManager.getSettingsManager()
         self.application = ''
         self.parameters = []
-    def setPostProcessStartup(self, application, parameters = []):
+    def setPostProcessStartup(self, application):
+        if application == '':
+            return False
         self.application = application
-        self.parameters = [self.application]
-        self.parameters.extend(parameters)
+        return True
     def execPostProcessStartup(self):
         if self.application == '':
             return
         sys.stdout.flush()
-        os.execvp(self.application, self.parameters)
+        #os.execvp(self.application, self.parameters)
+        os.system(self.application)

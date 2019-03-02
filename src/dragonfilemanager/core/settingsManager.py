@@ -91,7 +91,10 @@ class settingsManager():
         try:
             value = self.configParser.get(section, setting)
         except:
-            value = str(self.settings[section][setting])
+            try:
+                value = str(self.settings[section][setting])
+            except:
+                return ''
         return value
     def getShortcut(self, section, setting):
         value = ''
