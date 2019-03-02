@@ -11,9 +11,7 @@ class startUpManager():
         if len(application) == 0:
             return False
         self.application = application[0]
-        self.parameters = []
-        if len(application) > 1:
-            self.parameters = application
+        self.parameters = application
         return True
     def execPostProcessStartup(self):
         if self.application == '':
