@@ -25,21 +25,23 @@ class dragonfmManager():
         self.clipboardManager = clipboardManager.clipboardManager(self)
         self.debugManager = debugManager.debugManager(self)
         self.fileManager = fileManager.fileManager(self)
+        self.viewManager = None
+        self.inputManager = None
         self.commandManager = commandManager.commandManager(self)
+
         self.setProcessName()
 
     def start(self):
-        #return
         self.enter()
         try:
             self.proceed()
-        except:
-            pass
+        except Exception as e:
+            print(e)
         self.leave()
     # main process
     def proceed(self):
-        self.viewManager = viewManager.viewManager(self)
         self.inputManager = inputManager.inputManager(self)
+        self.viewManager = viewManager.viewManager(self)
         self.update()
         while self.running:
             shortcut = self.inputManager.get()
@@ -116,7 +118,7 @@ class dragonfmManager():
         signal.signal(signal.SIGINT, self.original_sigint_handler)
 
     def setCursor(self, y, x):
-        self.screen.move(y, x)    
+        self.screen.move(y, x)
     # Get
     def getScreenWidth(self):
         return self.width
@@ -134,6 +136,8 @@ class dragonfmManager():
         return self.viewManager
     def getInputManager(self):
         return self.inputManager
+    def getCommandManager(self):
+        return self.commandManager
     def getDebugManager(self):
         return self.debugManager
     def getScreen(self):

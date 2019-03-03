@@ -34,6 +34,7 @@ class commandManager():
                 command = command_mod.command(self.dragonfmManager)
                 return command
         except Exception as e:
+            print(e)
             pass
         return None
 
@@ -70,6 +71,7 @@ class commandManager():
                 command_mod = module_utils.importModule(fileName, command)
                 self.commands[section.upper()][fileName.upper()] = command_mod.command(self.dragonfmManager)
             except Exception as e:
+                print(e)
                 continue
 
     def commandExist(self, section, command):
@@ -85,6 +87,7 @@ class commandManager():
             c = self.commands[section.upper()][command.upper()]
             return c
         except Exception as e:
+            print(e)
             return None
         return None
 
@@ -92,6 +95,7 @@ class commandManager():
         if not self.commandExist(section, command):
             return False
         c = self.getCommand(section, command)
+
         try:
             c.run(callback)
             return True

@@ -11,6 +11,7 @@ class tabManager():
         self.settingsManager = self.dragonfmManager.getSettingsManager()
         self.folderManager = folderManager.folderManager(self.id, self.dragonfmManager)        
         self.contextMenuManager = contextMenuManager.contextMenuManager(self.id, self.dragonfmManager)
+        self.commandManager = self.dragonfmManager.getCommandManager()
         self.mode = 0 # 0: folder, 1: context menu
     def enter(self):
         self.update()
