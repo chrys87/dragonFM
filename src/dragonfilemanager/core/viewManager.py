@@ -48,7 +48,7 @@ class viewManager():
     def closeTab(self, id):
         if self.mode != 0:
             return
-        if len(self.tabs) > 1:
+        if len(self.tabList) > 1:
             tabIndex = -1
             try:
                 tabIndex = self.tabList.index(id)
