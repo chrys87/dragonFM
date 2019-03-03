@@ -16,10 +16,6 @@ class viewManager():
         self.currentID = -1
         self.mode = 0 # 0: folder, 1: context menu
         self.addTab()
-        self.addTab()
-        self.addTab()
-        self.addTab()
-        self.addTab()
     def getNewID(self):
         for i in range(1000):
             if not i in self.tabList:
@@ -39,7 +35,7 @@ class viewManager():
         if self.tabList == []:
             self.tabList = [id]
         else:
-            self.tabList = self.tabList[:self.getCurrentIndex() + 1] + [id] + self.tabList[self.getCurrentIndex() + 2:]
+            self.tabList = self.tabList[:self.getCurrentIndex() + 1] + [id] + self.tabList[self.getCurrentIndex() + 1:]
         if changeToNew:
             self.changeTab(id)
         return True
@@ -48,20 +44,23 @@ class viewManager():
     def closeTab(self, id):
         if self.mode != 0:
             return
-        if len(self.tabList) > 1:
-            tabIndex = -1
-            try:
-                tabIndex = self.tabList.index(id)
-                self.tabList.remove(id)
-                if tabIndex >= len(self.tabList):
-                    tabIndex = len(self.tabList) - 1
-                newID = self.tabList[tabIndex]
-                self.changeTab(newID)
-                del(self.tabs[id])
-            except:
-                pass
-        else:
-            self.dragonfmManager.stop()
+        #if len(self.tabList) > 1:
+        tabIndex = -1
+        try:
+            oldIndex = self.tabList.index(id)
+            newIndex = oldIndex
+            if newIndex >= len(self.tabList) - 1:
+                newIndex = len(self.tabList) - 2
+            newID = self.tabList[0]
+            #newID = self.tabList[newIndex]
+            self.changeTab(newID)
+            del self.tabs[id]
+            self.tabList.remove(id)
+        except Exception as e:
+            print(e)
+            pass
+        #else:
+        #    self.dragonfmManager.stop()
     def getCurrentIndex(self):
         return self.getIndexForID(self.currentID)
     def getIndexForID(self, id):
@@ -96,16 +95,19 @@ class viewManager():
             return
         # old
         if self.currentID != -1:
-            if self.tabList[self.getCurrentIndex()] == id:
+            if self.currentID == id:
                 return
-            self.tabs[self.getCurrentIndex()].leave()
+            self.tabs[self.currentID].leave()
         # new
         self.tabs[self.getIndexForID(id)].enter()
         self.currentID = id
     def getCurrentTab(self):
         return self.getTab(self, self.getCurrentIndex())
     def getTab(self, id):
-        return self.tabs[id]
+        try:
+            return self.tabs[id]
+        except:
+            return None
     def update(self):
         if self.mode == 0:
             self.tabs[self.getCurrentIndex()].update()
