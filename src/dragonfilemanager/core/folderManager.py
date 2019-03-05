@@ -140,6 +140,7 @@ class folderManager():
         return self.page
     def reloadFolder(self):
         self.loadentriesFromFolder(self.getLocation())
+        self.setNeedRefresh()
     def loadentriesFromFolder(self, path):
         if not os.access(path, os.R_OK):
             return False
