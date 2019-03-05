@@ -5,7 +5,6 @@ class command():
     def __init__(self, dragonfmManager):
         self.dragonfmManager = dragonfmManager
         self.screen = self.dragonfmManager.getScreen()
-        self.settingsManager = self.dragonfmManager.getSettingsManager()
         self.startUpManager = self.dragonfmManager.getStartUpManager()
         self.viewManager = None
     def shutdown(self):
