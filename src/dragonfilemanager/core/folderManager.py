@@ -30,15 +30,15 @@ class folderManager():
         self.columns = self.columns.split(',')
         self.getInitFolder(pwd)
     def getInitFolder(self, pwd):
-        currFolder = pwd
+        currFolder = expanduser(pwd)
         if (currFolder == '') or not os.access(currFolder, os.R_OK):
             currFolder = os.getcwd()
             if (currFolder == '') or not os.access(currFolder, os.R_OK):
-                currFolder = self.settingsManager.get('folder', 'pwd')
+                currFolder = expanduser(self.settingsManager.get('folder', 'pwd'))
                 if (currFolder == '') or not os.access(currFolder, os.R_OK):
                     currFolder = expanduser("~")
                     if (currFolder == '') or not os.access(currFolder, os.R_OK):
-                        currFolder = '/'                  
+                        currFolder = '/'
         self.gotoFolder(currFolder)
     def enter(self):
         self.setNeedRefresh()
