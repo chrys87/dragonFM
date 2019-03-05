@@ -69,7 +69,7 @@ class viewManager():
         if self.mode == mode:
             return
         if self.mode == 0:
-            self.tabs[self.getCurrentIndex()].leave()
+            self.getCurrentTab().leave()
         elif self.mode == 1:
             self.mainMenuManager.leave()
 
@@ -110,7 +110,7 @@ class viewManager():
             return None
     def update(self):
         if self.mode == 0:
-            self.tabs[self.getCurrentIndex()].update()
+            self.getCurrentTab().update()
         elif self.mode == 1:
             self.mainMenuManager.update()
         self.screen.addstr(8, 0, str(self.tabList))
@@ -123,6 +123,6 @@ class viewManager():
     def handleInput(self, shortcut):
         if not self.handleVeiwInput(shortcut):
             if self.mode == 0:
-                self.tabs[self.getCurrentIndex()].handleInput(shortcut)
+                self.getCurrentTab().handleInput(shortcut)
             elif self.mode == 1:
                 self.mainMenuManager.handleInput(shortcut)
