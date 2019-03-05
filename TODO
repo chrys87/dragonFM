@@ -6,21 +6,20 @@ It is essential that whatever we use be Unicode-compatible, because we will have
 (DONE): It should allow user to modify how much information is shown for each file.
 (DONE): we can just have file manager show the filename, 
 (DONE): Left arrow can take you back to last directory, right arrow can open directory you have selected.
-(DONE): Home and End takes you to top of current directory or bottom.
+(Needs Binding): Home and End takes you to top of current directory or bottom.
 (DONE): Pressing Enter or right arrow will open directory or file.
-(TODO): Alt+up arrow should go to parent directory, like in pcmanfm etc.
-
-(TODO): Control+w to close current tab if there are multiple tabs opened, or close entire file manager if just one tab is opened, just like Firefox.
-(TODO): Control+T to open a new tab, just like in pcmanfm.
-(TODO): Control+Tab and Control+Shift+Tab to move from one tab to another.
+(Needs Binding): Alt+up arrow should go to parent directory, like in pcmanfm etc.
+(Needs Binding): F5 to refresh, in case it is a remote directory.
+(Needs Binding): Control+q to quit file manager.
+(Needs Binding): alt plus home should go directly to home folder.
+(Needs Binding): F4 or an option in the menu should open command line in current directory, just like in pcmanfm.
+(Needs Binding): Control+T to open a new tab, just like in pcmanfm.
+(Needs Binding): Control+Tab and Control+Shift+Tab to move from one tab to another.
 When we talk about Tabs, they need not look like a tab on Firefox, for example, but it would be nice if we could quickly jump between entirely unrelated directories, like we jump between different web sites we have opened. So visually, they need not be side-by-side, they can entirely replace each other on the screen or not even show visually. The important thing is the functionality.
 
-(TODO): F4 or an option in the menu should open command line in current directory, just like in pcmanfm.
+(TODO): Control+w to close current tab if there are multiple tabs opened, or close entire file manager if just one tab is opened, just like Firefox.
 (TODO): F1 for help if file manager has one, or customizable so we can write our own help file.
 (TODO): Alt+number to jump from one tab to another, if multiple ones are opened, just like in Firefox.
-(TODO): F5 to refresh, in case it is a remote directory.
-(Needs Binding): Control+q to quit file manager.
-(TODO): alt plus home should go directly to home folder.
 
 (TODO): control shift n, to create a new directory in current directory.
 (TODO): control alt n to create a new text file in current directory. Equivalent of touch command.
