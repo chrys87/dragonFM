@@ -13,12 +13,10 @@ class folderManager():
         self.message = ''
         self.location = ''
         self.Path = None
-        self.setLocation(expanduser("~"))
         self.selection = []
         self.index = 0
         self.entries = {}
         self.keys = []
-        self.loadentriesFromFolder(self.getLocation())
         self.headerOffset = 0
         self.footerOffset = 0
         self.messageTimer = None
@@ -29,6 +27,8 @@ class folderManager():
         if self.columns == '':
             self.columns = name
         self.columns = self.columns.split(',')
+        self.loadentriesFromFolder(expanduser("~"))
+
     def enter(self):
         self.setNeedRefresh()
         self.update()
