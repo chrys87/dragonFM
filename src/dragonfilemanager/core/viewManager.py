@@ -64,7 +64,15 @@ class viewManager():
     def getCurrentIndex(self):
         return self.getIndexForID(self.currentID)
     def getIndexForID(self, id):
-        return self.tabList.index(id)
+        try:
+            return self.tabList.index(id)
+        except:
+            return None
+    def getIDForIndex(self, index):
+        try:
+            return self.tabList[index]
+        except:
+            return None
     def changeMode(self, mode):
         if self.mode == mode:
             return
@@ -90,6 +98,12 @@ class viewManager():
         if currIndex >= len(self.tabList):
             currIndex = 0
         self.changeTab(self.tabList[currIndex])
+    def changeTabIndex(self, index):
+        id = self.getIDForIndex(index)
+        if id == None:
+            return
+        self.changeTab(id)
+        return
     def changeTab(self, id):
         if self.mode != 0:
             return
@@ -101,6 +115,7 @@ class viewManager():
         # new
         self.tabs[self.getIndexForID(id)].enter()
         self.currentID = id
+        return
     def getCurrentTab(self):
         return self.getTab(self.getCurrentIndex())
     def getTab(self, id):
