@@ -138,9 +138,11 @@ class folderManager():
         return self.id
     def getPage(self):
         return self.page
-    def reloadFolder(self):
-        self.loadentriesFromFolder(self.getLocation())
+    def gotoFolder(self, path):
+        self.loadentriesFromFolder(path)
         self.setNeedRefresh()
+    def reloadFolder(self):
+        self.gotoFolder(self.getLocation())
     def loadentriesFromFolder(self, path):
         if not os.access(path, os.R_OK):
             return False
