@@ -6,9 +6,9 @@ class command():
     def shutdown(self):
         pass
     def getName(self):
-        return _('Next Entry')
+        return _('First Entry')
     def getDescription(self):
-        return _('Move Cursor to next entry')
+        return _('Move cursor to first entry')
     def active(self):
         return True
     def getValue(self):
@@ -18,6 +18,6 @@ class command():
     def run(self, callback = None):
         if self.viewManager == None:
             self.viewManager = self.dragonfmManager.getViewManager()
-        self.viewManager.getCurrentTab().nextEntry()
+        self.viewManager.getCurrentTab().firstEntry()
         if callback:
           callback()

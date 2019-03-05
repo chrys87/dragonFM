@@ -9,9 +9,9 @@ class command():
     def shutdown(self):
         pass
     def getName(self):
-        return _('Refresh')
+        return _('Goto Home')
     def getDescription(self):
-        return _('Refresh current folder')
+        return _('Goto Home folder')
     def active(self):
         return True
     def getValue(self):

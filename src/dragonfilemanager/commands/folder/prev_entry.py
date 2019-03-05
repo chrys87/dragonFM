@@ -7,9 +7,9 @@ class command():
     def shutdown(self):
         pass
     def getName(self):
-        return _('No description found')
+        return _('Previous Entry')
     def getDescription(self):
-        return _('No description found')
+        return _('Move Cursor to previous entry')
     def active(self):
         return True
     def getValue(self):
@@ -17,6 +17,8 @@ class command():
     def getShortcut(self):
         return None
     def run(self, callback = None):
-        self.prevEntry()
+        if self.viewManager == None:
+            self.viewManager = self.dragonfmManager.getViewManager()
+        self.viewManager.getCurrentTab().prevEntry()
         if callback:
           callback()

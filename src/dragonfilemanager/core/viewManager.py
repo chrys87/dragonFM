@@ -102,7 +102,7 @@ class viewManager():
         self.tabs[self.getIndexForID(id)].enter()
         self.currentID = id
     def getCurrentTab(self):
-        return self.getTab(self, self.getCurrentIndex())
+        return self.getTab(self.getCurrentIndex())
     def getTab(self, id):
         try:
             return self.tabs[id]
@@ -114,6 +114,7 @@ class viewManager():
         elif self.mode == 1:
             self.mainMenuManager.update()
         self.screen.addstr(8, 0, str(self.tabList))
+        self.screen.addstr(9, 0, str(self.tabs.keys()))
 
     def handleVeiwInput(self, shortcut):
         command = self.settingsManager.getShortcut('view-keyboard', shortcut)

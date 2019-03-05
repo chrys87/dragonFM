@@ -20,7 +20,7 @@ class folderManager():
         self.headerOffset = 0
         self.footerOffset = 0
         self.messageTimer = None
-        self.needRefresh = True
+        self.needRefresh = False
         self.height = self.dragonfmManager.getScreenHeight()
         self.page = 0
         self.columns = self.settingsManager.get('folder', 'columns')
@@ -99,7 +99,7 @@ class folderManager():
         self.openEntry(path, entryName)
         self.setNeedRefresh()
         return True
-    def openEntry(self, path, entryName=None entry = None):
+    def openEntry(self, path, entryName=None, entry = None):
         if not path:
             return
         if path == '':
@@ -138,7 +138,7 @@ class folderManager():
         return self.page
     def gotoFolder(self, path, entryName = None):
         if self.loadentriesFromFolder(path):
-            self.setLocation(path, entryName)      
+            self.setLocation(path, entryName)
             self.setNeedRefresh()
             return True
         return False

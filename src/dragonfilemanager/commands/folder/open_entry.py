@@ -16,5 +16,8 @@ class command():
     def getShortcut(self):
         return None
     def run(self, callback = None):
+        if self.viewManager == None:
+            self.viewManager = self.dragonfmManager.getViewManager()
+        self.viewManager.getCurrentTab().prevEntry()
         if callback:
           callback()
