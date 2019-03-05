@@ -21,6 +21,6 @@ class command():
     def run(self, callback = None):
         if self.viewManager == None:
             self.viewManager = self.dragonfmManager.getViewManager()
-        self.viewManager.getCurrentTab().gotoFolder(expanduser("~"))
+        self.viewManager.getCurrentTab().getFolderManager().gotoFolder(expanduser("~"))
         if callback:
             callback()

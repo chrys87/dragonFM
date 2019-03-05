@@ -31,7 +31,6 @@ class tabManager():
             self.contextMenuManager.enter()
 
         self.mode = mode
-
     def update(self):
         if self.mode == 0:
             self.folderManager.update()
@@ -48,3 +47,7 @@ class tabManager():
                 self.folderManager.handleInput(shortcut)
             elif self.mode == 1:
                 self.contextMenuManager.handleInput(shortcut)
+    def getFolderManager(self):
+        return self.folderManager
+    def getContextMenuManager(self):
+        return self.contextMenuManager

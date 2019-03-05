@@ -13,8 +13,9 @@ class commandManager():
         self.loadCommands('help')
         self.loadCommands('view')
         self.loadCommands('tab')
-        self.loadCommands('folder')
         self.loadCommands('context')
+        self.loadCommands('folder')
+
     def loadFile(self, filepath = ''):
         if filepath == '':
             return None
@@ -92,13 +93,14 @@ class commandManager():
         return None
 
     def runCommand(self, section, command, callback = None):
+        #self.dragonfmManager.leave()
+
         if not self.commandExist(section, command):
             return False
         c = self.getCommand(section, command)
-
         try:
             c.run(callback)
             return True
         except Exception as e:
-            pass
+            print(e)
         return False

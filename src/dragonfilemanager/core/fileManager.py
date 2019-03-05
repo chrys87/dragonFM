@@ -136,7 +136,7 @@ class fileManager():
         except:
             pass
         return entry.copy()
-    def openFile(self, entry):
+    def openFile(self, entry, pwd = ''):
         if not entry:
             return
         try:
@@ -152,7 +152,7 @@ class fileManager():
                 pass
         except:
             return
-        self.startUpManager.start(application)
+        self.startUpManager.start(application, pwd=pwd)
 
     def getMimeType(self, pathObject):
         mime = None

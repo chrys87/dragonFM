@@ -113,8 +113,8 @@ class viewManager():
             self.getCurrentTab().update()
         elif self.mode == 1:
             self.mainMenuManager.update()
-        self.screen.addstr(8, 0, str(self.tabList))
-        self.screen.addstr(9, 0, str(self.tabs.keys()))
+        #self.screen.addstr(8, 0, str(self.tabList))
+        #self.screen.addstr(9, 0, str(self.tabs.keys()))
 
     def handleVeiwInput(self, shortcut):
         command = self.settingsManager.getShortcut('view-keyboard', shortcut)

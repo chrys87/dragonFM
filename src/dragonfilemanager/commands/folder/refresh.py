@@ -19,6 +19,6 @@ class command():
     def run(self, callback = None):
         if self.viewManager == None:
             self.viewManager = self.dragonfmManager.getViewManager()
-        self.viewManager.getCurrentTab().reloadFolder()
+        self.viewManager.getCurrentTab().getFolderManager().reloadFolder()
         if callback:
             callback()

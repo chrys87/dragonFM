@@ -3,6 +3,7 @@ class command():
         self.dragonfmManager = dragonfmManager
         self.screen = self.dragonfmManager.getScreen()
         self.settingsManager = self.dragonfmManager.getSettingsManager()
+        self.viewManager = None
     def shutdown(self):
         pass
     def getName(self):
@@ -18,6 +19,17 @@ class command():
     def run(self, callback = None):
         if self.viewManager == None:
             self.viewManager = self.dragonfmManager.getViewManager()
-        self.viewManager.getCurrentTab().prevEntry()
+        folderManager = self.viewManager.getCurrentTab().getFolderManager()
+        currentEntry = folderManager.getCurrentEntry()
+        if not currentEntry:
+            return
+        currPath = ''
+        try:
+            currPath = currentEntry['full']
+        except:
+            return
+        if currPath == '':
+            return
+        folderManager.openEntry(currPath, entry=currentEntry)
         if callback:
           callback()

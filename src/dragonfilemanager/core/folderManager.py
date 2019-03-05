@@ -3,12 +3,13 @@ from pathlib import Path
 from os.path import expanduser
 
 class folderManager():
-    def __init__(self, id, dragonfmManager):
+    def __init__(self, id, dragonfmManager, pwd= ''):
         self.dragonfmManager = dragonfmManager
         self.screen = self.dragonfmManager.getScreen()
         self.settingsManager = self.dragonfmManager.getSettingsManager()
         self.fileManager = self.dragonfmManager.getFileManager()
         self.startUpManager = self.dragonfmManager.getStartUpManager()
+        self.commandManager = self.dragonfmManager.getCommandManager()
         self.id = id
         self.message = ''
         self.location = ''
@@ -27,8 +28,18 @@ class folderManager():
         if self.columns == '':
             self.columns = name
         self.columns = self.columns.split(',')
-        self.gotoFolder(expanduser("~"))
-
+        self.getInitFolder(pwd)
+    def getInitFolder(self, pwd):
+        currFolder = pwd
+        if (currFolder == '') or not os.access(currFolder, os.R_OK):
+            currFolder = os.getcwd()
+            if (currFolder == '') or not os.access(currFolder, os.R_OK):
+                currFolder = self.settingsManager.get('folder', 'pwd')
+                if (currFolder == '') or not os.access(currFolder, os.R_OK):
+                    currFolder = expanduser("~")
+                    if (currFolder == '') or not os.access(currFolder, os.R_OK):
+                        currFolder = '/'                  
+        self.gotoFolder(currFolder)
     def enter(self):
         self.setNeedRefresh()
         self.update()
@@ -107,7 +118,7 @@ class folderManager():
         if os.path.isdir(path):
             self.gotoFolder(path, entryName)
         else:
-            self.fileManager.openFile(entry)
+            self.fileManager.openFile(entry, self.getLocation())
     def getCurrentEntry(self):
         try:
             return self.entries[self.getKeyByIndex(self.getIndex())]
@@ -166,16 +177,25 @@ class folderManager():
 
     def handleFolderInput(self, shortcut):
         command = self.settingsManager.getShortcut('folder-keyboard', shortcut)
-        #if command == '':
-        #    return False
-        #return self.commandManager.runCommand('folder', command)
-
+        if command == '':
+            return False
+        return self.commandManager.runCommand('folder', command)
+        #if self.commandManager.runCommand('folder', command):
+        #    return True
         #self.setMessage(key)
         if shortcut == 'KEY_UP':
             self.prevEntry()
             return True
         elif shortcut == 'KEY_DOWN':
             self.nextEntry()
+            return True
+        elif shortcut == 'b':
+            terminalcmd = self.settingsManager.get('application', 'commandline')
+            if terminalcmd == '':
+                return False
+            location = self.viewManager.getCurrentTab().getLocation()
+            terminalcmd = terminalcmd.format(shlex.quote(location))
+            self.startUpManager.start(terminalcmd)
             return True
         elif shortcut == 'KEY_RIGHT':
             #try:

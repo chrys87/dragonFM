@@ -26,7 +26,7 @@ class command():
         terminalcmd = self.settingsManager.get('application', 'commandline')
         if terminalcmd == '':
             return
-        location = self.viewManager.getCurrentTab().getLocation()
+        location = self.viewManager.getCurrentTab().getFolderManager().getLocation()
         terminalcmd = terminalcmd.format(shlex.quote(location))
         self.startUpManager.start(terminalcmd)
         if callback:

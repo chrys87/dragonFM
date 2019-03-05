@@ -6,9 +6,11 @@ class startUpManager():
         self.screen = self.dragonfmManager.getScreen()
         self.settingsManager = self.dragonfmManager.getSettingsManager()
 
-    def start(self, application = ''):
+    def start(self, application = '', pwd = ''):
         if application == '':
             return
+        if pwd != '' and os.access(pwd, os.R_OK):
+            os.chdir(pwd)
         self.dragonfmManager.leave()
         try:
             os.system(application)
