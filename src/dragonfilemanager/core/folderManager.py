@@ -27,7 +27,7 @@ class folderManager():
         if self.columns == '':
             self.columns = name
         self.columns = self.columns.split(',')
-        self.loadentriesFromFolder(expanduser("~"))
+        self.gotoFolder(expanduser("~"))
 
     def enter(self):
         self.setNeedRefresh()
@@ -99,15 +99,13 @@ class folderManager():
         self.openEntry(path, entryName)
         self.setNeedRefresh()
         return True
-    def openEntry(self, path, entryName=None, force = False, entry = None):
+    def openEntry(self, path, entryName=None entry = None):
         if not path:
             return
         if path == '':
             return
-        if os.path.isdir(path) or force:
-            if self.loadentriesFromFolder(path):
-                self.setLocation(path, entryName)
-                self.setNeedRefresh()
+        if os.path.isdir(path):
+            self.gotoFolder(path, entryName)
         else:
             self.fileManager.openFile(entry)
     def getCurrentEntry(self):
@@ -138,9 +136,12 @@ class folderManager():
         return self.id
     def getPage(self):
         return self.page
-    def gotoFolder(self, path):
-        self.loadentriesFromFolder(path)
-        self.setNeedRefresh()
+    def gotoFolder(self, path, entryName = None):
+        if self.loadentriesFromFolder(path):
+            self.setLocation(path, entryName)      
+            self.setNeedRefresh()
+            return True
+        return False
     def reloadFolder(self):
         self.gotoFolder(self.getLocation())
     def loadentriesFromFolder(self, path):
@@ -161,7 +162,6 @@ class folderManager():
         # sort entries here
         self.entries = entries
         self.keys = list(entries.keys())
-        self.setLocation(path)
         return True
 
     def handleFolderInput(self, shortcut):
