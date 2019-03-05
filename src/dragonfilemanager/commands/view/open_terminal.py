@@ -1,5 +1,6 @@
 
-import os, shlex
+import shlex
+
 class command():
     def __init__(self, dragonfmManager):
         self.dragonfmManager = dragonfmManager
@@ -12,7 +13,7 @@ class command():
     def getName(self):
         return _('Open Terminal')
     def getDescription(self):
-        return _('Open current Tab in terminal')
+        return _('Open current location in terminal')
     def active(self):
         return True
     def getValue(self):
@@ -22,8 +23,10 @@ class command():
     def run(self, callback = None):
         if self.viewManager == None:
             self.viewManager = self.dragonfmManager.getViewManager()
-        location = self.viewManager.getCurrentTab().getLocation()
         terminalcmd = self.settingsManager.get('application', 'commandline')
+        if terminalcmd == '':
+            return
+        location = self.viewManager.getCurrentTab().getLocation()
         terminalcmd = terminalcmd.format(shlex.quote(location))
         self.startUpManager.start(terminalcmd)
         if callback:
