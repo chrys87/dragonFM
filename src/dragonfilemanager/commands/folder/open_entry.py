@@ -7,9 +7,9 @@ class command():
     def shutdown(self):
         pass
     def getName(self):
-        return _('No description found')
+        return _('Open Entry')
     def getDescription(self):
-        return _('No description found')
+        return _('Opens the current entry')
     def active(self):
         return True
     def getValue(self):
