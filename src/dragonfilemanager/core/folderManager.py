@@ -180,39 +180,7 @@ class folderManager():
         if command == '':
             return False
         return self.commandManager.runCommand('folder', command)
-        #if self.commandManager.runCommand('folder', command):
-        #    return True
-        #self.setMessage(key)
-        if shortcut == 'KEY_UP':
-            self.prevEntry()
-            return True
-        elif shortcut == 'KEY_DOWN':
-            self.nextEntry()
-            return True
-        elif shortcut == 'b':
-            terminalcmd = self.settingsManager.get('application', 'commandline')
-            if terminalcmd == '':
-                return False
-            location = self.viewManager.getCurrentTab().getLocation()
-            terminalcmd = terminalcmd.format(shlex.quote(location))
-            self.startUpManager.start(terminalcmd)
-            return True
-        elif shortcut == 'KEY_RIGHT':
-            #try:
-            self.openEntry(self.getCurrentEntry()['full'], entry=self.getCurrentEntry())
-            return True
-            #except:
-            #    pass
-        elif shortcut == 'KEY_LEFT':
-            self.parentEntry()
-            return True
-        elif shortcut == '1':
-            self.firstEntry()
-            return True
-        elif shortcut == '2':
-            self.lastEntry()
-            return True
-        return False
+
     def handleInput(self, shortcut):
         return self.handleFolderInput(shortcut)
     def getSelection(self):
