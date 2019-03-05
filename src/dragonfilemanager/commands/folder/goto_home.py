@@ -9,9 +9,9 @@ class command():
     def shutdown(self):
         pass
     def getName(self):
-        return _('Goto Root')
+        return _('Goto Home')
     def getDescription(self):
-        return _('Goto root folder')
+        return _('Goto Home folder')
     def active(self):
         return True
     def getValue(self):
@@ -21,6 +21,6 @@ class command():
     def run(self, callback = None):
         if self.viewManager == None:
             self.viewManager = self.dragonfmManager.getViewManager()
-        self.viewManager.getCurrentTab().getFolderManager().gotoFolder('/')
+        self.viewManager.getCurrentTab().getFolderManager().gotoFolder(expanduser("~"))
         if callback:
             callback()
