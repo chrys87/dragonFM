@@ -10,7 +10,6 @@ class commandManager():
         self.commands = {}
         self.loadCommands('application')
         self.loadCommands('menu')
-        self.loadCommands('help')
         self.loadCommands('view')
         self.loadCommands('tab')
         self.loadCommands('context')
