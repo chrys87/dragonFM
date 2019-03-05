@@ -177,6 +177,7 @@ class folderManager():
 
     def handleFolderInput(self, shortcut):
         command = self.settingsManager.getShortcut('folder-keyboard', shortcut)
+        self.setMessage(shortcut)
         if command == '':
             return False
         return self.commandManager.runCommand('folder', command)
