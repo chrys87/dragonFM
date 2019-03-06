@@ -5,3 +5,10 @@ class selectionManager():
         self.dragonfmManager = dragonfmManager
         self.screen = self.dragonfmManager.getScreen()
         self.settingsManager = self.dragonfmManager.getSettingsManager()
+        self.viewManager = self.dragonfmManager.getViewManager()
+        
+    def getSelectionCurrentTab(self):
+        return None
+    def getCursorCurrentTab(self):
+        return None
+    
