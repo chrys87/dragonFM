@@ -2,7 +2,7 @@ class command():
     def __init__(self, dragonfmManager):
         self.dragonfmManager = dragonfmManager
         self.screen = self.dragonfmManager.getScreen()
-        self.startUpManager = self.dragonfmManager.getStartUpManager()
+        self.processManager = self.dragonfmManager.getProcessManager()
     def shutdown(self):
         pass
     def getName(self):
@@ -16,6 +16,6 @@ class command():
     def getShortcut(self):
         return "F1"
     def run(self, callback = None):
-        self.startUpManager.start('man bash')
+        self.processManager.startExternal('man bash')
         if callback:
             callback()
