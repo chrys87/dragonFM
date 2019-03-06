@@ -19,7 +19,7 @@ class selectionManager():
         if selection == []:
             currentCursor = self.getCursorCurrentTab()
             if currentCursor != None:
-                currentSelection = [currentCursor]
+                currentSelection = [currentCursor].copy()
         else:
             currentSelection = selection
         return currentSelection 
