@@ -9,6 +9,7 @@ from dragonfilemanager.core import fileManager
 from dragonfilemanager.core import commandManager
 from dragonfilemanager.core import clipboardManager
 from dragonfilemanager.core import processManager
+from dragonfilemanager.core import selectionManager
 
 class dragonfmManager():
     def __init__(self):
@@ -27,6 +28,7 @@ class dragonfmManager():
         self.fileManager = fileManager.fileManager(self)
         self.viewManager = None
         self.inputManager = None
+        self.selectionManager = None
         self.commandManager = commandManager.commandManager(self)
 
         self.setProcessName()
@@ -42,6 +44,7 @@ class dragonfmManager():
     def proceed(self):
         self.inputManager = inputManager.inputManager(self)
         self.viewManager = viewManager.viewManager(self)
+        self.selectionManager = selectionManager.selectionManager(self)
         self.update()
         while self.running:
             shortcut = self.inputManager.get()
@@ -126,6 +129,8 @@ class dragonfmManager():
         return self.height
     def getClipboardManager(self):
         return self.clipboardManager
+    def getSelectionManager(self):
+        return self.selectionManager
     def getProcessManager(self):
         return self.processManager
     def getSettingsManager(self):
