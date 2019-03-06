@@ -8,7 +8,6 @@ class folderManager():
         self.screen = self.dragonfmManager.getScreen()
         self.settingsManager = self.dragonfmManager.getSettingsManager()
         self.fileManager = self.dragonfmManager.getFileManager()
-        self.startUpManager = self.dragonfmManager.getStartUpManager()
         self.commandManager = self.dragonfmManager.getCommandManager()
         self.id = id
         self.message = ''
