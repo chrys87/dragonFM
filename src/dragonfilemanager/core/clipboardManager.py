@@ -8,10 +8,10 @@ class clipboardManager():
         self.clipboard = {}
     def setClipboard(self, selection):
         if selection == None:
-            self.clearClipboard()
-        if selection == {}:
-            self.clearClipboard()            
+            return 
         self.clipboard = selection.copy()
     def clearClipboard(self):
         self.clipboard = {}
+    def getClipboard(self):
+        return self.clipboard.copy()
         
