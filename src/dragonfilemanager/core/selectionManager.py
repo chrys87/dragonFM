@@ -8,7 +8,6 @@ class selectionManager():
         self.viewManager = self.dragonfmManager.getViewManager()
         
     def getSelectionCurrentTab(self):
-        return None
+        return []
     def getCursorCurrentTab(self):
         return None
-    
