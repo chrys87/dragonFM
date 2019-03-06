@@ -1,4 +1,7 @@
 It is essential that whatever we use be Unicode-compatible, because we will have both left to right and right to left languages, as well as languages with non-Western alphabets. It must also be console-based and work well and efficiently on a Raspberry Pi 3B Plus running Arch Linux.
+# Done = Finish
+# Needs Binding = Implementation complete, needs keybinding
+# Todo = Nothing done yet
 (DONE): displaying files in a list is possible, then it is more usable for screen reader users.
 (DONE): When we move up or down with arrow keys, only one file should be read by Fenrir. 
 (DONE): Arrow keys to move up and down on current directory list or down and up on directory tree.
@@ -6,8 +9,8 @@ It is essential that whatever we use be Unicode-compatible, because we will have
 (DONE): It should allow user to modify how much information is shown for each file.
 (DONE): we can just have file manager show the filename, 
 (DONE): Left arrow can take you back to last directory, right arrow can open directory you have selected.
-(Needs Binding): Home and End takes you to top of current directory or bottom.
 (DONE): Pressing Enter or right arrow will open directory or file.
+(Needs Binding): Home and End takes you to top of current directory or bottom.
 (Needs Binding): Alt+up arrow should go to parent directory, like in pcmanfm etc.
 (Needs Binding): F5 to refresh, in case it is a remote directory.
 (Needs Binding): Control+q to quit file manager.
@@ -17,21 +20,29 @@ It is essential that whatever we use be Unicode-compatible, because we will have
 (Needs Binding): Control+T to open a new tab, just like in pcmanfm.
 (Needs Binding): Control+Tab and Control+Shift+Tab to move from one tab to another.
 When we talk about Tabs, they need not look like a tab on Firefox, for example, but it would be nice if we could quickly jump between entirely unrelated directories, like we jump between different web sites we have opened. So visually, they need not be side-by-side, they can entirely replace each other on the screen or not even show visually. The important thing is the functionality.
+(Needs Binding): F1 for help if file manager has one, or customizable so we can write our own help file.
 
 (BUG): Control+w to close current tab if there are multiple tabs opened, or close entire file manager if just one tab is opened, just like Firefox.
-(TODO): F1 for help if file manager has one, or customizable so we can write our own help file.
 
+# basic file operations (Priority)
 (TODO): control shift n, to create a new directory in current directory.
 (TODO): control alt n to create a new text file in current directory. Equivalent of touch command.
 (TODO):Control+x Cut
 (TODO): Control+c Copy
 (TODO): Control+v paste
+(TODO): F2 to rename whatever the current file or directory is.
 
+# input (Priority)
+(TODO): Nano Input hack
+(TODO): Keybindings similar to nautilus
+
+# Folder View
 (TODO): Search by Typing: Typing makes cursor jump to file beginning in letter or letters that were typed by user.
 (TODO): Sorting of file list of any directory you open can be alphabetically or by date of last modification. Other criteria would be nice, but this is the minimum.
+
+# Context menu
 (TODO): properties / Context menu: Shift+10, and selecting "properties", user can see file size, date of last modification, owner, permissions, etc.
 (TODO): Context menu: Shift+F10 should give you menu of things you can do to current file or directory, like rename, compress, uncompress, zip and email, open-with, etc. It should vary according to file type.
-(TODO): F2 to rename whatever the current file or directory is.
 (TODO): Shift+F10 should be customizable by user or at least by one of our scripts.
 (TODO): Shift+F10 usually gives you options like compressing file or directory, open, open-with, e-mailing as an attachment, uncompressing, etc. It should be different depending on file type, and we need to be able to modify this on a conf file or something.
 (TODO): Shift+F10 be accessible. After pressing Shift+F10, Fenrir should read each option, and nothing else, when we move it up and down with arrow keys.
@@ -50,14 +61,16 @@ Rename (F2)
 Copy (Ctrl + C)
 Paste (Ctrl + V)
 ***exampel context menu end***
+# Main Menu
 (TODO): Menu
 (TODO): F10 should take you to menu of file manager if it has one. If not, maybe it can take you to our Static Menu, if we are not using Virtual menu.
+
+# Search
 (TODO): Find a file (Control+f)
 (TODO): Find a file containing (Control+Shift+F)
   The first looks for a file based on the filename or filename segment you are prompted to type, and the second does a search for files which contain the string which you are prompted to type. Ideal situation here would be to use Recoll, which is apparently an excellent cli search engine, and is already installed in F123Light, but needs a nice easy way to use it.
   Searches are performed on current directory and all sub directories by default.
 
-(TODO): We can activate the corresponding option with the key indicated at the end of each string.
+# Others
 (TODO): Lastly, it would be great for us to be able to deal with remote directories, i.e. via sftp, sshFS, etc, in basically the same interface we use for local directories.
 (TODO): Control+Z could be un-do, but this is not so important. (?)
-(TODO): Keybindings similar to nautilus
