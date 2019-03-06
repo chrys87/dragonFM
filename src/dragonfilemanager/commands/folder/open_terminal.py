@@ -6,7 +6,7 @@ class command():
         self.dragonfmManager = dragonfmManager
         self.screen = self.dragonfmManager.getScreen()
         self.settingsManager = self.dragonfmManager.getSettingsManager()
-        self.startUpManager = self.dragonfmManager.getStartUpManager()
+        self.processManager = self.dragonfmManager.getProcessManager()
         self.viewManager = None
     def shutdown(self):
         pass
@@ -28,6 +28,6 @@ class command():
             return
         location = self.viewManager.getCurrentTab().getFolderManager().getLocation()
         terminalcmd = terminalcmd.format(shlex.quote(location))
-        self.startUpManager.start(terminalcmd)
+        self.processManager.startExternal(terminalcmd)
         if callback:
             callback()
