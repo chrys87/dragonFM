@@ -5,13 +5,15 @@ class clipboardManager():
         self.dragonfmManager = dragonfmManager
         self.screen = self.dragonfmManager.getScreen()
         self.settingsManager = self.dragonfmManager.getSettingsManager()
-        self.clipboard = {}
+        self.clipboard = []
     def setClipboard(self, selection):
         if selection == None:
             return 
         self.clipboard = selection.copy()
     def clearClipboard(self):
-        self.clipboard = {}
+        self.clipboard = []
     def getClipboard(self):
         return self.clipboard.copy()
+    def isClipboardEmpty(self):
+        return self.getClipboard() == []
         
