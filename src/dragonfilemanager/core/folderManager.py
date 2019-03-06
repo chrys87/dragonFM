@@ -183,6 +183,8 @@ class folderManager():
 
     def handleInput(self, shortcut):
         return self.handleFolderInput(shortcut)
+    def selectCurrent(self):
+        pass
     def getSelection(self):
         if self.selection == []:
             return [self.getEntry()]
