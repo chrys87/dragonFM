@@ -7,12 +7,18 @@ class processManager():
         self.settingsManager = self.dragonfmManager.getSettingsManager()
         self.externalStarted = False
         self.internalProcesses = {}
-    def startInternal(self, type, description = '', process = None, postProcess = None):
+        # process: id, name, description, process, postProcess, preProcess, value
+    def startInternal(self, name, description = '', value = None, process = None, postProcess = None, preProcess = None):
         if process == None:
             return None
     def getNewProcessID(self):
         return 1
     def stopInternal(self, id):
+        try:
+            del self.internalProcesses[id]
+        except:
+            pass
+    def updateInternal(self, id, property, value):
         pass
     def isExternalStarted(self):
         return self.externalStarted
