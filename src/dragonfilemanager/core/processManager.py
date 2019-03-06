@@ -1,4 +1,4 @@
-import sys, os, curses
+import sys, os, curses, threading
 
 class processManager():
     def __init__(self, dragonfmManager):
