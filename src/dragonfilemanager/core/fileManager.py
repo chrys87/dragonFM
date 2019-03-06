@@ -14,7 +14,7 @@ class fileManager():
         self.dragonfmManager = dragonfmManager
         self.screen = self.dragonfmManager.getScreen()
         self.settingsManager = self.dragonfmManager.getSettingsManager()
-        self.startUpManager = self.dragonfmManager.getStartUpManager()
+        self.processManager = self.dragonfmManager.getProcessManager()
         self.magicMime = None
         try:
             self.magicMime = magic.Magic(mime=True)
@@ -152,7 +152,7 @@ class fileManager():
                 pass
         except:
             return
-        self.startUpManager.start(application, pwd=pwd)
+        self.processManager.startExternal(application, pwd=pwd)
 
     def getMimeType(self, pathObject):
         mime = None
