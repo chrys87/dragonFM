@@ -104,7 +104,7 @@ class dragonfmManager():
         return False
     def enter(self):
         screen = curses.initscr()
-        #curses.nonl()
+        curses.nonl()
         curses.start_color()
         curses.noecho()
         curses.cbreak()
@@ -116,6 +116,7 @@ class dragonfmManager():
         pass
     def leave(self):
         self.setDisabled(True)
+        curses.nl()
         curses.echo()
         curses.nocbreak()
         self.screen.keypad(False)
