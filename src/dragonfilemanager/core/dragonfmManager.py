@@ -14,6 +14,7 @@ from dragonfilemanager.core import selectionManager
 class dragonfmManager():
     def __init__(self):
         self.running = True
+        self.disabled = True
         self.screen = None
         self.height = 0
         self.width = 0
@@ -107,11 +108,14 @@ class dragonfmManager():
         curses.start_color()
         curses.noecho()
         curses.cbreak()
+        screen.keypad(True)        
         self.original_sigint_handler = signal.signal(signal.SIGINT, signal.SIG_IGN)
         self.setScreen(screen)
+        self.setDisabled(False)        
     def captureSignal(self, siginit, frame):
         pass
     def leave(self):
+        self.setDisabled(True)
         curses.echo()
         curses.nocbreak()
         self.screen.keypad(False)
@@ -122,6 +126,8 @@ class dragonfmManager():
 
     def setCursor(self, y, x):
         self.screen.move(y, x)
+    def setDisabled(self, disabled):
+        self.disabled = disabled
     # Get
     def getScreenWidth(self):
         return self.width
@@ -149,3 +155,5 @@ class dragonfmManager():
         return self.screen
     def getDragonFmPath(self):
         return self.dragonFmPath
+    def getDisabled(self):
+        return self.disabled
