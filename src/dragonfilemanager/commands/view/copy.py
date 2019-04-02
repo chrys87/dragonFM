@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 
-import os, shutil
 import shutil
 
 class command():
