@@ -8,6 +8,7 @@ class command():
         self.screen = self.dragonfmManager.getScreen()
         self.settingsManager = self.dragonfmManager.getSettingsManager()
         self.selectionManager = self.dragonfmManager.getSelectionManager()
+        self.folderManager = self.dragonfmManager.getFolderManager()
     def shutdown(self):
         pass
     def getName(self):
@@ -27,8 +28,8 @@ class command():
         # Loop through the files and directories and move them to the selected destination.
         for i in selected:
             try:
-                shutil.move(i, self.folderview.getLocation())
+                shutil.move(i, self.folderManager.getLocation())
             except:
                 pass
         if callback:
-          callback()
+            callback()

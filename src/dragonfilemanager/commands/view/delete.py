@@ -9,6 +9,7 @@ class command():
         self.screen = self.dragonfmManager.getScreen()
         self.settingsManager = self.dragonfmManager.getSettingsManager()
         self.selectionManager = self.dragonfmManager.getSelectionManager()
+        self.folderManager = self.dragonfmManager.getFolderManager()        
     def shutdown(self):
         pass
     def getName(self):
@@ -32,4 +33,4 @@ class command():
             if os.is_dir(i):
                 shutil.rmtree(i)
         if callback:
-          callback()
+            callback()
