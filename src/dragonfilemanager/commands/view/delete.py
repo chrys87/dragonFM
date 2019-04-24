@@ -22,7 +22,7 @@ class command():
         return None
     def getShortcut(self):
         return None
-    def run(self, callback = None):
+    def run(self, callback = None):        
         # Get the files and directories that were selected.
         selected = self.selectionManager.getSelectionOrCursorCurrentTab()
                                                                                                                                                                 

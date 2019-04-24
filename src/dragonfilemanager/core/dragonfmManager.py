@@ -145,7 +145,7 @@ class dragonfmManager():
     def getFileManager(self):
         return self.fileManager
     def getViewManager(self):
-        return self.viewManager
+        return self.viewManager   
     def getInputManager(self):
         return self.inputManager
     def getCommandManager(self):
