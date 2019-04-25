@@ -8,7 +8,6 @@ class command():
         self.screen = self.dragonfmManager.getScreen()
         self.settingsManager = self.dragonfmManager.getSettingsManager()
         self.selectionManager = self.dragonfmManager.getSelectionManager()
-        self.viewManager = None
     def shutdown(self):
         pass
     def getName(self):
@@ -22,9 +21,7 @@ class command():
     def getShortcut(self):
         return None
     def run(self, callback = None):
-        if self.viewManager == None:
-            self.viewManager = self.dragonfmManager.getViewManager()
-        folderManager = self.viewManager.getCurrentTab().getFolderManager()
+        folderManager = self.dragonfmManager.getCurrFolderManager()
 
         # Get the files and directories that were selected.
         selected = self.selectionManager.getSelectionOrCursorCurrentTab()

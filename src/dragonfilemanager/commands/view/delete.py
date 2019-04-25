@@ -9,7 +9,6 @@ class command():
         self.screen = self.dragonfmManager.getScreen()
         self.settingsManager = self.dragonfmManager.getSettingsManager()
         self.selectionManager = self.dragonfmManager.getSelectionManager()
-        self.folderManager = self.dragonfmManager.getFolderManager()        
     def shutdown(self):
         pass
     def getName(self):

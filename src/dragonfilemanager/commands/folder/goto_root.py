@@ -19,8 +19,7 @@ class command():
     def getShortcut(self):
         return None
     def run(self, callback = None):
-        if self.viewManager == None:
-            self.viewManager = self.dragonfmManager.getViewManager()
-        self.viewManager.getCurrentTab().getFolderManager().gotoFolder('/')
+        folderManager = self.dragonfmManager.getCurrFolderManager()
+        folderManager.gotoFolder('/')
         if callback:
             callback()

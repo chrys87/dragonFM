@@ -7,7 +7,6 @@ class command():
         self.screen = self.dragonfmManager.getScreen()
         self.settingsManager = self.dragonfmManager.getSettingsManager()
         self.processManager = self.dragonfmManager.getProcessManager()
-        self.viewManager = None
     def shutdown(self):
         pass
     def getName(self):
@@ -21,12 +20,11 @@ class command():
     def getShortcut(self):
         return None
     def run(self, callback = None):
-        if self.viewManager == None:
-            self.viewManager = self.dragonfmManager.getViewManager()
         terminalcmd = self.settingsManager.get('application', 'commandline')
         if terminalcmd == '':
             return
-        location = self.viewManager.getCurrentTab().getFolderManager().getLocation()
+        folderManager = self.dragonfmManager.getCurrFolderManager()
+        location = folderManager.getLocation()
         terminalcmd = terminalcmd.format(shlex.quote(location))
         self.processManager.startExternal(terminalcmd)
         if callback:

@@ -4,7 +4,6 @@ class command():
         self.dragonfmManager = dragonfmManager
         self.screen = self.dragonfmManager.getScreen()
         self.settingsManager = self.dragonfmManager.getSettingsManager()
-        self.viewManager = None
     def shutdown(self):
         pass
     def getName(self):
@@ -18,8 +17,7 @@ class command():
     def getShortcut(self):
         return None
     def run(self, callback = None):
-        if self.viewManager == None:
-            self.viewManager = self.dragonfmManager.getViewManager()
-        self.viewManager.getCurrentTab().getFolderManager().prevEntry()
+        folderManager = self.dragonfmManager.getCurrFolderManager()
+        folderManager.prevEntry()
         if callback:
           callback()
