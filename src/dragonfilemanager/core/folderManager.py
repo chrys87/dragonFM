@@ -13,10 +13,10 @@ class folderManager():
         self.message = ''
         self.location = ''
         self.Path = None
-        self.selection = []
         self.index = 0
         self.entries = {}
         self.keys = []
+        self.selection = []
         self.headerOffset = 0
         self.footerOffset = 0
         self.messageTimer = None
@@ -67,6 +67,8 @@ class folderManager():
             return str(e)
             pass
         return None
+    def getCurrentKey(self):
+        return self.getKeyByIndex(self.getIndex())    
     def updatePage(self):
         index = self.getIndex()
         size = self.getEntryAreaSize()
@@ -118,9 +120,10 @@ class folderManager():
             self.gotoFolder(path, entryName)
         else:
             self.fileManager.openFile(entry, self.getLocation())
+    
     def getCurrentEntry(self):
         try:
-            return self.entries[self.getKeyByIndex(self.getIndex())]
+            return self.entries[self.getCurrentKey()]
         except:
             return None
     def getPositionForIndex(self):
@@ -147,14 +150,16 @@ class folderManager():
     def getPage(self):
         return self.page
     def gotoFolder(self, path, entryName = None):
-        if self.loadentriesFromFolder(path):
+        if self.loadEntriesFromFolder(path):
             self.setLocation(path, entryName)
             self.setNeedRefresh()
             return True
         return False
     def reloadFolder(self):
         self.gotoFolder(self.getLocation())
-    def loadentriesFromFolder(self, path):
+    def loadEntriesFromFolder(self, path):
+        if path != self.getLocation():
+            self.unselectAllEntries()
         if not os.access(path, os.R_OK):
             return False
         if not path.endswith('/'):
@@ -168,7 +173,7 @@ class folderManager():
             fullPath = path + e
             entry = self.fileManager.getInfo(fullPath)
             if entry != None:
-                entries[e] = entry
+                entries[fullPath] = entry
         # sort entries here
         self.entries = entries
         self.keys = list(entries.keys())
@@ -183,12 +188,6 @@ class folderManager():
 
     def handleInput(self, shortcut):
         return self.handleFolderInput(shortcut)
-    def selectCurrent(self):
-        pass
-    def getSelection(self):
-        if self.selection == []:
-            return [self.getEntry()]
-        return self.selection
     def getLocation(self):
         return self.location
     def showMessage(self):
@@ -224,18 +223,56 @@ class folderManager():
             self.screen.addstr(self.headerOffset, pos, c )
             pos += len(c) + 3
         self.headerOffset += 1
-
+    def selectEntry(self, key):
+        if not key:
+            return
+        if key == '':
+            return
+        if not key in self.keys:
+            return
+        if not self.isSelected(key):
+            try:
+                self.selection.append(key)
+            except:
+                pass
+    def unselectEntry(self, key):
+        if self.isSelected(key):
+            try:
+                self.selection.remove(key)
+            except:
+                pass
+    def selectCurrentEntry(self):
+        key = self.getCurrentKey()
+        self.selectEntry(key)
+    def selectAllEntries(self):
+        for key in self.keys:
+            self.selectEntry(key)            
+    def unselectAllEntries(self):
+        self.selection = []
+    def isSelected(self, key):
+        return key in self.selection
+    def getSelection(self):
+        return self.selection.copy()
     def drawEntryList(self):
         for i in range(self.getEntryAreaSize()):
             if i == self.height - self.footerOffset:
                 break
             if self.getPage() * self.getEntryAreaSize() + i >= len(self.entries):
                 break
-            e = self.entries[self.getKeyByIndex(self.getPage() * self.getEntryAreaSize() + i)]
+            key = self.getKeyByIndex(self.getPage() * self.getEntryAreaSize() + i)
+            e = self.entries[key]
             pos = 0
+            #debug
+            #self.screen.addstr(i + self.headerOffset, pos, key)
+            #continue
             for c in self.columns:
-                self.screen.addstr(i + self.headerOffset, pos, e[c] )
-                pos += len(e[c]) + 3
+                if c.lower() == 'selected':
+                    if self.isSelected(key):
+                        self.screen.addstr(i + self.headerOffset, pos, 'selected')
+                        pos += len('selected') + 3
+                else:
+                    self.screen.addstr(i + self.headerOffset, pos, e[c] )
+                    pos += len(e[c]) + 3
             i += 1
 
     def drawFooter(self):
