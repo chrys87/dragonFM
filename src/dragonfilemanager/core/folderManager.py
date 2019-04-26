@@ -31,7 +31,9 @@ class folderManager():
         self.reverseSorting = False
         self.caseSensitiveSorting = False
         self.setSorting(self.settingsManager.get('folder', 'sorting'))
-        self.setReverse(self.settingsManager.getBool('folder', 'reverse'))
+        self.setReverseSorting(self.settingsManager.getBool('folder', 'reverse'))
+        self.setCaseSensitiveSorting(self.settingsManager.getBool('folder', 'casesensitive'))
+        
         self.initLocation(pwd)
     def setColumns(self, columsString):
         self.columns = columsString.split(',')
@@ -44,9 +46,14 @@ class folderManager():
                 self.sorting = ['name']
         except:
             pass     
-    def setReverse(self, reverseSorting):
+    def setReverseSorting(self, reverseSorting):
         try:
             self.reverseSorting = reverseSorting        
+        except:
+            pass
+    def setCaseSensitiveSorting(self, caseSensitiveSorting):
+        try:
+            self.caseSensitiveSorting = caseSensitiveSorting        
         except:
             pass
 
