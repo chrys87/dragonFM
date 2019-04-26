@@ -8,6 +8,7 @@ def chrys_file_size(sizeBytes):
             newSize /= 1024.0
             currUnitIndex += 1
     return '{0} {1}'.format(newSize, units[currUnitIndex])
+
 print(chrys_file_size(102))
 print(chrys_file_size(1024))
 print(chrys_file_size(2500))
@@ -15,6 +16,9 @@ print(chrys_file_size(30090000))
 print(chrys_file_size(200000000000))
 print(chrys_file_size(20000000000000))
 print(chrys_file_size(4000000000000000))
+print(chrys_file_size(4000000000000000000))
+print(chrys_file_size(80000000000000000000000))
+print(chrys_file_size(8006540000000000000000000))
 
 '''    
 def file_size(bytes):
