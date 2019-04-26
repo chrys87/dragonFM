@@ -216,13 +216,11 @@ class folderManager():
         # sort entries here
         self.createdSortedEntries()
         return True
-    def createdSortedEntries(self, entries, key=None, reverse=None):    
-        if key == None:
-            key = self.sorting
-        if reverse == None:
-            reverse = self.reverse
-        self.entries = OrderedDict(sorted(e.items(), reverse=reverse, key=lambda t: t[0]))
+    def createdSortedEntries(self, entries):
+        self.entries = OrderedDict(sorted(entries.items(), reverse=self.reverseSorting, key=self.getSortingKey)
         self.keys = list(entries.keys())
+    def getSortingKey(self, element):
+        return element[0]
     def handleFolderInput(self, shortcut):
         command = self.settingsManager.getShortcut('folder-keyboard', shortcut)
         if command == '':
