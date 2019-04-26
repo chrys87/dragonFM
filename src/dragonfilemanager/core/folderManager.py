@@ -16,7 +16,7 @@ class folderManager():
         self.location = ''
         self.Path = None
         self.index = 0
-        self.entries = {}
+        self.entries = OrderedDict()
         self.keys = []
         self.selection = []
         self.headerOffset = 0
@@ -27,7 +27,7 @@ class folderManager():
         self.page = 0
         self.columns = self.settingsManager.get('folder', 'columns')
         if self.columns == '':
-            self.columns = name
+            self.columns = 'name,selected'
         self.columns = self.columns.split(',')
         self.initLocation(pwd)
     def removeEntry(self, path):
@@ -82,11 +82,9 @@ class folderManager():
         try:
             return self.keys[index]
         except Exception as e:
-            return str(e)
             pass
         return None
-    def getCurrentKey(self):
-        return self.getKeyByIndex(self.getIndex())    
+
     def updatePage(self):
         index = self.getIndex()
         size = self.getEntryAreaSize()
@@ -144,6 +142,9 @@ class folderManager():
             return self.entries[self.getCurrentKey()]
         except:
             return None
+    def getCurrentKey(self):
+        return self.getKeyByIndex(self.getIndex())    
+
     def getPositionForIndex(self):
         index = self.getIndex()
         size = self.getEntryAreaSize()
@@ -193,10 +194,11 @@ class folderManager():
             if entry != None:
                 entries[fullPath] = entry
         # sort entries here
-        self.entries = entries
-        self.keys = list(entries.keys())
+        self.createdSortedEntries()
         return True
-
+    def createdSortedEntries(self, entries):    
+        self.entries = OrderedDict(sorted(entries.items(), key=lambda t: t[1]))
+        self.keys = list(entries.keys())
     def handleFolderInput(self, shortcut):
         command = self.settingsManager.getShortcut('folder-keyboard', shortcut)
         if command == '':
