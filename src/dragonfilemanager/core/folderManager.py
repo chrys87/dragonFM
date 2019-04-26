@@ -2,6 +2,7 @@ import sys, os, time, threading, curses, math
 from pathlib import Path
 from os.path import expanduser
 from operator import itemgetter 
+from collections import OrderedDict
 
 class folderManager():
     def __init__(self, id, dragonfmManager, pwd= ''):
@@ -28,8 +29,24 @@ class folderManager():
         if self.columns == '':
             self.columns = name
         self.columns = self.columns.split(',')
-        self.getInitFolder(pwd)
-    def getInitFolder(self, pwd):
+        self.initLocation(pwd)
+    def removeEntry(self, path):
+        try:
+            self.selection.remove(path)
+        except:
+            pass        
+        try:
+            self.keys.remove(path)
+        except:
+            pass
+        try:
+            del(self.entries[path])
+        except:
+            pass
+        entry = self.getCurrentEntry(self)
+        if entry == None:
+            self.lastEntry()
+    def initLocation(self, pwd):
         currFolder = expanduser(pwd)
         if (currFolder == '') or not os.access(currFolder, os.R_OK):
             currFolder = os.getcwd()
