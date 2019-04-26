@@ -29,6 +29,7 @@ class folderManager():
         self.setColumns(self.settingsManager.get('folder', 'columns'))
         self.sorting = ['name']
         self.reverseSorting = False
+        self.caseSensitiveSorting = False
         self.setSorting(self.settingsManager.get('folder', 'sorting'))
         self.setReverse(self.settingsManager.getBool('folder', 'reverse'))
         self.initLocation(pwd)
@@ -213,13 +214,26 @@ class folderManager():
             if entry != None:
                 entries[fullPath] = entry
         # sort entries here
-        self.createdSortedEntries()
+        self.createdSortedEntries(entries)
         return True
     def createdSortedEntries(self, entries):
-        self.entries = OrderedDict(sorted(entries.items(), reverse=self.reverseSorting, key=self.getSortingKey)
-        self.keys = list(entries.keys())
+        self.entries = OrderedDict(sorted(entries.items(), reverse=self.reverseSorting, key=self.getSortingKey))
+        self.keys = list(self.entries.keys())
     def getSortingKey(self, element):
-        return element[0]
+        #self.screen.addstr(self.headerOffset, 0, str(element))        
+        sortingKey = []
+        try:
+            for column in self.sorting:
+                if isinstance(element[1][column], str):
+                    if self.caseSensitiveSorting:
+                        sortingKey.append(element[1][column])
+                    else:
+                        sortingKey.append(element[1][column].lower())                
+                else:
+                    sortingKey.append(element[1][column])
+        except:
+            return element[0]
+        return sortingKey
     def handleFolderInput(self, shortcut):
         command = self.settingsManager.getShortcut('folder-keyboard', shortcut)
         if command == '':
