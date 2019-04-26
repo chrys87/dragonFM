@@ -25,26 +25,30 @@ class folderManager():
         self.needRefresh = False
         self.height = self.dragonfmManager.getScreenHeight()
         self.page = 0
-        self.columns = self.settingsManager.get('folder', 'columns')
-        if self.columns == '':
-            self.columns = 'name,selected'
-        self.columns = self.columns.split(',')        
-        self.sorting = ''
+        self.columns = []
+        self.setColumns(self.settingsManager.get('folder', 'columns'))
+        self.sorting = []
+        self.reverseSorting = False
         self.setSorting(self.settingsManager.get('folder', 'sorting'))
         self.setReverse(self.settingsManager.getBool('folder', 'reverse'))
         self.initLocation(pwd)
-    def setSorting(self, sorting):
+    def setColumns(self, columsString):
+        self.columns = self.settingsManager.get('folder', 'columns')
+        if self.columns == '':
+            self.columns = 'name,selected'        
+    def setSorting(self, sortingString):
         try:
-            self.sorting = sorting
+            self.sorting = sortingString
             if self.sorting == '':
                 self.sorting = 'name'
+            self.sorting = self.sorting.split(',')
         except:
-            self.sorting = 'name'            
-    def setReverse(self, reverse):
+            pass     
+    def setReverse(self, reverseSorting):
         try:
-            self.reverse = reverse        
+            self.reverseSorting = reverseSorting        
         except:
-            self.reverse = False
+            pass
 
     def removeEntry(self, path):
         try:
@@ -212,8 +216,12 @@ class folderManager():
         # sort entries here
         self.createdSortedEntries()
         return True
-    def createdSortedEntries(self, entries):    
-        self.entries = OrderedDict(sorted(entries.items(), key=lambda t: t[1]))
+    def createdSortedEntries(self, entries, key=None, reverse=None):    
+        if key == None:
+            key = self.sorting
+        if reverse == None:
+            reverse = self.reverse
+        self.entries = OrderedDict(sorted(e.items(), reverse=reverse, key=lambda t: t[0]))
         self.keys = list(entries.keys())
     def handleFolderInput(self, shortcut):
         command = self.settingsManager.getShortcut('folder-keyboard', shortcut)
