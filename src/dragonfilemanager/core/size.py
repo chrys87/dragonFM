@@ -1,3 +1,22 @@
+#!/bin/python3
+def chrys_file_size(sizeBytes):
+    newSize = float(sizeBytes)
+    units = ['B', 'KB', 'MB', 'GB', 'TP', 'PB', 'EB', 'ZB', 'YB']
+    currUnitIndex = 0
+    if newSize >= 1024.0:
+        while (newSize / 1024.0) >= 1.0:
+            newSize /= 1024.0
+            currUnitIndex += 1
+    return '{0} {1}'.format(newSize, units[currUnitIndex])
+print(chrys_file_size(102))
+print(chrys_file_size(1024))
+print(chrys_file_size(2500))
+print(chrys_file_size(5555))
+print(chrys_file_size(355888))
+print(chrys_file_size(30090000))
+print(chrys_file_size(200000000000))
+
+'''    
 def file_size(bytes):
     pb = 0
     tb = 0
@@ -53,4 +72,4 @@ def file_size(bytes):
         message += "KB"
         return message
     return str(b) + "B"
-
+'''
