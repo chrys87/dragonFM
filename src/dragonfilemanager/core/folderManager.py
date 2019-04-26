@@ -1,6 +1,7 @@
 import sys, os, time, threading, curses, math
 from pathlib import Path
 from os.path import expanduser
+from operator import itemgetter 
 
 class folderManager():
     def __init__(self, id, dragonfmManager, pwd= ''):
