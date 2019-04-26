@@ -28,8 +28,24 @@ class folderManager():
         self.columns = self.settingsManager.get('folder', 'columns')
         if self.columns == '':
             self.columns = 'name,selected'
-        self.columns = self.columns.split(',')
+        self.columns = self.columns.split(',')        
+        self.sorting = ''
+        self.setSorting(self.settingsManager.get('folder', 'sorting'))
+        self.setReverse(self.settingsManager.getBool('folder', 'reverse'))
         self.initLocation(pwd)
+    def setSorting(self, sorting):
+        try:
+            self.sorting = sorting
+            if self.sorting == '':
+                self.sorting = 'name'
+        except:
+            self.sorting = 'name'            
+    def setReverse(self, reverse):
+        try:
+            self.reverse = reverse        
+        except:
+            self.reverse = False
+
     def removeEntry(self, path):
         try:
             self.selection.remove(path)
