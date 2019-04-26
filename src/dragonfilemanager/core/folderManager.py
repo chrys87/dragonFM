@@ -8,6 +8,7 @@ class folderManager():
     def __init__(self, id, dragonfmManager, pwd= ''):
         self.dragonfmManager = dragonfmManager
         self.screen = self.dragonfmManager.getScreen()
+        self.height = self.dragonfmManager.getScreenHeight()        
         self.settingsManager = self.dragonfmManager.getSettingsManager()
         self.fileManager = self.dragonfmManager.getFileManager()
         self.commandManager = self.dragonfmManager.getCommandManager()
@@ -23,7 +24,6 @@ class folderManager():
         self.footerOffset = 0
         self.messageTimer = None
         self.needRefresh = False
-        self.height = self.dragonfmManager.getScreenHeight()
         self.page = 0
         self.columns = ['name','selected']
         self.setColumns(self.settingsManager.get('folder', 'columns'))
