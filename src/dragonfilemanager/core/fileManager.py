@@ -38,7 +38,6 @@ class fileManager():
          'object': pathObject,
          'full': fullPath,
          'path': path,
-         'marked': False,
          'type': None,
          'mode': None,
          'ino': None,
