@@ -310,6 +310,12 @@ class folderManager():
     def selectCurrentEntry(self):
         key = self.getCurrentKey()
         return self.selectEntry(key)
+    def uncselectCurrentEntry(self):
+        key = self.getCurrentKey()
+        return self.unselectEntry(key)    
+    def isCurrentEntrySelected(self):
+        key = self.getCurrentKey()
+        return self.isSelected(key)      
     def selectAllEntries(self):
         selected = False
         for key in self.keys:
