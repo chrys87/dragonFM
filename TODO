@@ -10,6 +10,7 @@ It is essential that whatever we use be Unicode-compatible, because we will have
 (DONE): we can just have file manager show the filename, 
 (DONE): Left arrow can take you back to last directory, right arrow can open directory you have selected.
 (DONE): Pressing Enter or right arrow will open directory or file.
+(DONE): Sorting of file list of any directory you open can be alphabetically or by date of last modification. Other criteria would be nice, but this is the minimum.
 (Needs Binding): Home and End takes you to top of current directory or bottom.
 (Needs Binding): Alt+up arrow should go to parent directory, like in pcmanfm etc.
 (Needs Binding): F5 to refresh, in case it is a remote directory.
@@ -38,7 +39,6 @@ When we talk about Tabs, they need not look like a tab on Firefox, for example, 
 
 # Folder View
 (TODO): Search by Typing: Typing makes cursor jump to file beginning in letter or letters that were typed by user.
-(TODO): Sorting of file list of any directory you open can be alphabetically or by date of last modification. Other criteria would be nice, but this is the minimum.
 
 # Context menu
 (TODO): properties / Context menu: Shift+10, and selecting "properties", user can see file size, date of last modification, owner, permissions, etc.
