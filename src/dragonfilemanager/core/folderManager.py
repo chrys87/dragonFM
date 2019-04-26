@@ -287,30 +287,39 @@ class folderManager():
         self.headerOffset += 1
     def selectEntry(self, key):
         if not key:
-            return
+            return False
         if key == '':
-            return
+            return False
         if not key in self.keys:
-            return
+            return False
         if not self.isSelected(key):
             try:
                 self.selection.append(key)
+                return True
             except:
                 pass
+        return False
     def unselectEntry(self, key):
         if self.isSelected(key):
             try:
                 self.selection.remove(key)
+                return True
             except:
                 pass
+        return False
     def selectCurrentEntry(self):
         key = self.getCurrentKey()
-        self.selectEntry(key)
+        return self.selectEntry(key)
     def selectAllEntries(self):
+        selected = False
         for key in self.keys:
-            self.selectEntry(key)            
+            selected = selected or self.selectEntry(key)            
+        return selected
     def unselectAllEntries(self):
-        self.selection = []
+        if self.selection != []:
+            self.selection = []
+            return True
+        return False
     def isSelected(self, key):
         return key in self.selection
     def getSelection(self):

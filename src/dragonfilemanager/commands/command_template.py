@@ -17,4 +17,4 @@ class command():
         return None
     def run(self, callback = None):
         if callback:
-          callback()
+            callback()

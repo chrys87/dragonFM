@@ -29,4 +29,4 @@ class command():
             return
         folderManager.openEntry(currPath, entry=currentEntry)
         if callback:
-          callback()
+            callback()

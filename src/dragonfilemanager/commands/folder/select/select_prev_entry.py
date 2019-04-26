@@ -1,15 +1,15 @@
 class command():
     def __init__(self, dragonfmManager):
         self.dragonfmManager = dragonfmManager
+        self.dragonfmManager = dragonfmManager
         self.screen = self.dragonfmManager.getScreen()
         self.settingsManager = self.dragonfmManager.getSettingsManager()
-        self.viewManager = None
     def shutdown(self):
         pass
     def getName(self):
-        return _('Goto Tab 8')
+        return _('Previous Entry')
     def getDescription(self):
-        return _('Change to tab 8')
+        return _('Move Cursor to previous entry')
     def active(self):
         return True
     def getValue(self):
@@ -17,8 +17,9 @@ class command():
     def getShortcut(self):
         return None
     def run(self, callback = None):
-        if self.viewManager == None:
-            self.viewManager = self.dragonfmManager.getViewManager()
-        self.viewManager.changeTabIndex(8)
+        folderManager = self.dragonfmManager.getCurrFolderManager()
+        folderManager.prevEntry()
+        if folderManager.selectCurrentEntry():
+            folderManager.setNeedRefresh()
         if callback:
             callback()

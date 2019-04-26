@@ -19,4 +19,4 @@ class command():
         folderManager = self.dragonfmManager.getCurrFolderManager()
         folderManager.parentEntry()
         if callback:
-          callback()
+            callback()

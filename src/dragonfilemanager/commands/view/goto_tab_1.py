@@ -21,4 +21,4 @@ class command():
             self.viewManager = self.dragonfmManager.getViewManager()
         self.viewManager.changeTabIndex(1)
         if callback:
-          callback()
+            callback()

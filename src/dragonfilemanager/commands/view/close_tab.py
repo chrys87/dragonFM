@@ -21,4 +21,4 @@ class command():
             self.viewManager = self.dragonfmManager.getViewManager()
         self.viewManager.closeCurrentTab()
         if callback:
-          callback()
+            callback()

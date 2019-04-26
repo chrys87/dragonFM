@@ -18,4 +18,4 @@ class command():
     def run(self, callback = None):
         self.dragonfmManager.stop()
         if callback:
-          callback()
+            callback()
