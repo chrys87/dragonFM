@@ -33,15 +33,14 @@ class folderManager():
         self.setReverse(self.settingsManager.getBool('folder', 'reverse'))
         self.initLocation(pwd)
     def setColumns(self, columsString):
-        self.columns = self.settingsManager.get('folder', 'columns')
+        self.columns = columsString.split(',')
         if self.columns == '':
-            self.columns = 'name,selected'        
+            self.columns = ['name','selected']
     def setSorting(self, sortingString):
         try:
-            self.sorting = sortingString
+            self.sorting = sortingString.split(',')
             if self.sorting == '':
-                self.sorting = 'name'
-            self.sorting = self.sorting.split(',')
+                self.sorting = ['name']
         except:
             pass     
     def setReverse(self, reverseSorting):
