@@ -11,10 +11,10 @@ def chrys_file_size(sizeBytes):
 print(chrys_file_size(102))
 print(chrys_file_size(1024))
 print(chrys_file_size(2500))
-print(chrys_file_size(5555))
-print(chrys_file_size(355888))
 print(chrys_file_size(30090000))
 print(chrys_file_size(200000000000))
+print(chrys_file_size(20000000000000))
+print(chrys_file_size(4000000000000000))
 
 '''    
 def file_size(bytes):
