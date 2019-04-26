@@ -25,9 +25,9 @@ class folderManager():
         self.needRefresh = False
         self.height = self.dragonfmManager.getScreenHeight()
         self.page = 0
-        self.columns = []
+        self.columns = ['name','selected']
         self.setColumns(self.settingsManager.get('folder', 'columns'))
-        self.sorting = []
+        self.sorting = ['name']
         self.reverseSorting = False
         self.setSorting(self.settingsManager.get('folder', 'sorting'))
         self.setReverse(self.settingsManager.getBool('folder', 'reverse'))
