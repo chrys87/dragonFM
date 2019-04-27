@@ -27,9 +27,9 @@ class dragonfmManager():
         self.clipboardManager = clipboardManager.clipboardManager(self)
         self.debugManager = debugManager.debugManager(self)
         self.fileManager = fileManager.fileManager(self)
+        self.selectionManager = selectionManager.selectionManager(self)       
         self.viewManager = None
         self.inputManager = None
-        self.selectionManager = None
         self.commandManager = commandManager.commandManager(self)
 
         self.setProcessName()
@@ -45,7 +45,6 @@ class dragonfmManager():
     def proceed(self):
         self.inputManager = inputManager.inputManager(self)
         self.viewManager = viewManager.viewManager(self)
-        self.selectionManager = selectionManager.selectionManager(self)
         self.update()
         while self.running:
             shortcut = self.inputManager.get()

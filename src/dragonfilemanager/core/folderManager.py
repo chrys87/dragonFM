@@ -170,7 +170,10 @@ class folderManager():
         except:
             return None
     def getCurrentKey(self):
-        return self.getKeyByIndex(self.getIndex())    
+        try:
+            return self.getKeyByIndex(self.getIndex())    
+        except:
+            return None
 
     def getPositionForIndex(self):
         index = self.getIndex()
@@ -244,9 +247,14 @@ class folderManager():
     def handleFolderInput(self, shortcut):
         command = self.settingsManager.getShortcut('folder-keyboard', shortcut)
         if command == '':
-            #self.setMessage(shortcut)
             return False
-        return self.commandManager.runCommand('folder', command)
+        try:
+            result = self.commandManager.runCommand('folder', command)
+            self.setMessage(str(shortcut)+  ' (' +command+') ' +  str(result))
+            return result
+        except Exception as e:
+            self.setMessage(str(shortcut)+  ' (' +command+')'+ str(e))
+         
 
     def handleInput(self, shortcut):
         return self.handleFolderInput(shortcut)

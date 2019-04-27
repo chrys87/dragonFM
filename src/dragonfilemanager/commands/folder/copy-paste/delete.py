@@ -5,6 +5,7 @@ import os, shutil
 class command():
     def __init__(self, dragonfmManager):
         self.dragonfmManager = dragonfmManager
+        self.screen = self.dragonfmManager.getScreen()
         self.settingsManager = self.dragonfmManager.getSettingsManager()
         self.selectionManager = self.dragonfmManager.getSelectionManager()
     def shutdown(self):
@@ -26,16 +27,11 @@ class command():
         selected = self.selectionManager.getSelectionOrCursorCurrentTab()
                                                                                                                                                                 
         # Loop through the files and directories and delete them.
-        for path in selected:
-            try:
-                if os.path.isdir(path):
-                    shutil.rmtree(path)
-                else:
-                    os.remove(path)
-            except Exception as e:
-                pass
-            
-        folderManager.reloadFolder()
-        folderManager.update()
+        for i in selected:
+            if os.is_file(i):
+                os.remove(i)
+            if os.is_dir(i):
+                shutil.rmtree(i)
+        folderManager.setNeedRefresh()
         if callback:
             callback()
