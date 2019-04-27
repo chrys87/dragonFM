@@ -250,10 +250,12 @@ class folderManager():
             return False
         try:
             result = self.commandManager.runCommand('folder', command)
-            self.setMessage(str(shortcut)+  ' (' +command+') ' +  str(result))
+            if self.needRefresh():
+                self.update()
+            self.setMessage('debug: ' + str(shortcut)+  ' (' +command+') ' +  str(result))
             return result
         except Exception as e:
-            self.setMessage(str(shortcut)+  ' (' +command+')'+ str(e))
+            self.setMessage('debug: ' + str(shortcut)+  ' (' +command+')'+ str(e))
          
 
     def handleInput(self, shortcut):

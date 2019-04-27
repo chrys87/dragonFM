@@ -36,6 +36,5 @@ class command():
                 pass
             
         folderManager.reloadFolder()
-        folderManager.update()
         if callback:
             callback()
