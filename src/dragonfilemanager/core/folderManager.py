@@ -319,7 +319,8 @@ class folderManager():
     def selectAllEntries(self):
         selected = False
         for key in self.keys:
-            selected = selected or self.selectEntry(key)            
+            if self.selectEntry(key):
+                selected = True
         return selected
     def unselectAllEntries(self):
         if self.selection != []:
