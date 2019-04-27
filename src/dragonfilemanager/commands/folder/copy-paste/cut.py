@@ -1,11 +1,14 @@
 #!/usr/bin/env python
 
+import shutil
+
 class command():
     def __init__(self, dragonfmManager):
         self.dragonfmManager = dragonfmManager
+        self.screen = self.dragonfmManager.getScreen()
         self.settingsManager = self.dragonfmManager.getSettingsManager()
         self.selectionManager = self.dragonfmManager.getSelectionManager()
-        self.fileManager = self.dragonfmManager.getFileManager()
+        self.clipboardManager = self.dragonfmManager.getClipboardManager()        
     def shutdown(self):
         pass
     def getName(self):
@@ -18,14 +21,13 @@ class command():
         return None
     def getShortcut(self):
         return None
-    def run(self, callback = None):   
+    def run(self, callback = None):
         folderManager = self.dragonfmManager.getCurrFolderManager()
-        
+
         # Get the files and directories that were selected.
-        selection = self.selectionManager.getSelectionOrCursorCurrentTab()
+        selected = self.selectionManager.getSelectionOrCursorCurrentTab()
                                                                                                                                                                 
-        self.fileManager.deleteSelection(selection)
-            
-        folderManager.reloadFolder()
+        self.clipboardManager.setClipboard(selected, operation = 'cut')
+
         if callback:
             callback()

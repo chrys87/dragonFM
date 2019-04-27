@@ -10,6 +10,8 @@ class clipboardManager():
     def setClipboard(self, selection, operation = 'copy'):
         if selection == None:
             return 
+        if selection == []:
+            return         
         self.clipboard = selection.copy()
         self.operation = operation
     def clearClipboard(self):
@@ -20,4 +22,4 @@ class clipboardManager():
     def getOperation(self):
         return self.operation
     def isClipboardEmpty(self):
-        return self.getClipboard() == []
+        return self.getClipboard() == [] or self.getOperation() == ''

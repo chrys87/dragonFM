@@ -255,7 +255,8 @@ class folderManager():
             #self.setMessage('debug: ' + str(shortcut)+  ' (' +command+') ' +  str(result))
             return result
         except Exception as e:
-            self.setMessage('debug: ' + str(shortcut)+  ' (' +command+')'+ str(e))
+            pass
+            #self.setMessage('debug: ' + str(shortcut)+  ' (' +command+')'+ str(e))
          
 
     def handleInput(self, shortcut):

@@ -8,6 +8,7 @@ class command():
         self.screen = self.dragonfmManager.getScreen()
         self.settingsManager = self.dragonfmManager.getSettingsManager()
         self.selectionManager = self.dragonfmManager.getSelectionManager()
+        self.clipboardManager = self.dragonfmManager.getClipboardManager()        
     def shutdown(self):
         pass
     def getName(self):
@@ -26,11 +27,7 @@ class command():
         # Get the files and directories that were selected.
         selected = self.selectionManager.getSelectionOrCursorCurrentTab()
                                                                                                                                                                 
-        # Loop through the files and directories and copy them.
-        for i in selected:
-            try:
-                shutil.copy2(i, folderManager.getLocation())
-            except:
-                pass
+        self.clipboardManager.setClipboard(selected)
+
         if callback:
             callback()

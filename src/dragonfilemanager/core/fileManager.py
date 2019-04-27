@@ -1,4 +1,4 @@
-import sys, os, pwd, grp, curses, mimetypes, shlex
+import sys, os, pwd, grp, curses, mimetypes, shlex, shutil
 from pathlib import Path
 
 magicAvailable = False
@@ -15,12 +15,31 @@ class fileManager():
         self.screen = self.dragonfmManager.getScreen()
         self.settingsManager = self.dragonfmManager.getSettingsManager()
         self.processManager = self.dragonfmManager.getProcessManager()
+        self.clipboardManager = self.dragonfmManager.getClipboardManager()
         self.magicMime = None
         try:
             self.magicMime = magic.Magic(mime=True)
         except:
             pass
         self.mime = mimetypes.MimeTypes()
+    def deleteSelection(self, selection):
+        if selection == None:
+            return
+        if selection == []:
+            return
+        # Loop through the files and directories and delete them.
+        for fullPath in selection:
+            self.deleteEntry(fullPath)
+    def deleteEntry(self, fullPath):
+        try:
+            if os.path.isdir(fullPath):
+                shutil.rmtree(fullPath)
+            else:
+                os.remove(fullPath)
+        except Exception as e:
+            pass             
+    def pasteClipboard(self):
+        pass
     def getInfo(self, fullPath):
         if fullPath == '':
             return None
