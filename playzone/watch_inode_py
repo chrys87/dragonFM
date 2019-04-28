@@ -1,0 +1,36 @@
+#!/bin/python
+import inotify.adapters
+import inotify
+
+def watch():
+    '''
+    # all events
+    DRAGON_INOTIFY_EVENTS = (inotify.constants.IN_ACCESS | inotify.constants.IN_MODIFY |
+        inotify.constants.IN_ATTRIB | inotify.constants.IN_CLOSE_WRITE |
+        inotify.constants.IN_CLOSE_NOWRITE | inotify.constants.IN_OPEN |
+        inotify.constants.IN_MOVED_FROM | inotify.constants.IN_MOVED_TO | 
+        inotify.constants.IN_CREATE | inotify.constants.IN_DELETE | 
+        inotify.constants.IN_DELETE_SELF | inotify.constants.IN_MOVE_SELF)
+    '''
+    DRAGON_INOTIFY_EVENTS = (inotify.constants.IN_ACCESS | inotify.constants.IN_MODIFY |
+        inotify.constants.IN_ATTRIB | inotify.constants.IN_CLOSE_WRITE |
+        inotify.constants.IN_CLOSE_NOWRITE | inotify.constants.IN_OPEN |
+        inotify.constants.IN_MOVED_FROM | inotify.constants.IN_MOVED_TO | 
+        inotify.constants.IN_CREATE | inotify.constants.IN_DELETE | 
+        inotify.constants.IN_DELETE_SELF | inotify.constants.IN_MOVE_SELF)
+
+    patchWatcher = inotify.adapters.Inotify()
+    patchWatcher.add_watch('/tmp', mask=DRAGON_INOTIFY_EVENTS)
+    with open('/tmp/test_file', 'w'):
+        pass
+    while True:
+    
+        events = patchWatcher.event_gen(yield_nones=False, timeout_s=1)
+        print(events)
+        for event in events:
+            (_, type_names, path, filename) = event
+            print("PATH=[{}] FILENAME=[{}] EVENT_TYPES={}".format(
+                path, filename, type_names))
+
+if __name__ == '__main__':
+    watch() 

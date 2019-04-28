@@ -3,12 +3,12 @@ import sys, os, curses
 class selectionManager():
     def __init__(self, dragonfmManager):
         self.dragonfmManager = dragonfmManager
-        self.settingsManager = self.dragonfmManager.getSettingsManager()       
+        self.settingsManager = self.dragonfmManager.getSettingsManager()
     def getSelectionCurrentTab(self):
-        folderManager = self.dragonfmManager.getCurrFolderManager()        
+        folderManager = self.dragonfmManager.getCurrFolderManager()
         return folderManager.getSelection()
     def getCursorCurrentTab(self):
-        folderManager = self.dragonfmManager.getCurrFolderManager()        
+        folderManager = self.dragonfmManager.getCurrFolderManager() 
         return folderManager.getCurrentKey()
     def getSelectionOrCursorCurrentTab(self):
         #return [self.getCursorCurrentTab()]

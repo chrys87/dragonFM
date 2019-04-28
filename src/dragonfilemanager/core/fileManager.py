@@ -38,8 +38,35 @@ class fileManager():
                 os.remove(fullPath)
         except Exception as e:
             pass             
+    def copyEntry(self, fullPath, destination):
+        try:
+            if os.path.isdir(fullPath):
+                shutil.copytree(fullPath, destination, symlinks=False, ignore=None)
+            else:
+                shutil.copy2(fullPath, destination)
+        except Exception as e:
+            pass         
+            
+    def moveEntry(self, fullPath, destination):
+            try:
+                shutil.move(fullPath, destination)
+            except:
+                pass              
     def pasteClipboard(self):
-        pass
+        if self.clipboardManager.isClipboardEmpty():
+            return
+        # Loop through the files and directories and copy them.
+        folderManager = self.dragonfmManager.getCurrFolderManager()
+        
+        operation = self.clipboardManager.getOperation()
+        clipboard = self.clipboardManager.getClipboard()
+        for fullPath in clipboard:
+            if operation == 'copy':
+                self.copyEntry(fullPath, folderManager.getLocation())
+            elif operation == 'cut':
+                self.moveEntry(fullPath, folderManager.getLocation())
+        if operation in ['cut']:
+            self.clipboardManager.clearClipboard()
     def getInfo(self, fullPath):
         if fullPath == '':
             return None
