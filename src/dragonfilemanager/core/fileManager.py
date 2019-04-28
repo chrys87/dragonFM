@@ -60,13 +60,15 @@ class fileManager():
         
         operation = self.clipboardManager.getOperation()
         clipboard = self.clipboardManager.getClipboard()
+
+        if operation in ['cut']:
+            self.clipboardManager.clearClipboard()
+        
         for fullPath in clipboard:
             if operation == 'copy':
                 self.copyEntry(fullPath, folderManager.getLocation())
             elif operation == 'cut':
                 self.moveEntry(fullPath, folderManager.getLocation())
-        if operation in ['cut']:
-            self.clipboardManager.clearClipboard()
     def getInfo(self, fullPath):
         if fullPath == '':
             return None
