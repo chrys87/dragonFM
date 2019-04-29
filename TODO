@@ -87,4 +87,6 @@ Paste (Ctrl + V)
 
 # Binding help
 showkey -a
-cat -a
+cat -v
+https://invisible-island.net/ncurses/ncurses.faq.html#modified_keys
+https://stackoverflow.com/questions/9750588/how-to-get-ctrl-shift-or-alt-with-getch-ncurses
