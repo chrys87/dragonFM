@@ -106,7 +106,8 @@ class dragonfmManager():
         curses.nonl()
         curses.start_color()
         curses.noecho()
-        curses.cbreak()
+        #curses.cbreak()
+        curses.raw()        
         screen.keypad(True)        
         self.original_sigint_handler = signal.signal(signal.SIGINT, signal.SIG_IGN)
         self.setScreen(screen)
@@ -116,6 +117,7 @@ class dragonfmManager():
     def leave(self):
         self.setDisabled(True)
         curses.nl()
+        curses.noraw()
         curses.echo()
         curses.nocbreak()
         self.screen.keypad(False)
