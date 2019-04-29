@@ -22,23 +22,33 @@ It is essential that whatever we use be Unicode-compatible, because we will have
 (Needs Binding): Control+Tab and Control+Shift+Tab to move from one tab to another.
 When we talk about Tabs, they need not look like a tab on Firefox, for example, but it would be nice if we could quickly jump between entirely unrelated directories, like we jump between different web sites we have opened. So visually, they need not be side-by-side, they can entirely replace each other on the screen or not even show visually. The important thing is the functionality.
 (Needs Binding): F1 for help if file manager has one, or customizable so we can write our own help file.
-
-(BUG): Control+w to close current tab if there are multiple tabs opened, or close entire file manager if just one tab is opened, just like Firefox.
+(Needs Binding):Control+x Cut
+(Needs Binding): Control+c Copy
 
 # basic file operations (Priority)
 (TODO): control shift n, to create a new directory in current directory.
 (TODO): control alt n to create a new text file in current directory. Equivalent of touch command.
-(TODO):Control+x Cut
-(TODO): Control+c Copy
 (TODO): Control+v paste
 (TODO): F2 to rename whatever the current file or directory is.
 
 # input (Priority)
 (TODO): Nano Input hack
+(TODO): Input Dialog (rename, create, confirmation)
 (TODO): Keybindings similar to nautilus
 
-# Folder View
+# Folder View (Priority)
 (TODO): Search by Typing: Typing makes cursor jump to file beginning in letter or letters that were typed by user.
+(TODO): Update if current folder changes
+(TODO): Nice Formatting for column view (align them)
+
+# general
+(TODO): proper view update
+(TODO): message area
+(BUG): Control+w to close current tab if there are multiple tabs opened, or close entire file manager if just one tab is opened, just like Firefox.
+
+# Process View
+(TODO): show current copy / move processes
+(TODO): be able to abbort them
 
 # Context menu
 (TODO): properties / Context menu: Shift+10, and selecting "properties", user can see file size, date of last modification, owner, permissions, etc.
