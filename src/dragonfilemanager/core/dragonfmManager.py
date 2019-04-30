@@ -47,12 +47,14 @@ class dragonfmManager():
         self.viewManager = viewManager.viewManager(self)
         self.update()
         while self.running:
-            shortcut = self.inputManager.get()
+            shortcut = str(self.inputManager.get())
             if shortcut:
                 self.handleInput(shortcut)
             self.update()
         self.shutdown()
     def update(self):
+        if not self.running:
+            return
         self.viewManager.update()
     def handleApplicationInput(self, shortcut):
         command = self.settingsManager.getShortcut('application-keyboard', shortcut)
@@ -77,7 +79,6 @@ class dragonfmManager():
             return
         self.screen = screen
         self.height, self.width = self.screen.getmaxyx()
-        self.screen.keypad(True)
 
     def setProcessName(self, name = 'dragonFM'):
         """Attempts to set the process name to 'dragonFM'."""
@@ -108,7 +109,7 @@ class dragonfmManager():
         curses.noecho()
         #curses.cbreak()
         curses.raw()        
-        screen.keypad(True)        
+        screen.keypad(False)        
         self.original_sigint_handler = signal.signal(signal.SIGINT, signal.SIG_IGN)
         self.setScreen(screen)
         self.setDisabled(False)        
@@ -119,7 +120,7 @@ class dragonfmManager():
         curses.nl()
         curses.noraw()
         curses.echo()
-        curses.nocbreak()
+        #curses.nocbreak()
         self.screen.keypad(False)
         self.clear()
         curses.endwin()
@@ -130,6 +131,8 @@ class dragonfmManager():
         self.screen.move(y, x)
     def setDisabled(self, disabled):
         self.disabled = disabled
+    def setIsRunning(self, running):
+        self.running = running
     # Get
     def getScreenWidth(self):
         return self.width
@@ -161,3 +164,5 @@ class dragonfmManager():
         return self.dragonFmPath
     def getDisabled(self):
         return self.disabled
+    def getIsRunning(self):
+        return self.running
