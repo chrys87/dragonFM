@@ -16,6 +16,7 @@ class folderManager():
         self.message = ''
         self.location = ''
         self.Path = None
+        self.keyDebugging = False
         self.index = 0
         self.entries = OrderedDict()
         self.keys = []
@@ -246,18 +247,22 @@ class folderManager():
         return sortingKey
     def handleFolderInput(self, shortcut):
         command = self.settingsManager.getShortcut('folder-keyboard', shortcut)
+        #self.keyDebugging = True
         if command == '':
-            self.setMessage('debug: ' + str(shortcut) +  str(ord(shortcut[0]) == 3))
+            if self.keyDebugging:
+                self.setMessage('debug: ' + str(shortcut) +  str(ord(shortcut[0]) == 3))
             return False
         try:
             result = self.commandManager.runCommand('folder', command)
             if self.needRefresh:
                 self.update()
-            self.setMessage('debug: ' + str(shortcut)+  ' (' +command+') ' +  str(result))
+            if self.keyDebugging:
+                self.setMessage('debug: ' + str(shortcut)+  ' (' +command+') ' +  str(result))
             return result
         except Exception as e:
             pass
-            self.setMessage('debug: ' + str(shortcut)+  ' (' +command+')'+ str(e))
+            if self.keyDebugging:
+                self.setMessage('debug: ' + str(shortcut)+  ' (' +command+')'+ str(e))
          
 
     def handleInput(self, shortcut):

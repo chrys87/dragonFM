@@ -1,4 +1,4 @@
-import sys, os, threading, curses, time, inspect, signal
+import sys, os, threading, curses, time, inspect, termios, fcntl
 
 from dragonfilemanager.core import i18n
 from dragonfilemanager.core import settingsManager
@@ -14,6 +14,8 @@ from dragonfilemanager.core import selectionManager
 class dragonfmManager():
     def __init__(self):
         self.running = True
+        self.old_term_attr = None
+        self.new_term_attr = None
         self.disabled = True
         self.screen = None
         self.height = 0
@@ -32,6 +34,7 @@ class dragonfmManager():
         self.inputManager = None
         self.commandManager = commandManager.commandManager(self)
 
+        self.initTerminal()
         self.setProcessName()
 
     def start(self):
@@ -64,7 +67,26 @@ class dragonfmManager():
     def handleInput(self, shortcut):
         if not self.handleApplicationInput(shortcut):
             return self.viewManager.handleInput(shortcut)
-
+    def initTerminal(self):
+        if self.old_term_attr == None:
+            self.old_term_attr = termios.tcgetattr(sys.stdin)    
+        self.new_term_attr = self.old_term_attr.copy()
+        # Disable extended input and output processing in our terminal        
+        self.new_term_attr[3] &= ~termios.IEXTEN
+        self.new_term_attr[3] &= ~termios.OPOST
+        # Enable interpretation of the flow control characters in our terminal        
+        self.new_term_attr[3] &= ~termios.IXON
+        # Disable interpretation of the special control keys in our terminal
+        self.new_term_attr[3] &= ~termios.ISIG
+        # don't handle ^C / ^Z / ^\
+        self.new_term_attr[6][termios.VINTR] = 0
+        self.new_term_attr[6][termios.VQUIT] = 0
+        self.new_term_attr[6][termios.VSUSP] = 0
+        # store the old fcntl flags
+        self.oldflags = fcntl.fcntl(sys.stdin, fcntl.F_GETFL)
+        # fcntl.fcntl(self.pty, fcntl.F_SETFD, fcntl.FD_CLOEXEC)
+        # make the PTY non-blocking
+        # fcntl.fcntl(sys.stdin, fcntl.F_SETFL, self.oldflags | os.O_NONBLOCK)         
     def stop(self):
         self.running = False
     def shutdown(self):
@@ -104,13 +126,14 @@ class dragonfmManager():
         return False
     def enter(self):
         screen = curses.initscr()
+        if self.new_term_attr != None:
+            termios.tcsetattr(sys.stdin, termios.TCSANOW, self.new_term_attr)      
+        curses.raw()
         curses.nonl()
-        curses.start_color()
         curses.noecho()
+        curses.start_color()
         #curses.cbreak()
-        curses.raw()        
-        screen.keypad(False)        
-        self.original_sigint_handler = signal.signal(signal.SIGINT, signal.SIG_IGN)
+        screen.keypad(True)
         self.setScreen(screen)
         self.setDisabled(False)        
     def captureSignal(self, siginit, frame):
@@ -125,7 +148,8 @@ class dragonfmManager():
         self.clear()
         curses.endwin()
         sys.stdout.flush()
-        signal.signal(signal.SIGINT, self.original_sigint_handler)
+        if self.old_term_attr != None:
+            termios.tcsetattr(sys.stdin, termios.TCSANOW, self.old_term_attr)
 
     def setCursor(self, y, x):
         self.screen.move(y, x)
