@@ -28,9 +28,15 @@ class fileManager():
             return
         if selection == []:
             return
+        valueParam = {}
+        valueParam['selection'] = selection
+        self.processManager.startInternal('remove', description = '', 
+            process = self.deleteSelectionThread, value=valueParam.copy())
+    def deleteSelectionThread(self, valueParam):
+        selection = valueParam['selection']
         # Loop through the files and directories and delete them.
         for fullPath in selection:
-            self.deleteEntry(fullPath)
+            self.deleteEntry(fullPath)        
     def deleteEntry(self, fullPath):
         try:
             destPath = Path(fullPath)            
@@ -70,14 +76,14 @@ class fileManager():
         clipboard = self.clipboardManager.getClipboard()
         newLocation = folderManager.getLocation()
         
-        value = {}
-        value['operation'] = operation
-        value['clipboard'] = clipboard
-        value['newLocation'] = newLocation
+        valueParam = {}
+        valueParam['operation'] = operation
+        valueParam['clipboard'] = clipboard
+        valueParam['newLocation'] = newLocation
         if operation in ['cut']:
             self.clipboardManager.clearClipboard()
         self.processManager.startInternal(operation, description = '', 
-            process = self.pasteClipboardThread, value=value.copy())
+            process = self.pasteClipboardThread, value=valueParam.copy())
     def pasteClipboardThread(self, value):
         operation = value['operation']
         clipboard = value['clipboard']
