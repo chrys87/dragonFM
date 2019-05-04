@@ -26,6 +26,5 @@ class command():
                                                                                                                                                                 
         self.fileManager.deleteSelection(selection)
             
-        folderManager.reloadFolder()
         if callback:
             callback()
