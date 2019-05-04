@@ -376,8 +376,14 @@ class folderManager():
                         self.screen.addstr(i + self.headerOffset, pos, 'selected')
                         pos += len('selected') + 3
                 else:
-                    self.screen.addstr(i + self.headerOffset, pos, e[c] )
-                    pos += len(e[c]) + 3
+                    try:
+                        self.screen.addstr(i + self.headerOffset, pos, str(e[c]) )
+                        if isinstance(e[c], str):
+                            pos += len(e[c]) + 3
+                        else:
+                            pos += 20
+                    except Exception as err:
+                        self.screen.addstr(0, 0, str(err))
             i += 1
 
     def drawFooter(self):
