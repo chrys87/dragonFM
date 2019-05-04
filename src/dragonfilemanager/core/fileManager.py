@@ -1,5 +1,6 @@
 import sys, os, pwd, grp, curses, mimetypes, shlex, shutil
 from pathlib import Path
+from distutils.dir_util import copy_tree
 
 magicAvailable = False
 try:
@@ -32,24 +33,31 @@ class fileManager():
             self.deleteEntry(fullPath)
     def deleteEntry(self, fullPath):
         try:
-            if os.path.isdir(fullPath):
-                shutil.rmtree(fullPath)
+            destPath = Path(fullPath)            
+            if destPath.is_dir():
+                shutil.rmtree(str(destPath))
             else:
-                os.remove(fullPath)
+                os.remove(str(destPath))
         except Exception as e:
             pass             
     def copyEntry(self, fullPath, destination):
         try:
-            if os.path.isdir(fullPath):
-                shutil.copytree(fullPath, destination, symlinks=False, ignore=None)
+            sourcePath = Path(fullPath)
+            destPath = Path(destination)
+            if sourcePath.is_dir():
+                shutil.copytree(str(sourcePath), 
+                    "{0}/{1}".format(destPath, sourcePath.name),
+                    symlinks=False, ignore=None)
             else:
-                shutil.copy2(fullPath, destination)
+                shutil.copy2(str(sourcePath), str(destPath))
         except Exception as e:
             pass         
             
     def moveEntry(self, fullPath, destination):
             try:
-                shutil.move(fullPath, destination)
+                sourcePath = Path(fullPath)
+                destPath = Path(destination)                
+                shutil.move(str(sourcePath), str(destPath))
             except:
                 pass              
     def pasteClipboard(self):
