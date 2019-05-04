@@ -6,16 +6,49 @@ class processManager():
         self.screen = self.dragonfmManager.getScreen()
         self.settingsManager = self.dragonfmManager.getSettingsManager()
         self.externalStarted = False
+        self.processListLock = threading.RLock()
         self.internalProcesses = {}
         # process: id, name, description, process, postProcess, preProcess, value
-    def startInternal(self, name, description = '', value = None, process = None, postProcess = None, preProcess = None):
+    def startInternal(self, name, description = '', process = None , value = None, preProcess = None, postProcess = None):
         if process == None:
-            return None
+            return
+        id = self.getNewProcessID()
+        if id == -1:
+            return
+        self.processListLock.acquire(True)
+        self.internalProcesses[id] = threading.Thread(
+            target=self.internalProcess, args=(id, name, description, process, value, preProcess, postProcess)
+        )
+        self.processListLock.release()
+        self.internalProcesses[id].start()
+    def internalProcess(self, id, name, description, process, value, preProcess, postProcess):
+        if preProcess != None:
+            if value != None:
+                preProcess(value)
+            else:
+                preProcess()
+        if process != None:
+            if value != None:
+                process(value)
+            else:
+                process()
+        if postProcess != None:
+            if value != None:
+                postProcess(value)
+            else:
+                postProcess()
+        self.stopInternal(id)
     def getNewProcessID(self):
-        return 1
-    def stopInternal(self, id):
+        ids = list(self.internalProcesses.keys())
+        for id in range(1000000):
+            if not id in ids:
+                return id
+        return -1
+    def stopInternal(self, id):     
         try:
+            self.processListLock.acquire(True)
             del self.internalProcesses[id]
+            self.processListLock.release()
         except:
             pass
     def updateInternal(self, id, property, value):

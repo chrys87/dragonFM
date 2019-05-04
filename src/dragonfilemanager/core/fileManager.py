@@ -60,15 +60,25 @@ class fileManager():
         
         operation = self.clipboardManager.getOperation()
         clipboard = self.clipboardManager.getClipboard()
-
+        newLocation = folderManager.getLocation()
+        
+        value = {}
+        value['operation'] = operation
+        value['clipboard'] = clipboard
+        value['newLocation'] = newLocation
         if operation in ['cut']:
             self.clipboardManager.clearClipboard()
-        
+        self.processManager.startInternal(operation, description = '', 
+            process = self.pasteClipboardThread, value=value.copy())
+    def pasteClipboardThread(self, value):
+        operation = value['operation']
+        clipboard = value['clipboard']
+        newLocation = value['newLocation']
         for fullPath in clipboard:
             if operation == 'copy':
-                self.copyEntry(fullPath, folderManager.getLocation())
+                self.copyEntry(fullPath, newLocation)
             elif operation == 'cut':
-                self.moveEntry(fullPath, folderManager.getLocation())
+                self.moveEntry(fullPath, newLocation)
     def getInfo(self, fullPath):
         if fullPath == '':
             return None
