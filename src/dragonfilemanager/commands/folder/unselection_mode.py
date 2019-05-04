@@ -7,9 +7,9 @@ class command():
     def shutdown(self):
         pass
     def getName(self):
-        return _('Toggle selection')
+        return _('Unselection Mode')
     def getDescription(self):
-        return _('Select or Unselect the current element')
+        return _('Unselect on navigation')
     def active(self):
         return True
     def getValue(self):
@@ -18,10 +18,6 @@ class command():
         return None
     def run(self, callback = None):
         folderManager = self.dragonfmManager.getCurrFolderManager()
-        if folderManager.isCurrentEntrySelected():
-            folderManager.uncselectCurrentEntry()
-        else:    
-            folderManager.selectCurrentEntry()
-        folderManager.setNeedRefresh()
+        folderManager.setSelectionMode(0)
         if callback:
             callback()

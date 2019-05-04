@@ -25,6 +25,7 @@ class folderManager():
         self.footerOffset = 0
         self.messageTimer = None
         self.needRefresh = False
+        self.selectionMode = 0 # 0 = unselect on navigation, 1 = select on navigation, 2 = ignore
         self.page = 0
         self.columns = ['name','selected']
         self.setColumns(self.settingsManager.get('folder', 'columns'))
@@ -47,6 +48,16 @@ class folderManager():
                 self.sorting = ['name']
         except:
             pass     
+    def setSelectionMode(self, mode):
+        self.selectionMode = mode
+    def getSelectionMode(self):
+        return self.selectionMode
+    def nextSelectionMode(self):
+        mode = self.getSelectionMode()
+        mode += 1
+        if mode > 2:
+            mode = 0
+        self.setSelectionMode(mode)
     def setReverseSorting(self, reverseSorting):
         try:
             self.reverseSorting = reverseSorting        
