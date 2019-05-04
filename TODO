@@ -11,6 +11,9 @@ It is essential that whatever we use be Unicode-compatible, because we will have
 (DONE): Left arrow can take you back to last directory, right arrow can open directory you have selected.
 (DONE): Pressing Enter or right arrow will open directory or file.
 (DONE): Sorting of file list of any directory you open can be alphabetically or by date of last modification. Other criteria would be nice, but this is the minimum.
+(DONE):Control+x Cut
+(DONE): Control+c Copy
+(DONE): Control+v paste
 (Needs Binding): Home and End takes you to top of current directory or bottom.
 (Needs Binding): Alt+up arrow should go to parent directory, like in pcmanfm etc.
 (Needs Binding): F5 to refresh, in case it is a remote directory.
@@ -22,13 +25,10 @@ It is essential that whatever we use be Unicode-compatible, because we will have
 (Needs Binding): Control+Tab and Control+Shift+Tab to move from one tab to another.
 When we talk about Tabs, they need not look like a tab on Firefox, for example, but it would be nice if we could quickly jump between entirely unrelated directories, like we jump between different web sites we have opened. So visually, they need not be side-by-side, they can entirely replace each other on the screen or not even show visually. The important thing is the functionality.
 (Needs Binding): F1 for help if file manager has one, or customizable so we can write our own help file.
-(Needs Binding):Control+x Cut
-(Needs Binding): Control+c Copy
 
 # basic file operations (Priority)
 (TODO): control shift n, to create a new directory in current directory.
 (TODO): control alt n to create a new text file in current directory. Equivalent of touch command.
-(TODO): Control+v paste
 (TODO): F2 to rename whatever the current file or directory is.
 
 # input (Priority)
