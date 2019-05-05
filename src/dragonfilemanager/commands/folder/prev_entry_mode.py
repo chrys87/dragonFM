@@ -17,10 +17,7 @@ class command():
     def getShortcut(self):
         return None
     def run(self, callback = None):
-        folderManager = self.dragonfmManager.getCurrFolderManager()
-        if folderManager.getSelectionMode() == 1:
-            if folderManager.selectCurrentEntry():
-                folderManager.setNeedRefresh()          
+        folderManager = self.dragonfmManager.getCurrFolderManager()        
         folderManager.prevEntry()
         # unselection mode
         if folderManager.getSelectionMode() == 0:

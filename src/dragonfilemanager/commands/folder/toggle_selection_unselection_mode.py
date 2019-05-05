@@ -20,7 +20,11 @@ class command():
         folderManager = self.dragonfmManager.getCurrFolderManager()
         if folderManager.getSelectionMode() == 0:
             folderManager.setSelectionMode(1)
+            if folderManager.selectCurrentEntry():
+                folderManager.setNeedRefresh()              
         else:
-            folderManager.setSelectionMode(0)
+            folderManager.setSelectionMode(0)       
+            if folderManager.unselectAllEntries():
+                folderManager.setNeedRefresh()            
         if callback:
             callback()
