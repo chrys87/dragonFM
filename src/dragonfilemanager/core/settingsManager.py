@@ -90,7 +90,7 @@ class settingsManager():
         value = ''
         try:
             value = self.configParser.get(section, setting)
-        except:
+        except Exception as e:
             try:
                 value = str(self.settings[section][setting])
             except:

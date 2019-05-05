@@ -367,19 +367,15 @@ class folderManager():
             #self.screen.addstr(i + self.headerOffset, pos, key)
             #continue
             for c in self.columns:
-                if c.lower() == 'selected':
+                lowerColumn = c.lower()
+                if lowerColumn == 'selected':
                     if self.isSelected(key):
                         self.screen.addstr(i + self.headerOffset, pos, 'selected')
                         pos += len('selected') + 3
                 else:
-                    try:
-                        self.screen.addstr(i + self.headerOffset, pos, str(e[c]) )
-                        if isinstance(e[c], str):
-                            pos += len(e[c]) + 3
-                        else:
-                            pos += 20
-                    except Exception as err:
-                        self.screen.addstr(0, 0, str(err))
+                    formattedValue = self.fileManager.formatColumn(lowerColumn, e[lowerColumn])
+                    self.screen.addstr(i + self.headerOffset, pos, formattedValue )
+                    pos += len(formattedValue) + 3
             i += 1
 
     def drawFooter(self):
