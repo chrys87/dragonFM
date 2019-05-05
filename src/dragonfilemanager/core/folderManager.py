@@ -260,16 +260,16 @@ class folderManager():
         debug = self.settingsManager.getBool('debug', 'input')
         if command == '':
             if debug:
-                self.setMessage('debug Sequence:{0} '.format(shortcut))
+                self.setMessage('debug Sequence: {0}'.format(shortcut))
             return False
         try:
             result = self.commandManager.runCommand('folder', command)
             if debug:
-                self.setMessage('debug Sequence:{0} Command:{1} Command Success:{2}'.format(shortcut, command, result))
+                self.setMessage('debug Sequence: {0} Command: {1} Command Success: {2}'.format(shortcut, command, result))
             return result
         except Exception as e:
             if debug:
-                self.setMessage('debug Sequence:{0} Command:{1} Error:{2}'.format(shortcut, command, e))        
+                self.setMessage('debug Sequence: {0} Command: {1} Error: {2}'.format(shortcut, command, e))        
 
     def handleInput(self, shortcut):
         return self.handleFolderInput(shortcut)
