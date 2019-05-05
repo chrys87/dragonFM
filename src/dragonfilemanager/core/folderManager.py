@@ -217,7 +217,8 @@ class folderManager():
             return True
         return False
     def reloadFolder(self):
-        self.gotoFolder(self.getLocation())
+        entryName = self.getCurrentKey()
+        self.gotoFolder(self.getLocation(), entryName)
     def loadEntriesFromFolder(self, path):
         if path != self.getLocation():
             self.unselectAllEntries()
