@@ -18,6 +18,9 @@ class command():
         return None
     def run(self, callback = None):
         folderManager = self.dragonfmManager.getCurrFolderManager()
+        if folderManager.getSelectionMode() == 1:
+            if folderManager.selectCurrentEntry():
+                folderManager.setNeedRefresh()          
         folderManager.prevEntry()
         # unselection mode
         if folderManager.getSelectionMode() == 0:
