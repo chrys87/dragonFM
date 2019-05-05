@@ -275,6 +275,12 @@ class fileManager():
             return stat.filemode(value)
         except:
             return ''
+    def formatLink(self, value):
+        try:
+            if value == True:
+                return _('Link')
+        except:
+            return ''        
     def formatColumn(self, column, value):
         if column == 'size':
             return str(self.formatSize(value))
@@ -282,5 +288,7 @@ class fileManager():
             return str(self.formatTimestamp(value))
         elif column == 'mode':
             return str(self.formatMode(value))
+        elif column == 'link':
+            return str(self.formatLink(value))
         else:
             return str(value)
