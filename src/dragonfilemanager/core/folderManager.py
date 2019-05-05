@@ -9,6 +9,7 @@ class folderManager():
         self.dragonfmManager = dragonfmManager
         self.screen = self.dragonfmManager.getScreen()
         self.height = self.dragonfmManager.getScreenHeight()        
+        self.width = self.dragonfmManager.getScreenWidth()
         self.settingsManager = self.dragonfmManager.getSettingsManager()
         self.fileManager = self.dragonfmManager.getFileManager()
         self.commandManager = self.dragonfmManager.getCommandManager()
@@ -371,11 +372,12 @@ class folderManager():
                 if lowerColumn == 'selected':
                     if self.isSelected(key):
                         self.screen.addstr(i + self.headerOffset, pos, 'selected')
-                        pos += len('selected') + 3
+                        pos += len('selected') + 2
                 else:
                     formattedValue = self.fileManager.formatColumn(lowerColumn, e[lowerColumn])
-                    self.screen.addstr(i + self.headerOffset, pos, formattedValue )
-                    pos += len(formattedValue) + 3
+                    if i + len(formattedValue) < self.width:
+                        self.screen.addstr(i + self.headerOffset, pos, formattedValue )
+                        pos += len(formattedValue) + 2
             i += 1
 
     def drawFooter(self):
