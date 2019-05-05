@@ -79,11 +79,12 @@ class dragonfmManager():
         # Disable interpretation of the special control keys in our terminal
         self.new_term_attr[3] &= ~termios.ISIG
         # don't handle ^C / ^Z / ^\
+        self.new_term_attr[6] = self.old_term_attr[6].copy()
         self.new_term_attr[6][termios.VINTR] = 0
         self.new_term_attr[6][termios.VQUIT] = 0
         self.new_term_attr[6][termios.VSUSP] = 0
         # store the old fcntl flags
-        self.oldflags = fcntl.fcntl(sys.stdin, fcntl.F_GETFL)
+        #self.oldflags = fcntl.fcntl(sys.stdin, fcntl.F_GETFL)
         # fcntl.fcntl(self.pty, fcntl.F_SETFD, fcntl.FD_CLOEXEC)
         # make the PTY non-blocking
         # fcntl.fcntl(sys.stdin, fcntl.F_SETFL, self.oldflags | os.O_NONBLOCK)         
@@ -127,7 +128,7 @@ class dragonfmManager():
     def enter(self):
         screen = curses.initscr()
         if self.new_term_attr != None:
-            termios.tcsetattr(sys.stdin, termios.TCSANOW, self.new_term_attr)      
+            termios.tcsetattr(sys.stdin, termios.TCSANOW, self.new_term_attr)
         curses.raw()
         curses.nonl()
         curses.noecho()
@@ -148,8 +149,8 @@ class dragonfmManager():
         self.clear()
         curses.endwin()
         sys.stdout.flush()
-        if self.old_term_attr != None:
-            termios.tcsetattr(sys.stdin, termios.TCSANOW, self.old_term_attr)
+        #if self.old_term_attr != None:
+        termios.tcsetattr(sys.stdin, termios.TCSANOW, self.old_term_attr)
 
     def setCursor(self, y, x):
         self.screen.move(y, x)
