@@ -224,6 +224,7 @@ class fileManager():
                 pass
         except:
             return
+        application = os.path.expandvars(application)
         self.processManager.startExternal(application, pwd=pwd)
 
     def getMimeType(self, pathObject):
