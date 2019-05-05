@@ -25,6 +25,8 @@ class command():
         selection = self.selectionManager.getSelectionOrCursorCurrentTab()
                                                                                                                                                                 
         self.fileManager.deleteSelection(selection)
-            
+        if folderManager.getSelectionMode() != 0:
+            folderManager.setSelectionMode(0)
+
         if callback:
             callback()

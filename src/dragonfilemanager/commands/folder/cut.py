@@ -28,6 +28,8 @@ class command():
         selected = self.selectionManager.getSelectionOrCursorCurrentTab()
                                                                                                                                                                 
         self.clipboardManager.setClipboard(selected, operation = 'cut')
+        if folderManager.getSelectionMode() != 0:
+            folderManager.setSelectionMode(0)
 
         if callback:
             callback()
