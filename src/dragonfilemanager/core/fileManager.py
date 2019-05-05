@@ -1,4 +1,4 @@
-import sys, os, pwd, grp, curses, mimetypes, shlex, shutil, datetime
+import sys, os, pwd, grp, curses, mimetypes, shlex, shutil, datetime, stat
 from pathlib import Path
 from distutils.dir_util import copy_tree
 
@@ -253,28 +253,34 @@ class fileManager():
             mime = 'application/octet-stream'
         return mime
     def formatSize(self, sizeBytes):
-        units = ['B', 'KB', 'MB', 'GB', 'TP', 'PB', 'EB', 'ZB', 'YB']
-        currUnitIndex = 0
-        while (sizeBytes / 1024) >= 1:
-            sizeBytes /= 1024
-            currUnitIndex += 1
-        return '{0}{1}'.format(int(sizeBytes), units[currUnitIndex])
-
+        try:
+            units = ['B', 'KB', 'MB', 'GB', 'TP', 'PB', 'EB', 'ZB', 'YB']
+            currUnitIndex = 0
+            while (sizeBytes / 1024) >= 1:
+                sizeBytes /= 1024
+                currUnitIndex += 1
+            return '{0}{1}'.format(int(sizeBytes), units[currUnitIndex])
+        except:
+            return ''
     def formatTimestamp(self, value):
-        timestampFormat = "%A, %B %d, %Y"
-        #timestampFormat = self.settingsManager.get('folder', 'dateFormat')
-        timestamp = datetime.datetime.fromtimestamp(value)
-        dateString = datetime.datetime.strftime(timestamp, timestampFormat)
-        return str(dateString)    
+        try:
+            timestampFormat = self.settingsManager.get('folder', 'timestampFormat')
+            timestamp = datetime.datetime.fromtimestamp(value)
+            dateString = datetime.datetime.strftime(timestamp, timestampFormat)
+            return dateString
+        except:
+            return ''
     def formatMode(self, value):
-        return str(value)
+        try:
+            return stat.filemode(value)
+        except:
+            return ''
     def formatColumn(self, column, value):
         if column == 'size':
             return str(self.formatSize(value))
         elif column in ['ctime','atime','mtime']:
             return str(self.formatTimestamp(value))
         elif column == 'mode':
-            return str('mode')
             return str(self.formatMode(value))
         else:
             return str(value)

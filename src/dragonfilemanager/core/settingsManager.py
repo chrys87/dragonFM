@@ -1,4 +1,4 @@
-from configparser import ConfigParser
+from configparser import RawConfigParser
 import os, argparse
 
 class settingsManager():
@@ -32,7 +32,7 @@ class settingsManager():
         if not os.access(path, os.R_OK):
             return False
         try:
-            self.configParser = ConfigParser()
+            self.configParser = RawConfigParser()
             self.configParser.read(path)
             self.loadedSettingFile = path
             return True
@@ -93,7 +93,7 @@ class settingsManager():
         except Exception as e:
             try:
                 value = str(self.settings[section][setting])
-            except:
+            except Exception as e:
                 return ''
         return value
     def getShortcut(self, section, setting):
