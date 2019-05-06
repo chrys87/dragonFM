@@ -6,6 +6,7 @@ It is essential that whatever we use be Unicode-compatible, because we will have
 # Conzept = Conzept is done
 
 (Done): displaying files in a list is possible, then it is more usable for screen reader users.
+(Done): make Columns configurable
 (Done): When we move up or down with arrow keys, only one file should be read by Fenrir. 
 (Done): Arrow keys to move up and down on current directory list or down and up on directory tree.
 (Done): Tracks cursor and displays files and directories in a list
