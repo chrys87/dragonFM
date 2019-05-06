@@ -27,8 +27,6 @@ for directory in directories:
                 del(files[files.index('config/settings.conf')])
             except:
                 pass
-    elif 'config/plugins' in directory:
-        destDir = '/usr/share/dragonfm/plugins'
     if destDir != '':
         data_files.append((destDir, files))
 
