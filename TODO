@@ -90,6 +90,9 @@ for an example see below in "example context menu"
 (Todo): Lastly, it would be great for us to be able to deal with remote directories, i.e. via sftp, sshFS, etc, in basically the same interface we use for local directories.
 (Todo): Control+Z could be un-do, but this is not so important. (?)
 
+# Cleanup (low Priority)
+(Todo): verify/ move selection code from folder to selection manager where possible.
+
 # Binding help
 showkey -a
 cat -v
