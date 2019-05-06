@@ -54,6 +54,8 @@ When we talk about Tabs, they need not look like a tab on Firefox, for example, 
 (WIP): Update if current folder changes
 (WIP): Nice Formatting for column view (align them)
 (Todo): input for change location (needs input dialog)
+(Todo): Track history
+(Todo): navigate in history (prev, next folder in history)
 
 # general (Priority)
 (Todo): proper view update
