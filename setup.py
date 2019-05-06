@@ -75,7 +75,6 @@ setup(
 
     # Dependent packages (distributions)
     install_requires=[
-        "dbus-python>=1.2.8",
         "setuptools",
         "pexpect"
     ],
