@@ -86,7 +86,7 @@ class fileManager():
             pass
     def createFileThread(self, value):      
         fullPath = value['fullPath']
-        self.createFolder(fullPath)
+        self.createFile(fullPath)
     def spawnCreateFileThread(self, fullPath):
         if fullPath == None:
             return
