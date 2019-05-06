@@ -20,11 +20,11 @@ directories = glob.glob('config/*')
 for directory in directories:
     files = glob.glob(directory+'/*')
     destDir = ''
-    if 'config' in directory:
+    if 'config/settings' in directory:
         destDir = '/etc/dragonfm/settings'
         if not forceSettings:
             try:
-                del(files[files.index('config/settings.conf')])
+                del(files[files.index('config/settings/settings.conf')])
             except:
                 pass
     if destDir != '':
@@ -74,7 +74,6 @@ setup(
     # Dependent packages (distributions)
     install_requires=[
         "setuptools",
-        "pexpect"
     ],
 
 )
@@ -82,10 +81,11 @@ setup(
 if not forceSettings:
     print('')
     # create settings file from example if not exist
-    if not os.path.isfile('/etc/dragonfm/settings.conf'):
+    if not os.path.isfile('/etc/dragonfm/settings/settings.conf'):
         try:
-            copyfile('/etc/dragonfm/settings.conf', '/etc/dragonfm/settings.conf')
-            print('create settings file in /etc/dragonfm/settings.conf')
+            # needs fixed if an .example file is created
+            copyfile('/etc/dragonfm/settings/settings.conf', '/etc/dragonfm/settings/settings.conf')
+            print('create settings file in /etc/dragonfm/settings/settings.conf')
         except:
             pass
     else:
