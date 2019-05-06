@@ -18,6 +18,7 @@ class command():
     def getShortcut(self):
         return None
     def run(self, callback = None):   
+        folderManager = self.dragonfmManager.getCurrFolderManager()        
         self.fileManager.spawnCreateFolderThread('/tmp/testfolder')
         if callback:
             callback()
