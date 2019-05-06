@@ -31,10 +31,9 @@ class fileManager():
         valueParam = {}
         valueParam['selection'] = selection
         self.processManager.startInternal('remove', description = '', 
-            process = self.deleteSelectionThread, value=valueParam.copy())
+            process = self.deleteSelectionThread, valueParam=valueParam.copy())
     def deleteSelectionThread(self, valueParam):
         selection = valueParam['selection']
-        # Loop through the files and directories and delete them.
         self.deleteSelection(selection)
     def deleteSelection(self, selection):
         for fullPath in selection:
@@ -66,8 +65,8 @@ class fileManager():
                 os.makedirs(fullPath)
         except OSError:
             pass
-    def createFolderThread(self, value):      
-        fullPath = value['fullPath']
+    def createFolderThread(self, valueParam):      
+        fullPath = valueParam['fullPath']
         self.createFolder(fullPath)
     def spawnCreateFolderThread(self, fullPath):
         if fullPath == None:
@@ -77,15 +76,15 @@ class fileManager():
         valueParam = {}
         valueParam['fullPath'] = fullPath
         self.processManager.startInternal('create folder', description = '', 
-            process = self.createFolderThread, value=valueParam.copy())         
+            process = self.createFolderThread, valueParam=valueParam.copy())         
     def createFile(self, fullPath):
         try:
             if not os.path.exists(fullPath):
                 os.mknod(fullPath)
         except OSError:
             pass
-    def createFileThread(self, value):      
-        fullPath = value['fullPath']
+    def createFileThread(self, valueParam):      
+        fullPath = valueParam['fullPath']
         self.createFile(fullPath)
     def spawnCreateFileThread(self, fullPath):
         if fullPath == None:
@@ -94,8 +93,8 @@ class fileManager():
             return
         valueParam = {}
         valueParam['fullPath'] = fullPath
-        self.processManager.startInternal('create folder', description = '', 
-            process = self.createFileThread, value=valueParam.copy())             
+        self.processManager.startInternal('create file', description = '', 
+            process = self.createFileThread, valueParam=valueParam.copy())             
         
     def moveEntry(self, fullPath, destination):
             try:
@@ -104,11 +103,11 @@ class fileManager():
                 shutil.move(str(sourcePath), str(destPath))
             except:
                 pass
-    def pasteClipboardThread(self, value):            
-        operation = value['operation']
-        clipboard = value['clipboard']
-        newLocation = value['newLocation']
-        self.pasteClipboard(self, operation, clipboard, newLocation)
+    def pasteClipboardThread(self, valueParam):            
+        operation = valueParam['operation']
+        clipboard = valueParam['clipboard']
+        newLocation = valueParam['newLocation']
+        self.pasteClipboard(operation, clipboard, newLocation)
     def spawnPasteClipboardThread(self):
         if self.clipboardManager.isClipboardEmpty():
             return
@@ -125,7 +124,7 @@ class fileManager():
         valueParam['newLocation'] = newLocation
 
         self.processManager.startInternal(operation, description = '', 
-            process = self.pasteClipboardThread, value=valueParam.copy())
+            process = self.pasteClipboardThread, valueParam=valueParam.copy())
     def pasteClipboard(self, operation, clipboard, newLocation):    
         if operation in ['cut']:
             self.clipboardManager.clearClipboard()        
