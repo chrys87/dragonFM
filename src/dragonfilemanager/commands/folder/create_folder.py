@@ -19,6 +19,8 @@ class command():
         return None
     def run(self, callback = None):   
         folderManager = self.dragonfmManager.getCurrFolderManager()        
-        self.fileManager.spawnCreateFolderThread('/tmp/testfolder')
+        location = folderManager.getLocation()
+        fullPath = location + 'newFolder'        
+        self.fileManager.spawnCreateFolderThread(fullPath)
         if callback:
             callback()
