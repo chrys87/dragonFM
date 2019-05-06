@@ -24,7 +24,7 @@ for directory in directories:
         destDir = '/etc/dragonfm/settings'
         if not forceSettings:
             try:
-                del(files[files.index('config/settings/settings.conf')])
+                del(files[files.index('config/settings.conf')])
             except:
                 pass
     elif 'config/plugins' in directory:
@@ -84,10 +84,10 @@ setup(
 if not forceSettings:
     print('')
     # create settings file from example if not exist
-    if not os.path.isfile('/etc/dragonfm/settings/settings.conf'):
+    if not os.path.isfile('/etc/dragonfm/settings.conf'):
         try:
-            copyfile('/etc/dragonfm/settings/settings.conf.example', '/etc/dragonfm/settings/settings.conf')
-            print('create settings file in /etc/dragonfm/settings/settings.conf')
+            copyfile('/etc/dragonfm/settings.conf.example', '/etc/dragonfm/settings.conf')
+            print('create settings file in /etc/dragonfm/settings.conf')
         except:
             pass
     else:
