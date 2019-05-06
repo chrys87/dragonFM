@@ -8,9 +8,9 @@ class command():
     def shutdown(self):
         pass
     def getName(self):
-        return _('No description found')
+        return _('Paste Clipboard')
     def getDescription(self):
-        return _('No description found')
+        return _('Paste the clipboard to current location')
     def active(self):
         return True
     def getValue(self):
