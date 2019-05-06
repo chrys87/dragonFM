@@ -20,7 +20,7 @@ class settingsManager():
         path = '/etc/dragonFM/settings.conf'
         if os.access(path, os.R_OK):
             return path
-        path = self.dragonfmManager.getDragonFmPath() + '/../../config/settings.conf'
+        path = self.dragonfmManager.getDragonFmPath() + '/../../conf/settings/settings.conf'
         if os.access(path, os.R_OK):
             return path
         return ''
