@@ -17,7 +17,9 @@ It is essential that whatever we use be Unicode-compatible, because we will have
 (Done): Left arrow can take you back to last directory, right arrow can open directory you have selected.
 (Done): Pressing Enter or right arrow will open directory or file.
 (Done): Sorting of file list of any directory you open can be alphabetically or by date of last modification. Other criteria would be nice, but this is the minimum.
-(Done): selection management
+(Done): initial selection management (select, select all, select next... unselect...)
+(Done): New virtual column "selected" what shows the selection state
+(Done): selection mode
 (Done): Control+x Cut
 (Done): Control+c Copy
 (Done): Control+v paste
