@@ -2,6 +2,9 @@ It is essential that whatever we use be Unicode-compatible, because we will have
 # Done = Finish
 # Needs Binding = Implementation complete, needs keybinding
 # Todo = Nothing done yet
+# NEEDS RESEARCH = needs research to complete
+# CONZEPT = Conzept is done
+
 (DONE): displaying files in a list is possible, then it is more usable for screen reader users.
 (DONE): When we move up or down with arrow keys, only one file should be read by Fenrir. 
 (DONE): Arrow keys to move up and down on current directory list or down and up on directory tree.
