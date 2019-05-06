@@ -99,7 +99,7 @@ class folderManager():
         self.gotoFolder(currFolder)
     def enter(self):
         self.setNeedRefresh()
-        self.update()
+        self.dragonfmManager.update()
     def leave(self):
         pass
     def setNeedRefresh(self):
@@ -285,7 +285,7 @@ class folderManager():
     def resetMessage(self):
         self.message = ''
         self.setNeedRefresh()
-        self.update()
+        self.dragonfmManager.update()
     def setMessage(self, message):
         if self.messageTimer:
             if self.messageTimer.is_alive():
@@ -294,7 +294,7 @@ class folderManager():
 
         self.message = message
         self.setNeedRefresh()
-        self.update()
+        self.dragonfmManager.update()
         self.messageTimer.start()
     def drawHeader(self):
         self.headerOffset = 0
