@@ -18,7 +18,7 @@ class command():
     def getShortcut(self):
         return None
     def run(self, callback = None):   
-        self.fileManager.pasteClipboard()
+        self.fileManager.spawnPasteClipboardThread()
         folderManager.reloadFolder()
         if callback:
             callback()
