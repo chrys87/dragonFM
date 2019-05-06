@@ -8,9 +8,9 @@ class command():
     def shutdown(self):
         pass
     def getName(self):
-        return _('Paste Clipboard')
+        return _('No description found')
     def getDescription(self):
-        return _('Paste the clipboard to current location')
+        return _('No description found')
     def active(self):
         return True
     def getValue(self):
@@ -18,6 +18,7 @@ class command():
     def getShortcut(self):
         return None
     def run(self, callback = None):   
-        self.fileManager.spawnPasteClipboardThread()
+        self.fileManager.pasteClipboard()
+        folderManager.reloadFolder()
         if callback:
             callback()
