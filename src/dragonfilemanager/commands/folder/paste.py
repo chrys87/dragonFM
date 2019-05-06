@@ -19,6 +19,5 @@ class command():
         return None
     def run(self, callback = None):   
         self.fileManager.spawnPasteClipboardThread()
-        folderManager.reloadFolder()
         if callback:
             callback()
