@@ -8,10 +8,13 @@ It is essential that whatever we use be Unicode-compatible, because we will have
 (DONE): Tracks cursor and displays files and directories in a list
 (DONE): It should allow user to modify how much information is shown for each file.
 (DONE): we can just have file manager show the filename, 
+(DONE): initial mime handling
+(DONE): make environ variables usable for mime handling like $EDITOR
 (DONE): Left arrow can take you back to last directory, right arrow can open directory you have selected.
 (DONE): Pressing Enter or right arrow will open directory or file.
 (DONE): Sorting of file list of any directory you open can be alphabetically or by date of last modification. Other criteria would be nice, but this is the minimum.
-(DONE):Control+x Cut
+(DONE): selection management
+(DONE): Control+x Cut
 (DONE): Control+c Copy
 (DONE): Control+v paste
 (DONE): Control+T to open a new tab, just like in pcmanfm.
@@ -20,6 +23,7 @@ It is essential that whatever we use be Unicode-compatible, because we will have
 (DONE): F4 or an option in the menu should open command line in current directory, just like in pcmanfm.
 (DONE): F1 for help if file manager has one, or customizable so we can write our own help file.
 (DONE): Home and End takes you to top of current directory or bottom.
+(DONE): present values in an human readable format
 
 (Needs Binding): Alt+up arrow should go to parent directory, like in pcmanfm etc.
 (Needs Binding): alt plus home should go directly to home folder.
@@ -28,31 +32,28 @@ It is essential that whatever we use be Unicode-compatible, because we will have
 (Needs Binding): Control+Tab and Control+Shift+Tab to move from one tab to another.
 When we talk about Tabs, they need not look like a tab on Firefox, for example, but it would be nice if we could quickly jump between entirely unrelated directories, like we jump between different web sites we have opened. So visually, they need not be side-by-side, they can entirely replace each other on the screen or not even show visually. The important thing is the functionality.
 
+# input (Priority)
+(NEEDS RESEARCH): Nano Input hack
+(TODO): Input Dialog (needed for rename operation, create operation, confirmation (do you realy want.. (yes no)?)
+(WIP): Keybindings similar to nautilus
+
 # basic file operations (Priority)
 (TODO): control shift n, to create a new directory in current directory.
 (TODO): control alt n to create a new text file in current directory. Equivalent of touch command.
 (TODO): F2 to rename whatever the current file or directory is.
 
-# input (Priority)
-(TODO): Nano Input hack
-(TODO): Input Dialog (rename, create, confirmation)
-(TODO): Keybindings similar to nautilus
-
 # Folder View (Priority)
-(TODO): Search by Typing: Typing makes cursor jump to file beginning in letter or letters that were typed by user.
-(TODO): Update if current folder changes
-(TODO): Nice Formatting for column view (align them)
+(CONZEPT): Search by Typing: Typing makes cursor jump to file beginning in letter or letters that were typed by user.
+(WIP): Update if current folder changes
+(WIP): Nice Formatting for column view (align them)
+(TODO): input for change location
 
-# general
+# general (Priority)
 (TODO): proper view update
 (TODO): message area
 (BUG): Control+w to close current tab if there are multiple tabs opened, or close entire file manager if just one tab is opened, just like Firefox.
 
-# Process View
-(TODO): show current copy / move processes
-(TODO): be able to abbort them
-
-# Context menu
+# Context menu (Priority)
 (TODO): properties / Context menu: Shift+10, and selecting "properties", user can see file size, date of last modification, owner, permissions, etc.
 (TODO): Context menu: Shift+F10 should give you menu of things you can do to current file or directory, like rename, compress, uncompress, zip and email, open-with, etc. It should vary according to file type.
 (TODO): Shift+F10 should be customizable by user or at least by one of our scripts.
@@ -76,6 +77,10 @@ Paste (Ctrl + V)
 # Main Menu
 (TODO): Menu
 (TODO): F10 should take you to menu of file manager if it has one. If not, maybe it can take you to our Static Menu, if we are not using Virtual menu.
+
+# Process View
+(TODO): show current copy / move processes
+(TODO): be able to abbort them
 
 # Search
 (TODO): Find a file (Control+f)
