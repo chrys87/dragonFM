@@ -33,7 +33,7 @@ for directory in directories:
         data_files.append((destDir, files))
 
 data_files.append((destDir, files))
-data_files.append(('/usr/share/man/man1', ['docu/dragonfm.1']))
+#data_files.append(('/usr/share/man/man1', ['docu/dragonfm.1']))
 
 def read(fname):
     return open(os.path.join(os.path.dirname(__file__), fname)).read()
