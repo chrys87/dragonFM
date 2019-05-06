@@ -23,7 +23,7 @@ class fileManager():
         except:
             pass
         self.mime = mimetypes.MimeTypes()
-    def deleteSelection(self, selection):
+    def createDeleteSelectionThread(self, selection):
         if selection == None:
             return
         if selection == []:
