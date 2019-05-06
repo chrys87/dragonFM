@@ -21,6 +21,8 @@ It is essential that whatever we use be Unicode-compatible, because we will have
 (Done): Control+x Cut
 (Done): Control+c Copy
 (Done): Control+v paste
+(Done): add initial threading API to process manager
+(Done): make paste / remove operations threaded to not block the main Loop
 (Done): Control+T to open a new tab, just like in pcmanfm.
 (Done): Control+q to quit file manager.
 (Done): F5 to refresh, in case it is a remote directory.
