@@ -64,22 +64,22 @@ When we talk about Tabs, they need not look like a tab on Firefox, for example, 
 (Todo): It should also be possible to activate the option one wants by pressing a letter which we define as the shortcut letter, just like we do with main menu etc on pdmenu. So in a menu of any kind where you can hear:
 for an example see below in "example context menu"
 
-# Main Menu
-(Todo): Menu
-(Todo): F10 should take you to menu of file manager if it has one. If not, maybe it can take you to our Static Menu, if we are not using Virtual menu.
-(Todo): Content of Main Menu needs to be specified
-
-# Process View
-(Todo): show current copy / move processes
-(Todo): be able to abbort them
-
-# Search
+# Search (mid priority)
 (Todo): Find a file (Control+f)
 (Todo): Find a file containing (Control+Shift+F)
   The first looks for a file based on the filename or filename segment you are prompted to type, and the second does a search for files which contain the string which you are prompted to type. Ideal situation here would be to use Recoll, which is apparently an excellent cli search engine, and is already installed in F123Light, but needs a nice easy way to use it.
   Searches are performed on current directory and all sub directories by default.
 
-# Others
+# Main Menu (low priority)
+(Todo): Menu
+(Todo): F10 should take you to menu of file manager if it has one. If not, maybe it can take you to our Static Menu, if we are not using Virtual menu.
+(Todo): Content of Main Menu needs to be specified
+
+# Process View (low Priority)
+(Todo): show current copy / move processes
+(Todo): be able to abbort them
+
+# Others (low Priority)
 (Todo): Lastly, it would be great for us to be able to deal with remote directories, i.e. via sftp, sshFS, etc, in basically the same interface we use for local directories.
 (Todo): Control+Z could be un-do, but this is not so important. (?)
 
