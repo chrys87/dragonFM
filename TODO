@@ -14,13 +14,13 @@ It is essential that whatever we use be Unicode-compatible, because we will have
 (DONE):Control+x Cut
 (DONE): Control+c Copy
 (DONE): Control+v paste
-(Needs Binding): Control+T to open a new tab, just like in pcmanfm.
-(Needs Binding): Control+q to quit file manager.
-(Needs Binding): F5 to refresh, in case it is a remote directory.
-(Needs Binding): F4 or an option in the menu should open command line in current directory, just like in pcmanfm.
-(Needs Binding): F1 for help if file manager has one, or customizable so we can write our own help file.
+(DONE): Control+T to open a new tab, just like in pcmanfm.
+(DONE): Control+q to quit file manager.
+(DONE): F5 to refresh, in case it is a remote directory.
+(DONE): F4 or an option in the menu should open command line in current directory, just like in pcmanfm.
+(DONE): F1 for help if file manager has one, or customizable so we can write our own help file.
+(DONE): Home and End takes you to top of current directory or bottom.
 
-(Needs Binding): Home and End takes you to top of current directory or bottom.
 (Needs Binding): Alt+up arrow should go to parent directory, like in pcmanfm etc.
 (Needs Binding): alt plus home should go directly to home folder.
 (Needs Binding) Alt+number to jump from one tab to another, if multiple ones are opened, just like in Firefox.
