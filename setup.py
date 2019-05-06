@@ -42,7 +42,7 @@ setup(
     # Application name:
     name="dragon-filemanager",
     # Version number:
-    version=fenrirVersion + '.' + packageVersion,
+    version=dragonFileManagerVersion + '.' + packageVersion,
     # description
     description="A command line file manager for Linux.",
     long_description=read('README.md'),
