@@ -58,7 +58,36 @@ class fileManager():
                 shutil.copy2(str(sourcePath), str(destPath))
         except Exception as e:
             pass         
-            
+    def createFolderThread(self, fullPath):
+        try:
+            if not os.path.exists(fullPath):
+                os.makedirs(fullPath)
+        except OSError:
+            pass
+    def createFolder(self, fullPath):
+        if fullPath == None:
+            return
+        if fullPath == '':
+            return
+        valueParam = {}
+        valueParam['fullPath'] = fullPath
+        self.processManager.startInternal('create folder', description = '', 
+            process = self.createFolderThread, value=valueParam.copy())        
+    def createFileThread(self, fullPath):
+        try:
+            if not os.path.exists(fullPath):
+                os.mknod(fullPath)
+        except OSError:
+            pass
+    def createFile(self, fullPath):
+        if fullPath == None:
+            return
+        if fullPath == '':
+            return
+        valueParam = {}
+        valueParam['fullPath'] = fullPath
+        self.processManager.startInternal('create file', description = '', 
+            process = self.createFileThread, value=valueParam.copy())
     def moveEntry(self, fullPath, destination):
             try:
                 sourcePath = Path(fullPath)
