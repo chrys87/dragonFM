@@ -16,6 +16,7 @@ class viewManager():
         self.currentID = -1
         self.mode = 0 # 0: folder, 1: context menu
         self.addTab()
+        
     def getNewID(self):
         for i in range(1000):
             if not i in self.tabList:

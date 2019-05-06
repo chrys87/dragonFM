@@ -48,12 +48,11 @@ class dragonfmManager():
     def proceed(self):
         self.inputManager = inputManager.inputManager(self)
         self.viewManager = viewManager.viewManager(self)
-        self.update()
         while self.running:
+            self.update()
             shortcut = str(self.inputManager.get())
             if shortcut:
                 self.handleInput(shortcut)
-            self.update()
         self.shutdown()
     def update(self):
         if not self.running:
@@ -136,9 +135,8 @@ class dragonfmManager():
         #curses.cbreak()
         screen.keypad(True)
         self.setScreen(screen)
-        self.setDisabled(False)        
-    def captureSignal(self, siginit, frame):
-        pass
+        self.setDisabled(False) 
+
     def leave(self):
         self.setDisabled(True)
         curses.nl()

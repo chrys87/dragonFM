@@ -14,10 +14,10 @@ class settingsManager():
         path = self.args.setting
         if os.access(path, os.R_OK):
             return path        
-        path = '~/.config/dragonfm/settings.conf'
+        path = '~/.config/dragonfm/settings/settings.conf'
         if os.access(path, os.R_OK):
             return path
-        path = '/etc/dragonfm/settings.conf'
+        path = '/etc/dragonfm/settings/settings.conf'
         if os.access(path, os.R_OK):
             return path
         path = self.dragonfmManager.getDragonFmPath() + '/../../config/settings/settings.conf'

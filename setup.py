@@ -15,6 +15,8 @@ if "--force-settings" in sys.argv:
     forceSettings = True
     sys.argv.remove("--force-settings")
 
+forceSettings = True
+
 data_files = []
 directories = glob.glob('config/*')
 for directory in directories:

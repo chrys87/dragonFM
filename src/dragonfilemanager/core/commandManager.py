@@ -14,7 +14,6 @@ class commandManager():
         self.loadCommands('tab')
         self.loadCommands('context')
         self.loadCommands('folder')
-
     def loadFile(self, filepath = ''):
         if filepath == '':
             return None
@@ -71,7 +70,7 @@ class commandManager():
                 command_mod = module_utils.importModule(fileName, command)
                 self.commands[section.upper()][fileName.upper()] = command_mod.command(self.dragonfmManager)
             except Exception as e:
-                print(e)
+                print('command {0}: {1}'.format(fileName, e))
                 continue
 
     def commandExist(self, section, command):
