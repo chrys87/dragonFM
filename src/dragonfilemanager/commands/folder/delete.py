@@ -24,7 +24,7 @@ class command():
         # Get the files and directories that were selected.
         selection = self.selectionManager.getSelectionOrCursorCurrentTab()
                                                                                                                                                                 
-        self.fileManager.deleteSelection(selection)
+        self.fileManager.createDeleteSelectionThread(selection)
         if folderManager.getSelectionMode() != 0:
             folderManager.setSelectionMode(0)
 
