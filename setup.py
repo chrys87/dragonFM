@@ -20,7 +20,7 @@ directories = glob.glob('config/*')
 for directory in directories:
     files = glob.glob(directory+'/*')
     destDir = ''
-    if 'config/settings' in directory:
+    if 'config' in directory:
         destDir = '/etc/dragonfm/settings'
         if not forceSettings:
             try:
