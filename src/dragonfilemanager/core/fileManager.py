@@ -127,6 +127,8 @@ class fileManager():
         self.processManager.startInternal(operation, description = '', 
             process = self.pasteClipboardThread, value=valueParam.copy())
     def pasteClipboard(self, operation, clipboard, newLocation):    
+        if operation in ['cut']:
+            self.clipboardManager.clearClipboard()        
         for fullPath in clipboard:
             if operation == 'copy':
                 self.copyEntry(fullPath, newLocation)
