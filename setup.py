@@ -84,7 +84,7 @@ if not forceSettings:
     # create settings file from example if not exist
     if not os.path.isfile('/etc/dragonfm/settings.conf'):
         try:
-            copyfile('/etc/dragonfm/settings.conf.example', '/etc/dragonfm/settings.conf')
+            copyfile('/etc/dragonfm/settings.conf', '/etc/dragonfm/settings.conf')
             print('create settings file in /etc/dragonfm/settings.conf')
         except:
             pass
