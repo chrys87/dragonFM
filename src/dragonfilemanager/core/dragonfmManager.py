@@ -25,7 +25,8 @@ class dragonfmManager():
         self.dragonFmPath = os.path.dirname(self.currentdir)
         self.settingsManager = settingsManager.settingsManager(self)
         self.settingsManager.parseCliArgs()
-        self.settingsManager.loadSettings()
+        if not self.settingsManager.loadSettings():
+            raise IOError('could not load settingsfile, maybe it is not readable or does not exist.')
         self.processManager = processManager.processManager(self)
         self.clipboardManager = clipboardManager.clipboardManager(self)
         self.debugManager = debugManager.debugManager(self)
