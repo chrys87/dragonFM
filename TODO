@@ -50,9 +50,10 @@ place it in mainloop. make it use an multithreading queue and blocking mechanism
 (Todo): draw it in mainloop
 (Todo): make mainloop unblocking
 (Todo): design dialog
-(Todo): add "set value" method
+(Todo): add "set default value" method
+(Todo): add question text method
 (Todo): add basic navigation and editation 
-(Todo): add force selection ['y', 'n'] for only yes no
+(Todo): add modes for selection ['y', 'n'] for only yes no; range 1-100, folder input, freetext, 
 (Todo): add basic tab (autocomplete)
 (Todo): add default value
 (Todo): add mechanisms to work with (create, rename, confirmation (do you realy wnat?), location bar)
