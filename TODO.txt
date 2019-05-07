@@ -75,7 +75,6 @@ place it in mainloop. make it use an multithreading queue and blocking mechanism
 (Conzept): proper view update # make inputManager.get unblocking and handle the needUpdate then not async.
 (WIP): message area
 (BUG): Control+w to close current tab if there are multiple tabs opened, or close entire file manager if just one tab is opened, just like Firefox.
-(BUG): Redraw more less to not glitch and start speak screen
 
 # Context menu (Priority)
 (Todo): properties / Context menu: Shift+10, and selecting "properties", user can see file size, date of last modification, owner, permissions, etc.

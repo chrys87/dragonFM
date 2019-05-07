@@ -32,13 +32,13 @@ class command():
         fileName, fileExtension = os.path.splitext(filename_w_ext)
         
         location = folderManager.getLocation()
-        nameTemplate = fileName + '{0}{1}{2}'
+        nameTemplate = fileName + '_link{0}{1}{2}'
 
         if fileExtension != None:
             if fileExtension != '':
                 nameTemplate += fileExtension
 
-        linkName = self.fileManager.getInitName(location, nameTemplate, '_link_')
+        linkName = self.fileManager.getInitName(location, nameTemplate, '_')
         fullPath = '{0}/{1}'.format(location, linkName)        
 
         self.fileManager.spawnCreateLinkCursorThread(currentCursor, fullPath)
