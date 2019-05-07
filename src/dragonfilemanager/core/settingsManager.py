@@ -29,7 +29,7 @@ class settingsManager():
     def loadSettings(self):
         settingsFile = self.getSettingsPath()
         if settingsFile != '':
-            self.load(settingsFile)
+            return self.load(settingsFile)
     def load(self, path):
         if not os.access(path, os.R_OK):
             return False

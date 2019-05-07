@@ -1,4 +1,4 @@
-import sys, os, threading, curses, time, inspect, termios, fcntl
+import sys, os, threading, curses, time, inspect, termios, fcntl, locale, copy
 
 from dragonfilemanager.core import i18n
 from dragonfilemanager.core import settingsManager
@@ -20,11 +20,13 @@ class dragonfmManager():
         self.screen = None
         self.height = 0
         self.width = 0
+        self.encoding = 'UTF8'
         self.currentdir = os.path.dirname(os.path.realpath(os.path.abspath(inspect.getfile(inspect.currentframe()))))
         self.dragonFmPath = os.path.dirname(self.currentdir)
         self.settingsManager = settingsManager.settingsManager(self)
         self.settingsManager.parseCliArgs()
-        self.settingsManager.loadSettings()
+        if not self.settingsManager.loadSettings():
+            raise IOError('could not load settingsfile, maybe it is not readable or does not exist.')
         self.processManager = processManager.processManager(self)
         self.clipboardManager = clipboardManager.clipboardManager(self)
         self.debugManager = debugManager.debugManager(self)
@@ -33,7 +35,7 @@ class dragonfmManager():
         self.viewManager = None
         self.inputManager = None
         self.commandManager = commandManager.commandManager(self)
-
+        self.initEncoding()
         self.initTerminal()
         self.setProcessName()
 
@@ -48,14 +50,21 @@ class dragonfmManager():
     def proceed(self):
         self.inputManager = inputManager.inputManager(self)
         self.viewManager = viewManager.viewManager(self)
-        while self.running:
+        while self.getRunning():
+            if self.getDisabled():
+                continue
             self.update()
-            shortcut = str(self.inputManager.get())
-            if shortcut:
-                self.handleInput(shortcut)
+            shortcut = self.inputManager.get()
+            if shortcut == None:
+                continue
+            if shortcut == curses.ERR:
+                continue
+            self.handleInput(shortcut)
         self.shutdown()
     def update(self):
-        if not self.running:
+        if not self.getRunning():
+            return
+        if self.getDisabled():
             return
         self.viewManager.update()
     def handleApplicationInput(self, shortcut):
@@ -69,7 +78,7 @@ class dragonfmManager():
     def initTerminal(self):
         if self.old_term_attr == None:
             self.old_term_attr = termios.tcgetattr(sys.stdin)    
-        self.new_term_attr = self.old_term_attr.copy()
+        self.new_term_attr = copy.deepcopy(self.old_term_attr)
         # Disable extended input and output processing in our terminal        
         self.new_term_attr[3] &= ~termios.IEXTEN
         self.new_term_attr[3] &= ~termios.OPOST
@@ -78,7 +87,6 @@ class dragonfmManager():
         # Disable interpretation of the special control keys in our terminal
         self.new_term_attr[3] &= ~termios.ISIG
         # don't handle ^C / ^Z / ^\
-        self.new_term_attr[6] = self.old_term_attr[6].copy()
         self.new_term_attr[6][termios.VINTR] = 0
         self.new_term_attr[6][termios.VQUIT] = 0
         self.new_term_attr[6][termios.VSUSP] = 0
@@ -88,13 +96,15 @@ class dragonfmManager():
         # make the PTY non-blocking
         # fcntl.fcntl(sys.stdin, fcntl.F_SETFL, self.oldflags | os.O_NONBLOCK)         
     def stop(self):
-        self.running = False
+        self.setRunning(False)
     def shutdown(self):
         pass
     def refresh(self):
         self.screen.refresh()
     def clear(self):
         self.screen.clear()
+    def erase(self):
+        self.screen.erase()
     # Set
     def setScreen(self, screen):
         if not screen:
@@ -134,6 +144,7 @@ class dragonfmManager():
         curses.start_color()
         #curses.cbreak()
         screen.keypad(True)
+        screen.timeout(350)
         self.setScreen(screen)
         self.setDisabled(False) 
 
@@ -147,16 +158,21 @@ class dragonfmManager():
         self.clear()
         curses.endwin()
         sys.stdout.flush()
-        #if self.old_term_attr != None:
-        termios.tcsetattr(sys.stdin, termios.TCSANOW, self.old_term_attr)
+        if self.old_term_attr != None:
+            termios.tcsetattr(sys.stdin, termios.TCSANOW, self.old_term_attr)
 
     def setCursor(self, y, x):
         self.screen.move(y, x)
     def setDisabled(self, disabled):
         self.disabled = disabled
-    def setIsRunning(self, running):
+    def setRunning(self, running):
         self.running = running
+    def initEncoding(self):
+        locale.setlocale(locale.LC_ALL, '')
+        self.encoding =locale.getpreferredencoding()
     # Get
+    def getEncoding(self):
+        return self.encoding
     def getScreenWidth(self):
         return self.width
     def getScreenHeight(self):
@@ -187,5 +203,5 @@ class dragonfmManager():
         return self.dragonFmPath
     def getDisabled(self):
         return self.disabled
-    def getIsRunning(self):
+    def getRunning(self):
         return self.running
