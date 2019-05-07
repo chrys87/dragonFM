@@ -54,7 +54,10 @@ class dragonfmManager():
             if self.getDisabled():
                 continue
             self.update()
-            shortcut = self.inputManager.get()
+            try:
+                shortcut = self.inputManager.get()
+            except:
+                continue
             if shortcut == None:
                 continue
             if shortcut == curses.ERR:
