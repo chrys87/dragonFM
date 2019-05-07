@@ -1,5 +1,4 @@
 import sys, os, threading, curses, time, inspect, termios, fcntl, locale
-import 
 
 from dragonfilemanager.core import i18n
 from dragonfilemanager.core import settingsManager
