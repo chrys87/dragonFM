@@ -138,6 +138,7 @@ class dragonfmManager():
         curses.start_color()
         #curses.cbreak()
         screen.keypad(True)
+        screen.timeout(350)
         self.setScreen(screen)
         self.setDisabled(False) 
 
