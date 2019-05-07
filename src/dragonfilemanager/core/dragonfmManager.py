@@ -52,7 +52,7 @@ class dragonfmManager():
         self.viewManager = viewManager.viewManager(self)
         while self.getRunning():
             if self.getDisabled():
-                continue            
+                continue
             self.update()
             shortcut = self.inputManager.get()
             if shortcut == None:
@@ -104,7 +104,7 @@ class dragonfmManager():
     def clear(self):
         self.screen.clear()
     def erase(self):
-        self.screen.erase()        
+        self.screen.erase()
     # Set
     def setScreen(self, screen):
         if not screen:
@@ -169,7 +169,7 @@ class dragonfmManager():
         self.running = running
     def initEncoding(self):
         locale.setlocale(locale.LC_ALL, '')
-        self.encoding =locale.getpreferredencoding()  
+        self.encoding =locale.getpreferredencoding()
     # Get
     def getEncoding(self):
         return self.encoding

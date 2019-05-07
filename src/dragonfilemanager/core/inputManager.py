@@ -18,15 +18,15 @@ class inputManager():
             key = self.screen.getch()
             if key == curses.ERR:
                 break
-            key = curses.keyname(key).decode("utf-8") 
+            key = curses.keyname(key).decode("utf-8")
             keys += ',{0}'.format(key)
         self.screen.nodelay(False)
-        return str(keys)        
+        return str(keys)
     def getKey(self):
         if not self.screen:
             return None
         key = self.screen.getch()
-        key = curses.keyname(key).decode("utf-8") 
+        key = curses.keyname(key).decode("utf-8")
         return key
     def getSequenceAsList(self):
         if not self.screen:
