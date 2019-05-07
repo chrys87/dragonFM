@@ -22,6 +22,8 @@ class folderManager():
         self.entries = OrderedDict()
         self.keys = []
         self.selection = []
+        self.typeAheadSearch = ''
+        self.lastTypeAheadTime = time.time()
         self.headerOffset = 0
         self.footerOffset = 0
         self.messageTimer = None
@@ -36,8 +38,44 @@ class folderManager():
         self.setSorting(self.settingsManager.get('folder', 'sorting'))
         self.setReverseSorting(self.settingsManager.getBool('folder', 'reverse'))
         self.setCaseSensitiveSorting(self.settingsManager.getBool('folder', 'casesensitive'))
-        
         self.initLocation(pwd)
+    def doTypeAheadSearch(self, key):
+        # useful for type ahead search?
+        if key == None:
+            return False
+        if not isinstance(key, str):
+            return False
+        if len(key) != 1:
+            return False
+        key = key.lower()
+        if not key in '.-_0123456789abcdefghijklmnopqrstuvwxyz':
+            return False
+        if self.keys == None:
+            return False
+        if len(self.keys) < 2:
+            return False
+        # then search
+        if self.typeAheadSearch != key:
+            self.typeAheadSearch += key
+
+        startIndex = self.getIndex()
+        searchIndex = startIndex
+        location = self.getLocation()
+        searchString = '{0}/{1}'.format(location, self.typeAheadSearch)
+        
+        while True:
+            searchIndex += 1
+            if searchIndex >= len(self.keys) - 1:
+                searchIndex = 0
+            if searchIndex == startIndex:
+                return False
+            if self.keys[searchIndex].lower().startswith(searchString):
+                self.setIndex(searchIndex)
+                self.lastTypeAheadTime = time.time()
+                return True
+    def resetTypeAheadSearch(self, force = False):
+        if (time.time() - self.lastTypeAheadTime > 1) or force:
+            self.typeAheadSearch = ''
     def setColumns(self, columsString):
         self.columns = columsString.split(',')
         if self.columns == '':
@@ -111,10 +149,10 @@ class folderManager():
             return False
         self.Path = Path(location)
         self.location = location
-        self.index = 0
+        self.setIndex(0)
         if entryName != None:
             try:
-                self.index = self.keys.index(entryName)
+                self.setIndex( self.keys.index(entryName))
             except:
                 pass
         return True
@@ -135,21 +173,23 @@ class folderManager():
 
     def getIndex(self):
         return self.index
+    def setIndex(self, index):
+        self.index = index
     def firstEntry(self):
-        self.index = 0
+        self.setIndex(0)
     def lastEntry(self):
         if len(self.entries) - 1 >= 0:
-            self.index = len(self.entries) - 1
+            self.setIndex(len(self.entries) - 1)
         else:
-            self.index = 0
+            self.setIndex(0)
     def prevEntry(self):
-        if self.index > 0:
-            self.index -= 1
+        if self.getIndex() > 0:
+            self.setIndex( self.getIndex() -1)
         else:
             self.firstEntry()
     def nextEntry(self):
         if self.index < len(self.entries) - 1:
-            self.index += 1
+            self.setIndex( self.getIndex() +1)
         else:
             self.lastEntry()
     def getEntryAreaSize(self):
@@ -260,9 +300,12 @@ class folderManager():
     def handleFolderInput(self, shortcut):
         command = self.settingsManager.getShortcut('folder-keyboard', shortcut)
         debug = self.settingsManager.getBool('debug', 'input')
+        self.resetTypeAheadSearch(command != '')
         if command == '':
             if debug:
                 self.setMessage('debug Sequence: {0}'.format(shortcut))
+            if self.doTypeAheadSearch(shortcut):
+                return True
             return False
         try:
             result = self.commandManager.runCommand('folder', command)
