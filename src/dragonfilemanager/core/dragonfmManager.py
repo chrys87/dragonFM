@@ -1,4 +1,5 @@
-import sys, os, threading, curses, time, inspect, termios, fcntl
+import sys, os, threading, curses, time, inspect, termios, fcntl, locale
+import 
 
 from dragonfilemanager.core import i18n
 from dragonfilemanager.core import settingsManager
@@ -20,6 +21,7 @@ class dragonfmManager():
         self.screen = None
         self.height = 0
         self.width = 0
+        self.encoding = 'UTF8'
         self.currentdir = os.path.dirname(os.path.realpath(os.path.abspath(inspect.getfile(inspect.currentframe()))))
         self.dragonFmPath = os.path.dirname(self.currentdir)
         self.settingsManager = settingsManager.settingsManager(self)
@@ -33,7 +35,7 @@ class dragonfmManager():
         self.viewManager = None
         self.inputManager = None
         self.commandManager = commandManager.commandManager(self)
-
+        self.initEncoding()
         self.initTerminal()
         self.setProcessName()
 
@@ -48,9 +50,11 @@ class dragonfmManager():
     def proceed(self):
         self.inputManager = inputManager.inputManager(self)
         self.viewManager = viewManager.viewManager(self)
-        while self.running:
+        while self.getIsRunning():
             self.update()
-            shortcut = str(self.inputManager.get())
+            shortcut = self.inputManager.get()
+            if shortcut == None:
+                continue
             if shortcut:
                 self.handleInput(shortcut)
         self.shutdown()
@@ -156,7 +160,12 @@ class dragonfmManager():
         self.disabled = disabled
     def setIsRunning(self, running):
         self.running = running
+    def initEncoding(self):
+        locale.setlocale(locale.LC_ALL, '')
+        self.encoding =locale.getpreferredencoding()  
     # Get
+    def getEncoding(self):
+        return self.encoding
     def getScreenWidth(self):
         return self.width
     def getScreenHeight(self):
