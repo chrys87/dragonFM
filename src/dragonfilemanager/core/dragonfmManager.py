@@ -50,16 +50,21 @@ class dragonfmManager():
     def proceed(self):
         self.inputManager = inputManager.inputManager(self)
         self.viewManager = viewManager.viewManager(self)
-        while self.getIsRunning():
+        while self.getRunning():
+            if self.getDisabled():
+                continue            
             self.update()
             shortcut = self.inputManager.get()
             if shortcut == None:
                 continue
-            if shortcut:
-                self.handleInput(shortcut)
+            if shortcut == curses.ERR:
+                continue
+            self.handleInput(shortcut)
         self.shutdown()
     def update(self):
-        if not self.running:
+        if not self.getRunning():
+            return
+        if self.getDisabled():
             return
         self.viewManager.update()
     def handleApplicationInput(self, shortcut):
@@ -92,7 +97,7 @@ class dragonfmManager():
         # make the PTY non-blocking
         # fcntl.fcntl(sys.stdin, fcntl.F_SETFL, self.oldflags | os.O_NONBLOCK)         
     def stop(self):
-        self.running = False
+        self.setRunning(False)
     def shutdown(self):
         pass
     def refresh(self):
@@ -159,7 +164,7 @@ class dragonfmManager():
         self.screen.move(y, x)
     def setDisabled(self, disabled):
         self.disabled = disabled
-    def setIsRunning(self, running):
+    def setRunning(self, running):
         self.running = running
     def initEncoding(self):
         locale.setlocale(locale.LC_ALL, '')
@@ -197,5 +202,5 @@ class dragonfmManager():
         return self.dragonFmPath
     def getDisabled(self):
         return self.disabled
-    def getIsRunning(self):
+    def getRunning(self):
         return self.running
