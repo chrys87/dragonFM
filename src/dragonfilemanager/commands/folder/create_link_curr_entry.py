@@ -35,7 +35,7 @@ class command():
         nameTemplate = fileName + '{0}{1}{2}'
         if fileExtension != None:
             if fileExtension != '':
-                nameTemplate += '.' + fileExtension
+                nameTemplate += fileExtension
         linkName = self.fileManager.getInitName(location, nameTemplate, '_link_')
      
         fullPath = '{0}/{1}'.format(location, linkName)        
