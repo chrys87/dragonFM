@@ -238,7 +238,7 @@ class folderManager():
         return screenIndex
     def update(self):
         if self.needRefresh:
-            self.dragonfmManager.clear()
+            self.dragonfmManager.erase()
             self.drawHeader()
             self.drawFooter()
             self.updatePage()
