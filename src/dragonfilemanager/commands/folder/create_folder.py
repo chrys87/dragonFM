@@ -20,7 +20,8 @@ class command():
     def run(self, callback = None):   
         folderManager = self.dragonfmManager.getCurrFolderManager()        
         location = folderManager.getLocation()
-        fullPath = location + '/newFolder'        
+        folderName = self.fileManager.getInitName(location, 'new_folder{0}{1}{2}', '_')        
+        fullPath = '{0}/{1}'.format(location, folderName)
         self.fileManager.spawnCreateFolderThread(fullPath)
         if callback:
             callback()

@@ -133,6 +133,15 @@ class fileManager():
                 self.copyEntry(fullPath, newLocation)
             elif operation == 'cut':
                 self.moveEntry(fullPath, newLocation)
+
+    def getInitName(self, location, name, prefix = '', suffix = ''):
+        newName = name.format('', '', '')
+        i = 0
+        while os.path.exists('{0}/{1}'.format(location, newName)):
+            i += 1
+            newName = name.format(prefix, i, suffix)
+        return newName
+
     def getInfo(self, fullPath):
         if fullPath == '':
             return None
