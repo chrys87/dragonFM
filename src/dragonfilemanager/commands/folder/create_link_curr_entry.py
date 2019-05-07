@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+import os
 
 class command():
     def __init__(self, dragonfmManager):
@@ -9,9 +10,9 @@ class command():
     def shutdown(self):
         pass
     def getName(self):
-        return _('Delete')
+        return _('Create Link')
     def getDescription(self):
-        return _('Delete current entry or selection')
+        return _('Create a link of the current entry')
     def active(self):
         return True
     def getValue(self):
@@ -22,11 +23,18 @@ class command():
         folderManager = self.dragonfmManager.getCurrFolderManager()
         
         # Get the files and directories that were selected.
-        selection = self.selectionManager.getSelectionOrCursorCurrentTab()
-                                                                                                                                                                
-        self.fileManager.spawnDeleteSelectionThread(selection)
-        if folderManager.getSelectionMode() != 0:
-            folderManager.setSelectionMode(0)
-
+        currentCursor = self.selectionManager.getCursorCurrentTab()
+        if currentCursor == None:
+            return
+        if not os.path.exists(currentCursor):
+            return
+        filename_w_ext = os.path.basename(currentCursor)
+        fileName, fileExtension = os.path.splitext(filename_w_ext)
+        
+        location = folderManager.getLocation()
+        linkName = self.fileManager.getInitName(location, '{0}-{1}{2}.link', fileName)
+     
+        fullPath = '{0}/{1}'.format(location, linkName)        
+        self.fileManager.spawnCreateLinkCursorThread(currentCursor, fullPath)
         if callback:
             callback()

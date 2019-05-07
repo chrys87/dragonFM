@@ -59,6 +59,35 @@ class fileManager():
                 shutil.copy2(str(sourcePath), str(destPath))
         except Exception as e:
             pass         
+    
+    def createLink(self, currentCursor, fullPath):
+        try:
+            if not os.path.exists(fullPath):
+                os.symlink(currentCursor, fullPath)
+        except OSError:
+            pass
+    
+    def createLinkThread(self, valueParam):      
+        currentCursor = valueParam['currentCursor']
+        fullPath = valueParam['fullPath']
+        self.createLink(currentCursor, fullPath)
+        
+    def spawnCreateLinkCursorThread(self, currentCursor, fullPath):
+        if currentCursor == None:
+            return
+        if currentCursor == '':
+            return
+        if fullPath == None:
+            return
+        if fullPath == '':
+            return
+        valueParam = {}
+        valueParam['currentCursor'] = currentCursor
+        valueParam['fullPath'] = fullPath
+        
+        self.processManager.startInternal('create link', description = '', 
+            process = self.createLinkThread, value=valueParam.copy())  
+
     def createFolder(self, fullPath):
         try:
             if not os.path.exists(fullPath):
