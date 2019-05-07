@@ -15,6 +15,7 @@ if "--force-settings" in sys.argv:
     forceSettings = True
     sys.argv.remove("--force-settings")
 
+# set this hard here until we have an settings.conf.example
 forceSettings = True
 
 data_files = []
@@ -86,7 +87,7 @@ if not forceSettings:
     if not os.path.isfile('/etc/dragonfm/settings/settings.conf'):
         try:
             # needs fixed if an .example file is created
-            copyfile('/etc/dragonfm/settings/settings.conf', '/etc/dragonfm/settings/settings.conf')
+            copyfile('/etc/dragonfm/settings/settings.conf.example', '/etc/dragonfm/settings/settings.conf')
             print('create settings file in /etc/dragonfm/settings/settings.conf')
         except:
             pass
