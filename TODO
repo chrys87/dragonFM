@@ -32,6 +32,7 @@ It is essential that whatever we use be Unicode-compatible, because we will have
 (Done): F1 for help if file manager has one, or customizable so we can write our own help file.
 (Done): Home and End takes you to top of current directory or bottom.
 (Done): present values in an human readable format
+(Done): Search by Typing: Typing makes cursor jump to file beginning in letter or letters that were typed by user.
 
 (Needs Binding): Alt+up arrow should go to parent directory, like in pcmanfm etc.
 (Needs Binding): alt plus home should go directly to home folder.
@@ -50,7 +51,6 @@ When we talk about Tabs, they need not look like a tab on Firefox, for example, 
 (Todo): F2 to rename whatever the current file or directory is. (needs input dialog)
 
 # Folder View (Priority)
-(Conzept): Search by Typing: Typing makes cursor jump to file beginning in letter or letters that were typed by user.
 (WIP): Update if current folder changes
 (WIP): Nice Formatting for column view (align them)
 (Todo): input for change location (needs input dialog)
@@ -59,7 +59,7 @@ When we talk about Tabs, they need not look like a tab on Firefox, for example, 
 
 # general (Priority)
 (Todo): proper view update
-(Todo): message area
+(WIP): message area
 (BUG): Control+w to close current tab if there are multiple tabs opened, or close entire file manager if just one tab is opened, just like Firefox.
 
 # Context menu (Priority)
