@@ -104,6 +104,8 @@ class dragonfmManager():
         self.screen.refresh()
     def clear(self):
         self.screen.clear()
+    def erase(self):
+        self.screen.erase()        
     # Set
     def setScreen(self, screen):
         if not screen:
