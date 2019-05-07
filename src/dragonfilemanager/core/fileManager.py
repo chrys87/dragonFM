@@ -40,8 +40,10 @@ class fileManager():
             self.deleteEntry(fullPath)
     def deleteEntry(self, fullPath):
         try:
-            destPath = Path(fullPath)            
-            if destPath.is_dir():
+            destPath = Path(fullPath)
+            if destPath.is_symlink():
+                os.unlink(str(destPath))
+            elif destPath.is_dir():
                 shutil.rmtree(str(destPath))
             else:
                 os.remove(str(destPath))
