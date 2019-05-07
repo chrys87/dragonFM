@@ -42,7 +42,20 @@ When we talk about Tabs, they need not look like a tab on Firefox, for example, 
 
 # input (Priority)
 (Needs Research): Nano Input hack
-(Todo): Input Dialog (needed for rename operation, create operation, confirmation like: do you realy want.. (yes no)?
+(Conzept): Input Dialog (needed for rename operation, create operation, confirmation like: do you realy want.. (yes no)?
+place it in mainloop. make it use an multithreading queue and blocking mechanism to let threads wait. Global runmodal then.
+(Todo): add initial dialogManager
+(Todo): caputre keys for it with priority in mainloop
+(Todo): Only call update in mainloop
+(Todo): draw it in mainloop
+(Todo): make mainloop unblocking
+(Todo): design dialog
+(Todo): add "set value" method
+(Todo): add basic navigation and editation 
+(Todo): add force selection ['y', 'n'] for only yes no
+(Todo): add basic tab (autocomplete)
+(Todo): add default value
+(Todo): add mechanisms to work with (create, rename, confirmation (do you realy wnat?), location bar)
 (WIP): Keybindings similar to nautilus
 
 # basic file operations (Priority)
@@ -58,9 +71,10 @@ When we talk about Tabs, they need not look like a tab on Firefox, for example, 
 (Todo): navigate in history (prev, next folder in history)
 
 # general (Priority)
-(Todo): proper view update
+(Conzept): proper view update # make inputManager.get unblocking and handle the needUpdate then not async.
 (WIP): message area
 (BUG): Control+w to close current tab if there are multiple tabs opened, or close entire file manager if just one tab is opened, just like Firefox.
+(BUG): Redraw more less to not glitch and start speak screen
 
 # Context menu (Priority)
 (Todo): properties / Context menu: Shift+10, and selecting "properties", user can see file size, date of last modification, owner, permissions, etc.
