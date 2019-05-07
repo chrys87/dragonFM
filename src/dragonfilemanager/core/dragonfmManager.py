@@ -1,4 +1,4 @@
-import sys, os, threading, curses, time, inspect, termios, fcntl, locale
+import sys, os, threading, curses, time, inspect, termios, fcntl, locale, copy
 
 from dragonfilemanager.core import i18n
 from dragonfilemanager.core import settingsManager
@@ -78,7 +78,7 @@ class dragonfmManager():
     def initTerminal(self):
         if self.old_term_attr == None:
             self.old_term_attr = termios.tcgetattr(sys.stdin)    
-        self.new_term_attr = self.old_term_attr.copy()
+        self.new_term_attr = copy.deepcopy(self.old_term_attr)
         # Disable extended input and output processing in our terminal        
         self.new_term_attr[3] &= ~termios.IEXTEN
         self.new_term_attr[3] &= ~termios.OPOST
@@ -87,7 +87,6 @@ class dragonfmManager():
         # Disable interpretation of the special control keys in our terminal
         self.new_term_attr[3] &= ~termios.ISIG
         # don't handle ^C / ^Z / ^\
-        self.new_term_attr[6] = self.old_term_attr[6].copy()
         self.new_term_attr[6][termios.VINTR] = 0
         self.new_term_attr[6][termios.VQUIT] = 0
         self.new_term_attr[6][termios.VSUSP] = 0
@@ -159,8 +158,8 @@ class dragonfmManager():
         self.clear()
         curses.endwin()
         sys.stdout.flush()
-        #if self.old_term_attr != None:
-        termios.tcsetattr(sys.stdin, termios.TCSANOW, self.old_term_attr)
+        if self.old_term_attr != None:
+            termios.tcsetattr(sys.stdin, termios.TCSANOW, self.old_term_attr)
 
     def setCursor(self, y, x):
         self.screen.move(y, x)
