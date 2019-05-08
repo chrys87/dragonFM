@@ -17,7 +17,7 @@ class processManager():
             return
         self.processListLock.acquire(True)
         self.internalProcesses[id] = threading.Thread(
-            target=self.internalProcess, args=(id, name, description, process, value, preProcess, postProcess)
+            target=self.internalProcess, args=[id, name, description, process, value, preProcess, postProcess]
         )
         self.processListLock.release()
         self.internalProcesses[id].start()

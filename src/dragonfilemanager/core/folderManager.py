@@ -1,7 +1,6 @@
 import sys, os, time, threading, curses, math
 from pathlib import Path
 from os.path import expanduser
-from operator import itemgetter 
 from collections import OrderedDict
 
 class folderManager():

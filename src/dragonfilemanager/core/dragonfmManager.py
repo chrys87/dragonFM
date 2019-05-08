@@ -35,6 +35,10 @@ class dragonfmManager():
         self.viewManager = None
         self.inputManager = None
         self.commandManager = commandManager.commandManager(self)
+        self.runningLock = threading.RLock()
+        self.disabledLock = threading.RLock()
+        self.updateLock = threading.RLock()
+
         self.initEncoding()
         self.initTerminal()
         self.setProcessName()
@@ -69,7 +73,9 @@ class dragonfmManager():
             return
         if self.getDisabled():
             return
+        self.updateLock.acquire(True)
         self.viewManager.update()
+        self.updateLock.release()
     def handleApplicationInput(self, shortcut):
         command = self.settingsManager.getShortcut('application-keyboard', shortcut)
         if command == '':
@@ -80,12 +86,12 @@ class dragonfmManager():
             return self.viewManager.handleInput(shortcut)
     def initTerminal(self):
         if self.old_term_attr == None:
-            self.old_term_attr = termios.tcgetattr(sys.stdin)    
+            self.old_term_attr = termios.tcgetattr(sys.stdin)
         self.new_term_attr = copy.deepcopy(self.old_term_attr)
-        # Disable extended input and output processing in our terminal        
+        # Disable extended input and output processing in our terminal
         self.new_term_attr[3] &= ~termios.IEXTEN
         self.new_term_attr[3] &= ~termios.OPOST
-        # Enable interpretation of the flow control characters in our terminal        
+        # Enable interpretation of the flow control characters in our terminal
         self.new_term_attr[3] &= ~termios.IXON
         # Disable interpretation of the special control keys in our terminal
         self.new_term_attr[3] &= ~termios.ISIG
@@ -97,7 +103,7 @@ class dragonfmManager():
         #self.oldflags = fcntl.fcntl(sys.stdin, fcntl.F_GETFL)
         # fcntl.fcntl(self.pty, fcntl.F_SETFD, fcntl.FD_CLOEXEC)
         # make the PTY non-blocking
-        # fcntl.fcntl(sys.stdin, fcntl.F_SETFL, self.oldflags | os.O_NONBLOCK)         
+        # fcntl.fcntl(sys.stdin, fcntl.F_SETFL, self.oldflags | os.O_NONBLOCK)
     def stop(self):
         self.setRunning(False)
     def shutdown(self):
@@ -163,13 +169,16 @@ class dragonfmManager():
         sys.stdout.flush()
         if self.old_term_attr != None:
             termios.tcsetattr(sys.stdin, termios.TCSANOW, self.old_term_attr)
-
     def setCursor(self, y, x):
         self.screen.move(y, x)
     def setDisabled(self, disabled):
+        self.disabledLock.acquire(True)
         self.disabled = disabled
+        self.disabledLock.release()
     def setRunning(self, running):
+        self.runningLock.acquire(True)
         self.running = running
+        self.runningLock.release()
     def initEncoding(self):
         locale.setlocale(locale.LC_ALL, '')
         self.encoding =locale.getpreferredencoding()
@@ -183,7 +192,7 @@ class dragonfmManager():
     def getClipboardManager(self):
         return self.clipboardManager
     def getCurrFolderManager(self):
-        return self.viewManager.getCurrentTab().getFolderManager()    
+        return self.viewManager.getCurrentTab().getFolderManager()
     def getSelectionManager(self):
         return self.selectionManager
     def getProcessManager(self):
@@ -193,7 +202,7 @@ class dragonfmManager():
     def getFileManager(self):
         return self.fileManager
     def getViewManager(self):
-        return self.viewManager   
+        return self.viewManager
     def getInputManager(self):
         return self.inputManager
     def getCommandManager(self):
@@ -205,6 +214,10 @@ class dragonfmManager():
     def getDragonFmPath(self):
         return self.dragonFmPath
     def getDisabled(self):
+        self.disabledLock.acquire(True)
         return self.disabled
+        self.disabledLock.release()
     def getRunning(self):
+        self.runningLock.acquire(True)
         return self.running
+        self.runningLock.release()
