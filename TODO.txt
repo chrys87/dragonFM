@@ -33,6 +33,7 @@ It is essential that whatever we use be Unicode-compatible, because we will have
 (Done): Home and End takes you to top of current directory or bottom.
 (Done): present values in an human readable format
 (Done): Search by Typing: Typing makes cursor jump to file beginning in letter or letters that were typed by user.
+(Done): Update if current folder changes
 
 (Needs Binding): Alt+up arrow should go to parent directory, like in pcmanfm etc.
 (Needs Binding): alt plus home should go directly to home folder.
@@ -46,9 +47,9 @@ When we talk about Tabs, they need not look like a tab on Firefox, for example, 
 place it in mainloop. make it use an multithreading queue and blocking mechanism to let threads wait. Global runmodal then.
 (Todo): add initial dialogManager
 (Todo): caputre keys for it with priority in mainloop
-(Todo): Only call update in mainloop
+(Done): Only call update in mainloop
 (Todo): draw it in mainloop
-(Todo): make mainloop unblocking
+(Done): make mainloop unblocking
 (Todo): design dialog
 (Todo): add "set default value" method
 (Todo): add question text method
@@ -65,7 +66,6 @@ place it in mainloop. make it use an multithreading queue and blocking mechanism
 (Todo): F2 to rename whatever the current file or directory is. (needs input dialog)
 
 # Folder View (Priority)
-(WIP): Update if current folder changes
 (WIP): Nice Formatting for column view (align them)
 (Todo): input for change location (needs input dialog)
 (Todo): Track history
