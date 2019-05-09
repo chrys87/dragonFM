@@ -60,18 +60,30 @@ class folderManager():
         startIndex = self.getIndex()
         searchIndex = startIndex
         location = self.getLocation()
-        searchString = '{0}/{1}'.format(location, self.typeAheadSearch)
+        if not location.endswith('/'):
+            location += '/'
+        searchString = '{0}{1}'.format(location, self.typeAheadSearch)
         
         while True:
-            searchIndex += 1
-            if searchIndex >= len(self.keys) - 1:
-                searchIndex = 0
-            if searchIndex == startIndex:
-                return False
+            if len(self.typeAheadSearch) == 1:
+                # jump always to next match if only one first letter nav (==1)
+                searchIndex += 1
+                if searchIndex >= len(self.keys):
+                    searchIndex = 0
+                if searchIndex == startIndex:
+                    return False
             if self.keys[searchIndex].lower().startswith(searchString):
                 self.setIndex(searchIndex)
                 self.lastTypeAheadTime = time.time()
                 return True
+            elif len(self.typeAheadSearch) > 1:
+                # keep current match until its not matching 
+                # anymore for type ahead search (> 1)
+                searchIndex += 1
+                if searchIndex >= len(self.keys):
+                    searchIndex = 0
+                if searchIndex == startIndex:
+                    return False
     def resetTypeAheadSearch(self, force = False):
         if (time.time() - self.lastTypeAheadTime > 1) or force:
             self.typeAheadSearch = ''
