@@ -19,6 +19,6 @@ class command():
     def run(self, callback = None):
         folderManager = self.dragonfmManager.getCurrFolderManager()
         if folderManager.unselectAllEntries():
-            folderManager.setNeedRefresh()
+            folderManager.setRequestUpdate()
         if callback:
             callback()

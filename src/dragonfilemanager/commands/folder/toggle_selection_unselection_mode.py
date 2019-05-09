@@ -21,10 +21,10 @@ class command():
         if folderManager.getSelectionMode() == 0:
             folderManager.setSelectionMode(1)
             if folderManager.selectCurrentEntry():
-                folderManager.setNeedRefresh()              
+                folderManager.setRequestUpdate()              
         else:
             folderManager.setSelectionMode(0)       
             if folderManager.unselectAllEntries():
-                folderManager.setNeedRefresh()            
+                folderManager.setRequestUpdate()            
         if callback:
             callback()

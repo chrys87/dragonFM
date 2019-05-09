@@ -21,11 +21,11 @@ class command():
         # unselection mode
         if folderManager.getSelectionMode() == 0:
             if folderManager.unselectAllEntries():
-                folderManager.setNeedRefresh()
+                folderManager.setRequestUpdate()
         # selection mode
         elif folderManager.getSelectionMode() == 1:
             if folderManager.selectCurrentEntry():
-                folderManager.setNeedRefresh()        
+                folderManager.setRequestUpdate()        
         # ignore mode
         elif folderManager.getSelectionMode() == 2:
             pass

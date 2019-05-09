@@ -26,7 +26,8 @@ class folderManager():
         self.headerOffset = 0
         self.footerOffset = 0
         self.messageTimer = None
-        self.needRefresh = False
+        self.requestUpdate = False
+        self.requestReload = False
         self.selectionMode = 0 # 0 = unselect on navigation, 1 = select on navigation, 2 = ignore
         self.page = 0
         self.columns = ['name','selected']
@@ -147,12 +148,22 @@ class folderManager():
                         currFolder = '/'
         self.gotoFolder(currFolder)
     def enter(self):
-        self.setNeedRefresh()
+        self.setRequestUpdate()
         self.dragonfmManager.update()
     def leave(self):
         pass
-    def setNeedRefresh(self):
-        self.needRefresh = True
+    def isRequestReload(self):
+        return self.requestReload
+    def setRequestReload(self):
+        self.requestReload = True
+    def resetRequestReload(self):
+        self.requestReload = False
+    def isRequestUpdate(self):
+        return self.requestUpdate
+    def setRequestUpdate(self):
+        self.requestUpdate = True
+    def resetRequestUpdate(self):
+        self.requestUpdate = False
     def setLocation(self, location, entryName = None):
         if location == '':
             return False
@@ -179,7 +190,7 @@ class folderManager():
         size = self.getEntryAreaSize()
         page = int(index / size)
         if page != self.page:
-            self.setNeedRefresh()
+            self.setRequestUpdate()
             self.page = page
 
     def getIndex(self):
@@ -215,7 +226,7 @@ class folderManager():
         if path == '':
             return False
         self.openEntry(path, location)
-        self.setNeedRefresh()
+        self.setRequestUpdate()
         return True
     def openEntry(self, path, entryName=None, entry = None):
         if not path:
@@ -248,7 +259,7 @@ class folderManager():
         screenIndex += self.headerOffset
         return screenIndex
     def update(self):
-        if self.needRefresh:
+        if self.isRequestUpdate():
             self.dragonfmManager.erase()
             self.drawHeader()
             self.drawFooter()
@@ -264,7 +275,7 @@ class folderManager():
     def gotoFolder(self, path, entryName = None):
         if self.loadEntriesFromFolder(path):
             self.setLocation(path, entryName)
-            self.setNeedRefresh()
+            self.setRequestUpdate()
             return True
         return False
     def reloadFolder(self):
@@ -338,7 +349,7 @@ class folderManager():
         return self.message != ''
     def resetMessage(self):
         self.message = ''
-        self.setNeedRefresh()
+        self.setRequestUpdate()
         self.dragonfmManager.update()
     def setMessage(self, message):
         if self.messageTimer:
@@ -347,7 +358,7 @@ class folderManager():
         self.messageTimer = threading.Timer(0.5, self.resetMessage)
 
         self.message = message
-        self.setNeedRefresh()
+        self.setRequestUpdate()
         self.dragonfmManager.update()
         self.messageTimer.start()
     def drawHeader(self):
