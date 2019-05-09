@@ -45,7 +45,7 @@ class autoUpdateManager():
             target=self.watchThread, args=[callback]
         )
         self.watchdogThread.start()
-    def stopWatch(self):
+    def requestStop(self):
         self.watchdogLock.acquire(True)
         if self.location == '':
             self.watchdogLock.release()
@@ -61,6 +61,7 @@ class autoUpdateManager():
             except:
                 pass
         self.watchdogLock.release()
+    def waitForStopWatch(self):
         try:
             if self.watchdogThread != None:
                 self.watchdogThread.join()
@@ -86,6 +87,6 @@ class autoUpdateManager():
                 wasChange = True
                 lastChangeTime = time.time()
             if wasChange:
-                if (time.time() - lastChangeTime) > 1:
+                if (time.time() - lastChangeTime) > 0.5:
                     wasChange = False
                     callback()

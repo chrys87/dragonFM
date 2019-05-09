@@ -155,6 +155,7 @@ class dragonfmManager():
         screen.keypad(True)
         self.setScreen(screen)
         self.setDisabled(False) 
+        self.screen.timeout(150)
 
     def leave(self):
         self.setDisabled(True)

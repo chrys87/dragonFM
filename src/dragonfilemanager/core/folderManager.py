@@ -196,6 +196,8 @@ class folderManager():
             # dont underrun
             if NoOfEntries > 0:
                 index = len(self.keys) - 1
+            else:
+                index = 0
         self.setIndex(index)
 
         # try to get current element 
@@ -321,7 +323,7 @@ class folderManager():
         self.resetRequestReload()
         if path != self.getLocation():
             self.unselectAllEntries()
-            self.autoUpdateManager.stopWatch()
+            self.autoUpdateManager.requestStop()
 
         elements = os.listdir(path)
         entries = {}
@@ -340,6 +342,7 @@ class folderManager():
         # sort entries here
         self.createdSortedEntries(entries)
         if path != self.getLocation():
+            self.autoUpdateManager.waitForStopWatch()
             self.setLocation(path)
             self.autoUpdateManager.startWatch(path, self.setRequestReload)
             self.setCurrentCursor(self.getIndex(), entryName)
