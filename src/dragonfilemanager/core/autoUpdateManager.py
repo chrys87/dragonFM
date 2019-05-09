@@ -12,10 +12,9 @@ ALL_INOTIFY_EVENTS = (inotify.constants.IN_ACCESS | inotify.constants.IN_MODIFY 
 '''
 
 class autoUpdateManager():
-    #def __init__(self, dragonfmManager):
-    #    self.dragonfmManager = dragonfmManager
-    #    self.settingsManager = self.dragonfmManager.getSettingsManager()
-    def __init__(self):
+    def __init__(self, dragonfmManager):
+        self.dragonfmManager = dragonfmManager
+        self.settingsManager = self.dragonfmManager.getSettingsManager()
         self.DRAGON_INOTIFY_EVENTS = (inotify.constants.IN_ACCESS |
             inotify.constants.IN_MODIFY |inotify.constants.IN_ATTRIB |
             inotify.constants.IN_CLOSE_WRITE | inotify.constants.IN_CLOSE_NOWRITE |
@@ -29,6 +28,7 @@ class autoUpdateManager():
         self.notificationLock = threading.RLock()
         self.location = ''
         self.watchdogThread = None
+
     def startWatch(self, location, callback):
         self.watchdogLock.acquire(True)
         if self.watchdog != None:
@@ -70,10 +70,11 @@ class autoUpdateManager():
         self.watchdog = None
         self.watchdogThread = None
         self.watchdogLock.release()
+
     def watchThread(self, callback):
         wasChange = False
         lastChangeTime = time.time()
-        while True: #self.dragonfmManager.getRunning():
+        while self.dragonfmManager.getRunning():
             self.watchdogLock.acquire(True)
             if self.location == '':
                 self.watchdogLock.release()
@@ -85,6 +86,6 @@ class autoUpdateManager():
                 wasChange = True
                 lastChangeTime = time.time()
             if wasChange:
-                if (time.time() - lastChangeTime) > 1.5:
+                if (time.time() - lastChangeTime) > 1:
                     wasChange = False
                     callback()

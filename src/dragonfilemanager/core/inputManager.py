@@ -13,14 +13,16 @@ class inputManager():
         if key == curses.ERR:
             return None
         keys = curses.keyname(key).decode("utf-8") 
-        self.screen.nodelay(True)
+        self.screen.timeout(1)
+        #self.screen.nodelay(True)
         while True:
             key = self.screen.getch()
             if key == curses.ERR:
                 break
             key = curses.keyname(key).decode("utf-8")
             keys += ',{0}'.format(key)
-        self.screen.nodelay(False)
+        #self.screen.nodelay(False)
+        self.screen.timeout(200)
         #self.screen.addstr(0,0,str(time.time()) + ' ' +str(keys))
         
         return str(keys)

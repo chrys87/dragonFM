@@ -31,7 +31,7 @@ class dragonfmManager():
         self.clipboardManager = clipboardManager.clipboardManager(self)
         self.debugManager = debugManager.debugManager(self)
         self.fileManager = fileManager.fileManager(self)
-        self.selectionManager = selectionManager.selectionManager(self)       
+        self.selectionManager = selectionManager.selectionManager(self)
         self.viewManager = None
         self.inputManager = None
         self.commandManager = commandManager.commandManager(self)
@@ -153,7 +153,6 @@ class dragonfmManager():
         curses.start_color()
         #curses.cbreak()
         screen.keypad(True)
-        screen.timeout(350)
         self.setScreen(screen)
         self.setDisabled(False) 
 
@@ -215,9 +214,11 @@ class dragonfmManager():
         return self.dragonFmPath
     def getDisabled(self):
         self.disabledLock.acquire(True)
-        return self.disabled
+        disabled = self.disabled
         self.disabledLock.release()
+        return disabled
     def getRunning(self):
         self.runningLock.acquire(True)
-        return self.running
+        running = self.running
         self.runningLock.release()
+        return running

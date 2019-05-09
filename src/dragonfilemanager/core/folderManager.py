@@ -2,16 +2,18 @@ import sys, os, time, threading, curses, math
 from pathlib import Path
 from os.path import expanduser
 from collections import OrderedDict
+from dragonfilemanager.core import autoUpdateManager
 
 class folderManager():
     def __init__(self, id, dragonfmManager, pwd= ''):
         self.dragonfmManager = dragonfmManager
         self.screen = self.dragonfmManager.getScreen()
-        self.height = self.dragonfmManager.getScreenHeight()        
+        self.height = self.dragonfmManager.getScreenHeight()
         self.width = self.dragonfmManager.getScreenWidth()
         self.settingsManager = self.dragonfmManager.getSettingsManager()
         self.fileManager = self.dragonfmManager.getFileManager()
         self.commandManager = self.dragonfmManager.getCommandManager()
+        self.autoUpdateManager = autoUpdateManager.autoUpdateManager(self.dragonfmManager)
         self.id = id
         self.message = ''
         self.location = ''
@@ -41,6 +43,13 @@ class folderManager():
         self.setReverseSorting(self.settingsManager.getBool('folder', 'reverse'))
         self.setCaseSensitiveSorting(self.settingsManager.getBool('folder', 'casesensitive'))
         self.initLocation(pwd)
+        '''
+        try:
+            self.autoUpdateManager.startWatch('/tmp/playzone', self.setRequestReload)
+            self.screen.addstr(0, 0, 'läuft')
+        except Exception as e:
+            self.screen.addstr(0, 0, str(e)+'nicht')
+        '''
     def doTypeAheadSearch(self, key):
         # useful for type ahead search?
         if key == None:
@@ -100,7 +109,7 @@ class folderManager():
             if self.sorting == '':
                 self.sorting = ['name']
         except:
-            pass     
+            pass
     def setSelectionMode(self, mode):
         self.selectionMode = mode
     def getSelectionMode(self):
@@ -113,12 +122,12 @@ class folderManager():
         self.setSelectionMode(mode)
     def setReverseSorting(self, reverseSorting):
         try:
-            self.reverseSorting = reverseSorting        
+            self.reverseSorting = reverseSorting
         except:
             pass
     def setCaseSensitiveSorting(self, caseSensitiveSorting):
         try:
-            self.caseSensitiveSorting = caseSensitiveSorting        
+            self.caseSensitiveSorting = caseSensitiveSorting
         except:
             pass
 
@@ -126,7 +135,7 @@ class folderManager():
         try:
             self.selection.remove(path)
         except:
-            pass        
+            pass
         try:
             self.keys.remove(path)
         except:
@@ -180,19 +189,25 @@ class folderManager():
         self.requestUpdateLock.acquire(True)
         self.requestUpdate = False
         self.requestUpdateLock.release()
-    def setLocation(self, location, entryName = None):
-        if location == '':
-            return False
-        if not os.path.exists(location):
-            return False
-        self.Path = Path(location)
-        self.location = location
-        self.setIndex(0)
+    def setCurrentCursor(self, index, entryName = None):
+        NoOfEntries = len(self.keys)
+        # dont overrunt
+        if index >= NoOfEntries:
+            # dont underrun
+            if NoOfEntries > 0:
+                index = len(self.keys) - 1
+        self.setIndex(index)
+
+        # try to get current element 
         if entryName != None:
             try:
                 self.setIndex( self.keys.index(entryName))
             except:
                 pass
+    def setLocation(self, location):
+        self.Path = Path(location)
+        self.location = location
+        self.setIndex(0)
         return True
     def getKeyByIndex(self, index):
         try:
@@ -261,7 +276,7 @@ class folderManager():
             return None
     def getCurrentKey(self):
         try:
-            return self.getKeyByIndex(self.getIndex())    
+            return self.getKeyByIndex(self.getIndex())
         except:
             return None
 
@@ -275,6 +290,8 @@ class folderManager():
         screenIndex += self.headerOffset
         return screenIndex
     def update(self):
+        if self.isRequestReload():
+            self.reloadFolder()
         if self.isRequestUpdate():
             self.dragonfmManager.erase()
             self.drawHeader()
@@ -289,39 +306,51 @@ class folderManager():
     def getPage(self):
         return self.page
     def gotoFolder(self, path, entryName = None):
-        if self.loadEntriesFromFolder(path):
-            self.setLocation(path, entryName)
+        if self.loadEntriesFromFolder(path, entryName):
             self.setRequestUpdate()
             return True
         return False
     def reloadFolder(self):
         entryName = self.getCurrentKey()
         self.gotoFolder(self.getLocation(), entryName)
-    def loadEntriesFromFolder(self, path):
-        if path != self.getLocation():
-            self.unselectAllEntries()
+    def loadEntriesFromFolder(self, path, entryName = None):
+        if path == '':
+            return False
         if not os.access(path, os.R_OK):
             return False
-        if not path.endswith('/'):
-            path += '/'
+        self.resetRequestReload()
+        if path != self.getLocation():
+            self.unselectAllEntries()
+            self.autoUpdateManager.stopWatch()
+
         elements = os.listdir(path)
         entries = {}
+
         for e in elements:
             if e.startswith('.'):
                 if not self.settingsManager.getBool('folder', 'showHidden'):
                     continue
-            fullPath = path + e
+            fullPath = path
+            if not fullPath.endswith('/'):
+                fullPath += '/'
+            fullPath += e
             entry = self.fileManager.getInfo(fullPath)
             if entry != None:
                 entries[fullPath] = entry
         # sort entries here
         self.createdSortedEntries(entries)
+        if path != self.getLocation():
+            self.setLocation(path)
+            self.autoUpdateManager.startWatch(path, self.setRequestReload)
+            self.setCurrentCursor(self.getIndex(), entryName)
+        else:
+            self.setCurrentCursor(self.getIndex(), entryName)
         return True
     def createdSortedEntries(self, entries):
         self.entries = OrderedDict(sorted(entries.items(), reverse=self.reverseSorting, key=self.getSortingKey))
         self.keys = list(self.entries.keys())
     def getSortingKey(self, element):
-        #self.screen.addstr(self.headerOffset, 0, str(element))        
+        #self.screen.addstr(self.headerOffset, 0, str(element))
         sortingKey = []
         try:
             for column in self.sorting:
@@ -352,8 +381,7 @@ class folderManager():
             return result
         except Exception as e:
             if debug:
-                self.setMessage('debug Sequence: {0} Command: {1} Error: {2}'.format(shortcut, command, e))        
-
+                self.setMessage('debug Sequence: {0} Command: {1} Error: {2}'.format(shortcut, command, e))
     def handleInput(self, shortcut):
         return self.handleFolderInput(shortcut)
     def getLocation(self):
@@ -366,16 +394,13 @@ class folderManager():
     def resetMessage(self):
         self.message = ''
         self.setRequestUpdate()
-        self.dragonfmManager.update()
     def setMessage(self, message):
         if self.messageTimer:
             if self.messageTimer.is_alive():
                 self.messageTimer.cancel()
         self.messageTimer = threading.Timer(0.5, self.resetMessage)
-
         self.message = message
         self.setRequestUpdate()
-        self.dragonfmManager.update()
         self.messageTimer.start()
     def drawHeader(self):
         self.headerOffset = 0
@@ -418,10 +443,10 @@ class folderManager():
         return self.selectEntry(key)
     def uncselectCurrentEntry(self):
         key = self.getCurrentKey()
-        return self.unselectEntry(key)    
+        return self.unselectEntry(key)
     def isCurrentEntrySelected(self):
         key = self.getCurrentKey()
-        return self.isSelected(key)      
+        return self.isSelected(key)
     def selectAllEntries(self):
         selected = False
         for key in self.keys:
