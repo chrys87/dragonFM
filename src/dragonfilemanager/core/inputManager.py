@@ -13,7 +13,7 @@ class inputManager():
         if key == curses.ERR:
             return None
         keys = curses.keyname(key).decode("utf-8") 
-        self.screen.timeout(1)
+        self.screen.timeout(0)
         while True:
             key = self.screen.getch()
             if key == curses.ERR:
@@ -45,4 +45,3 @@ class inputManager():
             keys.append(chr(key))
         self.screen.nodelay(False)
         return str(keys)
-            
