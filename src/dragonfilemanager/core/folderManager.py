@@ -28,6 +28,8 @@ class folderManager():
         self.messageTimer = None
         self.requestUpdate = False
         self.requestReload = False
+        self.requestUpdateLock = threading.RLock()
+        self.requestReloadLock = threading.RLock()
         self.selectionMode = 0 # 0 = unselect on navigation, 1 = select on navigation, 2 = ignore
         self.page = 0
         self.columns = ['name','selected']
@@ -153,17 +155,31 @@ class folderManager():
     def leave(self):
         pass
     def isRequestReload(self):
-        return self.requestReload
+        self.requestReloadLock.acquire(True)
+        requestReload = self.requestReload
+        self.requestReloadLock.release()
+        return requestReload
     def setRequestReload(self):
+        self.requestReloadLock.acquire(True)
         self.requestReload = True
+        self.requestReloadLock.release()
     def resetRequestReload(self):
+        self.requestReloadLock.acquire(True)
         self.requestReload = False
+        self.requestReloadLock.release()
     def isRequestUpdate(self):
-        return self.requestUpdate
+        self.requestUpdateLock.acquire(True)
+        requestUpdate = self.requestUpdate
+        self.requestUpdateLock.release()
+        return requestUpdate
     def setRequestUpdate(self):
+        self.requestUpdateLock.acquire(True)
         self.requestUpdate = True
+        self.requestUpdateLock.release()
     def resetRequestUpdate(self):
+        self.requestUpdateLock.acquire(True)
         self.requestUpdate = False
+        self.requestUpdateLock.release()
     def setLocation(self, location, entryName = None):
         if location == '':
             return False
