@@ -85,7 +85,7 @@ class folderManager():
                 if searchIndex == startIndex:
                     return False
     def resetTypeAheadSearch(self, force = False):
-        if (time.time() - self.lastTypeAheadTime > 1) or force:
+        if (time.time() - self.lastTypeAheadTime > 1.5) or force:
             self.typeAheadSearch = ''
     def setColumns(self, columsString):
         self.columns = columsString.split(',')

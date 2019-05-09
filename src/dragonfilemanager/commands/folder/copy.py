@@ -8,13 +8,13 @@ class command():
         self.screen = self.dragonfmManager.getScreen()
         self.settingsManager = self.dragonfmManager.getSettingsManager()
         self.selectionManager = self.dragonfmManager.getSelectionManager()
-        self.clipboardManager = self.dragonfmManager.getClipboardManager()        
+        self.clipboardManager = self.dragonfmManager.getClipboardManager()
     def shutdown(self):
         pass
     def getName(self):
-        return _('No description found')
+        return _('Copy')
     def getDescription(self):
-        return _('No description found')
+        return _('Copy current entry or selection')
     def active(self):
         return True
     def getValue(self):

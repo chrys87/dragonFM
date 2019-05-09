@@ -7,9 +7,9 @@ class command():
     def shutdown(self):
         pass
     def getName(self):
-        return _('Previous Entry')
+        return _('Select All')
     def getDescription(self):
-        return _('Move Cursor to previous entry')
+        return _('Select All entries in the current folder')
     def active(self):
         return True
     def getValue(self):

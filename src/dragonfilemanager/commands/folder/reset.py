@@ -7,9 +7,9 @@ class command():
     def shutdown(self):
         pass
     def getName(self):
-        return _('Unselect All')
+        return _('Reset')
     def getDescription(self):
-        return _('Unselect all entries')
+        return _('Reset All')
     def active(self):
         return True
     def getValue(self):
@@ -18,7 +18,9 @@ class command():
         return None
     def run(self, callback = None):
         folderManager = self.dragonfmManager.getCurrFolderManager()
-        if folderManager.unselectAllEntries():
-            folderManager.setNeedRefresh()
+        folderManager.setSelectionMode(0)
+        folderManager.resetTypeAheadSearch(True)
+        folderManager.unselectAllEntries()
+        folderManager.setNeedRefresh()
         if callback:
             callback()
