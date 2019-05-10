@@ -37,12 +37,11 @@ class Textbox:
     KEY_LEFT = Ctrl-B, KEY_RIGHT = Ctrl-F, KEY_UP = Ctrl-P, KEY_DOWN = Ctrl-N
     KEY_BACKSPACE = Ctrl-h
     """
-    def __init__(self, x = 0, y = 0, insert_mode=True, description = []):
+    def __init__(self, parentWindow, insert_mode=True, description = []):
         self.init()
         self.setInsertMode(insert_mode)
-        ncols, nlines = 50, len(description) + 2
-        win = curses.newwin(nlines, ncols, y, x)
-        self.setWindow(win)
+        height = len(description) + 1
+        self.createWindow(parentWindow, height)
         self.setDescription(description)
     def setDescription(self, description):
         for d in description:
@@ -51,13 +50,21 @@ class Textbox:
     def init(self):
         self.stripspaces = 1
         self.lastcmd = None
+        self.parentWindow = None
+        self.win = None
         self.validValues = []
         self.headerOffset = 0
-    def setWindow(self, window):
-        self.win = window
+    def createWindow(self, parentWindow, height):
+        self.parentWindow = parentWindow
+        parentSizeY, parentSizeX = self.parentWindow.getmaxyx()
+        ncols, nlines = parentSizeX, height
+        self.win = curses.newwin(nlines, ncols, 0, 0)
         self.win.keypad(1)
         self._update_max_yx()
 
+    def close(self):
+        if self.parentWindow:
+            self.parentWindow.touchwin()
     def setInsertMode(self, insert_mode):
         self.insert_mode = insert_mode
     def _update_max_yx(self):
@@ -209,23 +216,26 @@ class Textbox:
                     break
                 self.win.refresh()
             currValue = self.gather()
-            self.win.addstr(self.headerOffset + 1, 0, repr(currValue))
-
+            currValue = currValue.replace('\n','')
+            if self.getValidValues() == []:
+                break
+        self.close()
         del self.win
         return currValue
 
 if __name__ == '__main__':
     def test_editbox(stdscr):
-        ncols, nlines = 50, 1
         uly, ulx = 2, 1
-        #stdscr.addstr(uly-2, ulx, "Use Ctrl-G to end editing.")
-        #win = curses.newwin(nlines, ncols, uly, ulx)
-        #rectangle(stdscr, uly-1, ulx-1, uly + nlines, ulx + ncols)
+        stdscr.addstr(0, 0, "Parent Window")
         stdscr.refresh()
-        inputBox = Textbox(description=['willst du wirklich?','j = ja','n = nein'])
-        inputBox.setValidValues(['test\n', 'q\n', 'j\n', 'n\n'])
-        #inputBox.setDescription('mal ne frage j oder n?')
-        return inputBox.show(initValue='test')
+        stdscr.getch()
+        inputBox = Textbox(stdscr, description=['Do You realy want?','q = quit','y = yes','n = nope'])
+        inputBox.setValidValues(['q', 'y', 'n'])
+        text = inputBox.show(initValue='y')
+        stdscr.erase()
+        stdscr.addstr(0, ulx, "Parent Window")
+        stdscr.addstr(1, ulx, "Dialog was closed                      ")
+        stdscr.addstr(2, ulx, 'The value was: {}'.format(text))
+        stdscr.getch()
 
-    result = curses.wrapper(test_editbox)
-print('Contents of text box:', repr(result))
+    curses.wrapper(test_editbox)
