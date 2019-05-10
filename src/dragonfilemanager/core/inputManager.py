@@ -20,7 +20,7 @@ class inputManager():
                 break
             key = curses.keyname(key).decode("utf-8")
             keys += ',{0}'.format(key)
-        self.screen.timeout(1)
+        self.screen.timeout(150)
 
         return str(keys)
     def getKey(self):
