@@ -61,8 +61,8 @@ place it in mainloop. make it use an multithreading queue and blocking mechanism
 (WIP): Keybindings similar to nautilus
 
 # basic file operations (Priority)
-(Todo): control shift n, to create a new directory in current directory. (needs input dialog)
-(Todo): control alt n to create a new text file in current directory. Equivalent of touch command. (needs input dialog)
+(WIP): control shift n, to create a new directory in current directory. (needs input dialog)
+(WIP): control alt n to create a new text file in current directory. Equivalent of touch command. (needs input dialog)
 (Todo): F2 to rename whatever the current file or directory is. (needs input dialog)
 
 # Folder View (Priority)
