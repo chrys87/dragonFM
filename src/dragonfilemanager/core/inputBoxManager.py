@@ -37,28 +37,26 @@ class Textbox:
     KEY_LEFT = Ctrl-B, KEY_RIGHT = Ctrl-F, KEY_UP = Ctrl-P, KEY_DOWN = Ctrl-N
     KEY_BACKSPACE = Ctrl-h
     """
-    def __init__(self, stdscr, insert_mode=True):
+    def __init__(self, x = 0, y = 0, insert_mode=True, description = []):
         self.init()
-        ncols, nlines = 50, 1
-        uly, ulx = 2, 1
-        win = curses.newwin(nlines, ncols, uly, ulx)
-        win.addstr(uly-2, ulx, "Use Ctrl-G to end editing.")
-        rectangle(win, uly-1, ulx-1, uly + nlines, ulx + ncols)
-        self.setWindow(win)
         self.setInsertMode(insert_mode)
-    #def __init__(self, win, insert_mode=True):
-    #    self.init()
-    #    self.setWindow(win)
-    #    self.setInsertMode(insert_mode)
+        ncols, nlines = 50, len(description) + 2
+        win = curses.newwin(nlines, ncols, y, x)
+        self.setWindow(win)
+        self.setDescription(description)
+    def setDescription(self, description):
+        for d in description:
+            self.win.addstr(self.headerOffset, 0, d)
+            self.headerOffset += 1
     def init(self):
-        self.insert_mode = insert_mode
-        self._update_max_yx()
         self.stripspaces = 1
         self.lastcmd = None
         self.validValues = []
+        self.headerOffset = 0
     def setWindow(self, window):
         self.win = window
         self.win.keypad(1)
+        self._update_max_yx()
 
     def setInsertMode(self, insert_mode):
         self.insert_mode = insert_mode
@@ -144,10 +142,12 @@ class Textbox:
         elif ch == curses.ascii.BEL:                           # ^g
             return 0
         elif ch == curses.ascii.NL:                            # ^j
-            if self.maxy == 0:
-                return 0
-            elif y < self.maxy:
-                self.win.move(y+1, 0)
+            return False
+            #if self.maxy == 0:
+            #    return 0
+            #elif y < self.maxy:
+            #    return 0
+            #    self.win.move(y+1, 0)
         elif ch == curses.ascii.VT:                            # ^k
             if x == 0 and self._end_of_line(y) == 0:
                 self.win.deleteln()
@@ -169,13 +169,13 @@ class Textbox:
                 self.win.move(y-1, x)
                 if x > self._end_of_line(y-1):
                     self.win.move(y-1, self._end_of_line(y-1))
-        return 1
+        return True
 
     def gather(self):
         "Collect and return the contents of the window."
         result = ""
         self._update_max_yx()
-        for y in range(self.maxy+1):
+        for y in range(self.headerOffset, self.maxy+1):
             self.win.move(y, 0)
             stop = self._end_of_line(y)
             if stop == 0 and self.stripspaces:
@@ -198,7 +198,7 @@ class Textbox:
         currValue = None
         while not currValue or not self.isValidValues(currValue):
             if initValue != '' :
-                self.win.addstr(0, 0, initValue)
+                self.win.addstr(self.headerOffset, 0, initValue)
             while True:
                 ch = self.win.getch()
                 if validate:
@@ -209,6 +209,9 @@ class Textbox:
                     break
                 self.win.refresh()
             currValue = self.gather()
+            self.win.addstr(self.headerOffset + 1, 0, repr(currValue))
+
+        del self.win
         return currValue
 
 if __name__ == '__main__':
@@ -219,8 +222,9 @@ if __name__ == '__main__':
         #win = curses.newwin(nlines, ncols, uly, ulx)
         #rectangle(stdscr, uly-1, ulx-1, uly + nlines, ulx + ncols)
         stdscr.refresh()
-        inputBox = Textbox(win)
-        inputBox.setValidValues(['test', 'q', 'q ', 'j', 'n'])
+        inputBox = Textbox(description=['willst du wirklich?','j = ja','n = nein'])
+        inputBox.setValidValues(['test\n', 'q\n', 'j\n', 'n\n'])
+        #inputBox.setDescription('mal ne frage j oder n?')
         return inputBox.show(initValue='test')
 
     result = curses.wrapper(test_editbox)
