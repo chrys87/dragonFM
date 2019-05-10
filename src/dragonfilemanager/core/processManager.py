@@ -37,17 +37,16 @@ class processManager():
                 postProcess(value)
             else:
                 postProcess()
-        self.stopInternal(id)
+        self.removeInternal(id)
     def getNewProcessID(self):
         ids = list(self.internalProcesses.keys())
         for id in range(1000000):
             if not id in ids:
                 return id
         return -1
-    def stopInternal(self, id):
+    def removeInternal(self, id):
         try:
             self.processListLock.acquire(True)
-            #self.internalProcesses[id].join()
             del self.internalProcesses[id]
             self.processListLock.release()
         except:
