@@ -13,6 +13,7 @@ class folderManager():
         self.settingsManager = self.dragonfmManager.getSettingsManager()
         self.fileManager = self.dragonfmManager.getFileManager()
         self.commandManager = self.dragonfmManager.getCommandManager()
+        self.clipboardManager = self.dragonfmManager.getClipboardManager()
         self.autoUpdateManager = autoUpdateManager.autoUpdateManager(self.dragonfmManager)
         self.id = id
         self.message = ''
@@ -477,16 +478,30 @@ class folderManager():
             for c in self.columns:
                 lowerColumn = c.lower()
                 if lowerColumn == 'selected':
-                    if self.isSelected(key):
-                        self.screen.addstr(i + self.headerOffset, pos, 'selected')
-                        pos += len('selected') + 2
+                    value = self.calcSelectionColumn(key)
+                    self.screen.addstr(i + self.headerOffset, pos, value)
+                    pos += len(value) + 2
                 else:
                     formattedValue = self.fileManager.formatColumn(lowerColumn, e[lowerColumn])
                     if i + len(formattedValue) < self.width:
                         self.screen.addstr(i + self.headerOffset, pos, formattedValue )
                         pos += len(formattedValue) + 2
             i += 1
-
+    def calcSelectionColumn(self, entry):
+        value = ''
+        doClipboard = True
+        doSelection = True
+        if doSelection:
+            if self.isSelected(entry):
+                value += 'selected'
+        if doClipboard:
+            if value != '':
+                value += ','
+            clipboard = self.clipboardManager.getClipboard()
+            if entry in clipboard:
+                operation = self.clipboardManager.getOperation()
+                value += operation
+        return value
     def drawFooter(self):
         self.footerOffset = 0
         self.footerOffset += 1

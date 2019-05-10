@@ -8,7 +8,7 @@ try:
     magicAvailable = True
 except:
     pass
-    
+
 
 class fileManager():
     def __init__(self, dragonfmManager):
@@ -30,7 +30,7 @@ class fileManager():
             return
         valueParam = {}
         valueParam['selection'] = selection
-        self.processManager.startInternal('remove', description = '', 
+        self.processManager.startInternal('remove', description = '',
             process = self.deleteSelectionThread, value=valueParam.copy())
     def deleteSelectionThread(self, valueParam):
         selection = valueParam['selection']
@@ -48,7 +48,7 @@ class fileManager():
             else:
                 os.remove(str(destPath))
         except Exception as e:
-            pass             
+            pass
     def copyEntry(self, fullPath, destination):
         try:
             sourcePath = Path(fullPath)
@@ -68,12 +68,12 @@ class fileManager():
                 os.symlink(currentCursor, fullPath)
         except OSError:
             pass
-    
-    def createLinkThread(self, valueParam):      
+
+    def createLinkThread(self, valueParam):
         currentCursor = valueParam['currentCursor']
         fullPath = valueParam['fullPath']
         self.createLink(currentCursor, fullPath)
-        
+
     def spawnCreateLinkCursorThread(self, currentCursor, fullPath):
         if currentCursor == None:
             return
@@ -88,7 +88,7 @@ class fileManager():
         valueParam['fullPath'] = fullPath
         
         self.processManager.startInternal('create link', description = '', 
-            process = self.createLinkThread, value=valueParam.copy())  
+            process = self.createLinkThread, value=valueParam.copy())
 
     def createFolder(self, fullPath):
         try:
@@ -96,7 +96,7 @@ class fileManager():
                 os.makedirs(fullPath)
         except OSError:
             pass
-    def createFolderThread(self, valueParam):      
+    def createFolderThread(self, valueParam):
         fullPath = valueParam['fullPath']
         self.createFolder(fullPath)
     def spawnCreateFolderThread(self, fullPath):
@@ -107,14 +107,14 @@ class fileManager():
         valueParam = {}
         valueParam['fullPath'] = fullPath
         self.processManager.startInternal('create folder', description = '', 
-            process = self.createFolderThread, value=valueParam.copy())         
+            process = self.createFolderThread, value=valueParam.copy())
     def createFile(self, fullPath):
         try:
             if not os.path.exists(fullPath):
                 os.mknod(fullPath)
         except OSError:
             pass
-    def createFileThread(self, valueParam):      
+    def createFileThread(self, valueParam):
         fullPath = valueParam['fullPath']
         self.createFile(fullPath)
     def spawnCreateFileThread(self, fullPath):
@@ -125,16 +125,16 @@ class fileManager():
         valueParam = {}
         valueParam['fullPath'] = fullPath
         self.processManager.startInternal('create file', description = '', 
-            process = self.createFileThread, value=valueParam.copy())             
-        
+            process = self.createFileThread, value=valueParam.copy())
+
     def moveEntry(self, fullPath, destination):
             try:
                 sourcePath = Path(fullPath)
-                destPath = Path(destination)                
+                destPath = Path(destination)
                 shutil.move(str(sourcePath), str(destPath))
             except:
                 pass
-    def pasteClipboardThread(self, valueParam):            
+    def pasteClipboardThread(self, valueParam):
         operation = valueParam['operation']
         clipboard = valueParam['clipboard']
         newLocation = valueParam['newLocation']
@@ -144,11 +144,11 @@ class fileManager():
             return
         # Loop through the files and directories and copy them.
         folderManager = self.dragonfmManager.getCurrFolderManager()
-        
+
         operation = self.clipboardManager.getOperation()
         clipboard = self.clipboardManager.getClipboard()
         newLocation = folderManager.getLocation()
-        
+
         valueParam = {}
         valueParam['operation'] = operation
         valueParam['clipboard'] = clipboard
@@ -156,7 +156,7 @@ class fileManager():
 
         self.processManager.startInternal(operation, description = '', 
             process = self.pasteClipboardThread, value=valueParam.copy())
-    def pasteClipboard(self, operation, clipboard, newLocation):    
+    def pasteClipboard(self, operation, clipboard, newLocation):
         if operation in ['cut']:
             self.clipboardManager.clearClipboard()
         for fullPath in clipboard:
@@ -256,12 +256,12 @@ class fileManager():
                         pass
                 if entry['mime'] == None:
                     if pathObject.is_symlink():
-                        entry['mime'] = 'inode/symlink'                
+                        entry['mime'] = 'inode/symlink'
                     else:
                         entry['mime'] = 'application/octet-stream'
                 # be a badass?
                 #mime = subprocess.Popen("/usr/bin/file --mime PATH", shell=True, \
-                #    stdout=subprocess.PIPE).communicate()[0]                        
+                #    stdout=subprocess.PIPE).communicate()[0]
 
         # details
         info = None
@@ -327,7 +327,7 @@ class fileManager():
             pass
         # be a badass?
         #mime = subprocess.Popen("/usr/bin/file --mime PATH", shell=True, \
-        #    stdout=subprocess.PIPE).communicate()[0]                    
+        #    stdout=subprocess.PIPE).communicate()[0]
         if pathObject.is_symlink():
             mime = 'inode/symlink'
         else:
@@ -361,7 +361,7 @@ class fileManager():
             if value == True:
                 return _('Link')
         except:
-            return ''        
+            return ''
     def formatColumn(self, column, value):
         if column == 'size':
             return str(self.formatSize(value))
