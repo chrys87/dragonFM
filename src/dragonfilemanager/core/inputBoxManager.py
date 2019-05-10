@@ -37,13 +37,14 @@ class Textbox:
     KEY_LEFT = Ctrl-B, KEY_RIGHT = Ctrl-F, KEY_UP = Ctrl-P, KEY_DOWN = Ctrl-N
     KEY_BACKSPACE = Ctrl-h
     """
-    def __init__(self, win, insert_mode=False):
+    def __init__(self, win, insert_mode=True):
         self.win = win
         self.insert_mode = insert_mode
         self._update_max_yx()
         self.stripspaces = 1
         self.lastcmd = None
         win.keypad(1)
+        self.validValues = []
 
     def _update_max_yx(self):
         maxy, maxx = self.win.getmaxyx()
@@ -164,7 +165,7 @@ class Textbox:
             if stop == 0 and self.stripspaces:
                 continue
             for x in range(self.maxx+1):
-                if self.stripspaces and x > stop:
+                if self.stripspaces and x >= stop:
                     break
                 result = result + chr(curses.ascii.ascii(self.win.inch(y, x)))
             if self.maxy > 0:
@@ -176,20 +177,23 @@ class Textbox:
         return self.validValues
     def isValidValues(self, value):
         return value in self.validValues
-    def edit(self, validate=None, value=''):
+    def show(self, validate=None, initValue=''):
         "Edit in the widget window and collect the results."
-        if value != '' 
-            self.win.addstr(0, 0, value)
-        while 1:
-            ch = self.win.getch()
-            if validate:
-                ch = validate(ch)
-            if not ch:
-                continue
-            if not self.do_command(ch):
-                break
-            self.win.refresh()
-        return self.gather()
+        currValue = None
+        while not currValue or not self.isValidValues(currValue):
+            if initValue != '' :
+                self.win.addstr(0, 0, initValue)
+            while True:
+                ch = self.win.getch()
+                if validate:
+                    ch = validate(ch)
+                if not ch:
+                    continue
+                if not self.do_command(ch):
+                    break
+                self.win.refresh()
+            currValue = self.gather()
+        return currValue
 
 if __name__ == '__main__':
     def test_editbox(stdscr):
@@ -199,7 +203,9 @@ if __name__ == '__main__':
         win = curses.newwin(nlines, ncols, uly, ulx)
         rectangle(stdscr, uly-1, ulx-1, uly + nlines, ulx + ncols)
         stdscr.refresh()
-        return Textbox(win, insert_mode=True).edit()
+        inputBox = Textbox(win)
+        inputBox.setValidValues(['test', 'q', 'q ', 'j', 'n'])
+        return inputBox.show(initValue='test')
 
-    str = curses.wrapper(test_editbox)
-print('Contents of text box:', repr(str)) 
+    result = curses.wrapper(test_editbox)
+print('Contents of text box:', repr(result))
