@@ -99,6 +99,7 @@ class dragonfmManager():
         self.new_term_attr[6][termios.VINTR] = 0
         self.new_term_attr[6][termios.VQUIT] = 0
         self.new_term_attr[6][termios.VSUSP] = 0
+        os.environ.setdefault('ESCDELAY', '25')
         # store the old fcntl flags
         #self.oldflags = fcntl.fcntl(sys.stdin, fcntl.F_GETFL)
         # fcntl.fcntl(self.pty, fcntl.F_SETFD, fcntl.FD_CLOEXEC)
