@@ -5,6 +5,11 @@ It is essential that whatever we use be Unicode-compatible, because we will have
 # Needs Research = needs research to complete
 # Conzept = Conzept is done
 
+# known bugs
+(BUG): Control+w to close current tab if there are multiple tabs opened, or close entire file manager if just one tab is opened, just like Firefox.
+(BUG): stop watchdog clean on close tabs
+
+
 (Done): displaying files in a list is possible, then it is more usable for screen reader users.
 (Done): make Columns configurable
 (Done): When we move up or down with arrow keys, only one file should be read by Fenrir. 
@@ -45,25 +50,29 @@ When we talk about Tabs, they need not look like a tab on Firefox, for example, 
 (Needs Research): Nano Input hack
 (Conzept): Input Dialog (needed for rename operation, create operation, confirmation like: do you realy want.. (yes no)?
 place it in mainloop. make it use an multithreading queue and blocking mechanism to let threads wait. Global runmodal then.
-(Todo): add initial dialogManager
-(Todo): caputre keys for it with priority in mainloop
+(Done): add initial dialogManager
 (Done): Only call update in mainloop
-(Todo): draw it in mainloop
 (Done): make mainloop unblocking
-(Todo): design dialog
-(Todo): add "set default value" method
-(Todo): add question text method
-(Todo): add basic navigation and editation 
-(Todo): add modes for selection ['y', 'n'] for only yes no; range 1-100, folder input, freetext, 
+(Done): design dialog
+(Done): add "set default value" method
+(Done): add question text method
+(Done): add basic navigation and editation 
+(Done): add default value
+(Todo): add modes for selection ['y', 'n'] for only yes no; range 1-100, folder
+input, freetext, 
 (Todo): add basic tab (autocomplete)
-(Todo): add default value
+(Todo): add return values for action True/ False (ok, cancle)
+(Todo): make return work to close the dialog
+(Todo): make ESC work to cancle the dialog
+(Todo): add posibility to spawn dialog from threads
+(Todo): add posibiltiy to pass return value back to the thread
 (Todo): add mechanisms to work with (create, rename, confirmation (do you realy wnat?), location bar)
 (WIP): Keybindings similar to nautilus
 
 # basic file operations (Priority)
 (WIP): control shift n, to create a new directory in current directory. (needs input dialog)
 (WIP): control alt n to create a new text file in current directory. Equivalent of touch command. (needs input dialog)
-(Todo): F2 to rename whatever the current file or directory is. (needs input dialog)
+(Done): F2 to rename whatever the current file or directory is. (needs input dialog)
 
 # Folder View (Priority)
 (WIP): Nice Formatting for column view (align them)
@@ -72,9 +81,8 @@ place it in mainloop. make it use an multithreading queue and blocking mechanism
 (Todo): navigate in history (prev, next folder in history)
 
 # general (Priority)
-(Conzept): proper view update # make inputManager.get unblocking and handle the needUpdate then not async.
+(Done): proper view update # make inputManager.get unblocking and handle the needUpdate then not async.
 (WIP): message area
-(BUG): Control+w to close current tab if there are multiple tabs opened, or close entire file manager if just one tab is opened, just like Firefox.
 
 # Context menu (Priority)
 (Todo): properties / Context menu: Shift+10, and selecting "properties", user can see file size, date of last modification, owner, permissions, etc.
