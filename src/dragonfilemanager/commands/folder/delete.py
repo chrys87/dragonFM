@@ -20,10 +20,10 @@ class command():
         return None
     def run(self, callback = None):   
         folderManager = self.dragonfmManager.getCurrFolderManager()
-        
+
         # Get the files and directories that were selected.
         selection = self.selectionManager.getSelectionOrCursorCurrentTab()
-                                                                                                                                                                
+
         self.fileManager.spawnDeleteSelectionThread(selection)
         if folderManager.getSelectionMode() != 0:
             folderManager.setSelectionMode(0)

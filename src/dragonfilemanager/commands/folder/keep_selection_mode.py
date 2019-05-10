@@ -7,9 +7,9 @@ class command():
     def shutdown(self):
         pass
     def getName(self):
-        return _('Ignore Selection Mode')
+        return _('Keep Selection Mode')
     def getDescription(self):
-        return _('Ignore Selection while navigation')
+        return _('Keep Selection while navigation')
     def active(self):
         return True
     def getValue(self):
