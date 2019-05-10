@@ -16,7 +16,7 @@ def rectangle(win, uly, ulx, lry, lrx):
     win.addch(lry, lrx, curses.ACS_LRCORNER)
     win.addch(lry, ulx, curses.ACS_LLCORNER)
 
-class Textbox:
+class inputBoxManager:
     """Editing widget using the interior of a window object.
      Supports the following Emacs-like key bindings:
     Ctrl-A      Go to left edge of window.
@@ -54,6 +54,7 @@ class Textbox:
         self.win = None
         self.validValues = []
         self.headerOffset = 0
+        self.initValue = ''
     def createWindow(self, parentWindow, height):
         self.parentWindow = parentWindow
         parentSizeY, parentSizeX = self.parentWindow.getmaxyx()
@@ -61,6 +62,7 @@ class Textbox:
         self.win = curses.newwin(nlines, ncols, 0, 0)
         self.win.keypad(1)
         self._update_max_yx()
+        self.win.erase()
 
     def close(self):
         if self.parentWindow:
@@ -200,12 +202,16 @@ class Textbox:
         return self.validValues
     def isValidValues(self, value):
         return value in self.validValues
-    def show(self, validate=None, initValue=''):
+    def setInitValue(self, initValue):
+        self.initValue = initValue
+    def getInitValue(self):
+        return self.initValue
+    def show(self, validate=None):
         "Edit in the widget window and collect the results."
         currValue = None
         while not currValue or not self.isValidValues(currValue):
-            if initValue != '' :
-                self.win.addstr(self.headerOffset, 0, initValue)
+            if self.getInitValue() != '' :
+                self.win.addstr(self.headerOffset, 0, self.getInitValue())
             while True:
                 ch = self.win.getch()
                 if validate:
@@ -229,7 +235,7 @@ if __name__ == '__main__':
         stdscr.addstr(0, 0, "Parent Window")
         stdscr.refresh()
         stdscr.getch()
-        inputBox = Textbox(stdscr, description=['Do You realy want?','q = quit','y = yes','n = nope'])
+        inputBox = inputBoxManager(stdscr, description=['Do You realy want?','q = quit','y = yes','n = nope'])
         inputBox.setValidValues(['q', 'y', 'n'])
         text = inputBox.show(initValue='y')
         stdscr.erase()
