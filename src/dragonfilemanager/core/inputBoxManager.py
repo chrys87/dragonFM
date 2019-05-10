@@ -37,15 +37,31 @@ class Textbox:
     KEY_LEFT = Ctrl-B, KEY_RIGHT = Ctrl-F, KEY_UP = Ctrl-P, KEY_DOWN = Ctrl-N
     KEY_BACKSPACE = Ctrl-h
     """
-    def __init__(self, win, insert_mode=True):
-        self.win = win
+    def __init__(self, stdscr, insert_mode=True):
+        self.init()
+        ncols, nlines = 50, 1
+        uly, ulx = 2, 1
+        win = curses.newwin(nlines, ncols, uly, ulx)
+        win.addstr(uly-2, ulx, "Use Ctrl-G to end editing.")
+        rectangle(win, uly-1, ulx-1, uly + nlines, ulx + ncols)
+        self.setWindow(win)
+        self.setInsertMode(insert_mode)
+    #def __init__(self, win, insert_mode=True):
+    #    self.init()
+    #    self.setWindow(win)
+    #    self.setInsertMode(insert_mode)
+    def init(self):
         self.insert_mode = insert_mode
         self._update_max_yx()
         self.stripspaces = 1
         self.lastcmd = None
-        win.keypad(1)
         self.validValues = []
+    def setWindow(self, window):
+        self.win = window
+        self.win.keypad(1)
 
+    def setInsertMode(self, insert_mode):
+        self.insert_mode = insert_mode
     def _update_max_yx(self):
         maxy, maxx = self.win.getmaxyx()
         self.maxy = maxy - 1
@@ -199,9 +215,9 @@ if __name__ == '__main__':
     def test_editbox(stdscr):
         ncols, nlines = 50, 1
         uly, ulx = 2, 1
-        stdscr.addstr(uly-2, ulx, "Use Ctrl-G to end editing.")
-        win = curses.newwin(nlines, ncols, uly, ulx)
-        rectangle(stdscr, uly-1, ulx-1, uly + nlines, ulx + ncols)
+        #stdscr.addstr(uly-2, ulx, "Use Ctrl-G to end editing.")
+        #win = curses.newwin(nlines, ncols, uly, ulx)
+        #rectangle(stdscr, uly-1, ulx-1, uly + nlines, ulx + ncols)
         stdscr.refresh()
         inputBox = Textbox(win)
         inputBox.setValidValues(['test', 'q', 'q ', 'j', 'n'])
