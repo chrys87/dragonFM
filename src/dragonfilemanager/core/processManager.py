@@ -44,9 +44,10 @@ class processManager():
             if not id in ids:
                 return id
         return -1
-    def stopInternal(self, id):     
+    def stopInternal(self, id):
         try:
             self.processListLock.acquire(True)
+            #self.internalProcesses[id].join()
             del self.internalProcesses[id]
             self.processListLock.release()
         except:

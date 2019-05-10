@@ -39,7 +39,7 @@ class command():
                 nameTemplate += fileExtension
 
         linkName = self.fileManager.getInitName(location, nameTemplate, '_')
-        fullPath = '{0}/{1}'.format(location, linkName)        
+        fullPath = '{0}/{1}'.format(location, linkName)
 
         self.fileManager.spawnCreateLinkCursorThread(currentCursor, fullPath)
         if callback:
