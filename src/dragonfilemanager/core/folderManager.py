@@ -35,7 +35,7 @@ class folderManager():
         self.requestReloadLock = threading.RLock()
         self.selectionMode = 0 # 0 = unselect on navigation, 1 = select on navigation, 2 = ignore
         self.page = 0
-        self.columns = ['name','selected']
+        self.columns = ['name','selected', 'clipboard']
         self.setColumns(self.settingsManager.get('folder', 'columns'))
         self.sorting = ['name']
         self.reverseSorting = False
@@ -481,26 +481,30 @@ class folderManager():
                     value = self.calcSelectionColumn(key)
                     self.screen.addstr(i + self.headerOffset, pos, value)
                     pos += len(value) + 2
+                elif lowerColumn == 'clipboard':
+                    #continue
+                    value = self.calcClipboardColumn(key)
+                    self.screen.addstr(i + self.headerOffset, pos, value)
+                    pos += len(value) + 2
                 else:
                     formattedValue = self.fileManager.formatColumn(lowerColumn, e[lowerColumn])
                     if i + len(formattedValue) < self.width:
                         self.screen.addstr(i + self.headerOffset, pos, formattedValue )
                         pos += len(formattedValue) + 2
             i += 1
+    def calcClipboardColumn(self, entry = ''):
+        if entry == '':
+            return ''
+        clipboard = self.clipboardManager.getClipboard()
+        if entry in clipboard:
+            return self.clipboardManager.getOperation()
+        return ''
     def calcSelectionColumn(self, entry):
-        value = ''
-        doClipboard = True
-        doSelection = True
-        if doSelection:
-            if self.isSelected(entry):
-                value += 'selected'
-        if doClipboard:
-            clipboard = self.clipboardManager.getClipboard()
-            if entry in clipboard:
-                if value != '':
-                    value += ','
-                value += self.clipboardManager.getOperation()
-        return value
+        if entry == '':
+            return ''
+        if self.isSelected(entry):
+            return 'selected'
+        return ''
     def drawFooter(self):
         self.footerOffset = 0
         self.footerOffset += 1
