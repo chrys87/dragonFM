@@ -21,6 +21,5 @@ class command():
         folderManager.resetTypeAheadSearch(True)
         folderManager.unselectAllEntries()
         folderManager.setRequestUpdate()
-        self.dragonfmManager.update()
         if callback:
             callback()
