@@ -43,13 +43,6 @@ class folderManager():
         self.setReverseSorting(self.settingsManager.getBool('folder', 'reverse'))
         self.setCaseSensitiveSorting(self.settingsManager.getBool('folder', 'casesensitive'))
         self.initLocation(pwd)
-        '''
-        try:
-            self.autoUpdateManager.startWatch('/tmp/playzone', self.setRequestReload)
-            self.screen.addstr(0, 0, 'läuft')
-        except Exception as e:
-            self.screen.addstr(0, 0, str(e)+'nicht')
-        '''
     def doTypeAheadSearch(self, key):
         # useful for type ahead search?
         if key == None:
@@ -323,7 +316,10 @@ class folderManager():
         self.resetRequestReload()
         if path != self.getLocation():
             self.unselectAllEntries()
-            self.autoUpdateManager.requestStop()
+            try:
+                self.autoUpdateManager.requestStop()
+            except:
+                pass
 
         elements = os.listdir(path)
         entries = {}
@@ -344,10 +340,11 @@ class folderManager():
         if path != self.getLocation():
             self.autoUpdateManager.waitForStopWatch()
             self.setLocation(path)
-            self.autoUpdateManager.startWatch(path, self.setRequestReload)
-            self.setCurrentCursor(self.getIndex(), entryName)
-        else:
-            self.setCurrentCursor(self.getIndex(), entryName)
+            try:
+                self.autoUpdateManager.startWatch(path, self.setRequestReload)
+            except:
+                pass
+        self.setCurrentCursor(self.getIndex(), entryName)
         return True
     def createdSortedEntries(self, entries):
         self.entries = OrderedDict(sorted(entries.items(), reverse=self.reverseSorting, key=self.getSortingKey))
@@ -361,7 +358,7 @@ class folderManager():
                     if self.caseSensitiveSorting:
                         sortingKey.append(element[1][column])
                     else:
-                        sortingKey.append(element[1][column].lower())                
+                        sortingKey.append(element[1][column].lower())
                 else:
                     sortingKey.append(element[1][column])
         except:
