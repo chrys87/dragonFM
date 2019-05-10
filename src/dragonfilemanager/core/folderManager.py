@@ -495,12 +495,11 @@ class folderManager():
             if self.isSelected(entry):
                 value += 'selected'
         if doClipboard:
-            if value != '':
-                value += ','
             clipboard = self.clipboardManager.getClipboard()
             if entry in clipboard:
-                operation = self.clipboardManager.getOperation()
-                value += operation
+                if value != '':
+                    value += ','
+                value += self.clipboardManager.getOperation()
         return value
     def drawFooter(self):
         self.footerOffset = 0
