@@ -28,7 +28,9 @@ class command():
             return
         currEntryName = os.path.basename(currentCursor)
         inputDialog = self.dragonfmManager.createInputDialog(description = ['Please enter a filename:'], initValue = currEntryName)
-        newEntryName = inputDialog.show()
+        exitStatus, newEntryName = inputDialog.show()
+        if not exitStatus:
+            return
         if currEntryName == newEntryName:
             return
         if not location.endswith('/'):

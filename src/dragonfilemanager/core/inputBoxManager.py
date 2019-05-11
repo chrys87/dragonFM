@@ -55,6 +55,7 @@ class inputBoxManager:
         self.validValues = []
         self.headerOffset = 0
         self.initValue = ''
+        self.exitStatus = None # None = error, True = ok, False = cancle
     def createWindow(self, parentWindow, height):
         self.parentWindow = parentWindow
         parentSizeY, parentSizeX = self.parentWindow.getmaxyx()
@@ -152,6 +153,7 @@ class inputBoxManager:
                 self.win.move(y+1, 0)
         elif ch in [curses.ascii.BEL, curses.ascii.NL, curses.ascii.CR]: # ^g
             # complete
+            self.exitStatus = True
             return False
         #elif ch in [curses.ascii.NL]:                            # ^j
             #if self.maxy == 0:
@@ -161,6 +163,7 @@ class inputBoxManager:
             #    self.win.move(y+1, 0)
         elif ch in [curses.ascii.ESC, 17]: # 17 = ^q
             # abbording
+            self.exitStatus = False
             return False
         elif ch == curses.ascii.VT:                            # ^k
             if x == 0 and self._end_of_line(y) == 0:
@@ -234,7 +237,7 @@ class inputBoxManager:
                 break
         self.close()
         del self.win
-        return currValue
+        return self.exitStatus, currValue
 
 if __name__ == '__main__':
     def test_editbox(stdscr):
@@ -245,11 +248,11 @@ if __name__ == '__main__':
         inputBox = inputBoxManager(stdscr, description=['Do You realy want?','q = quit','y = yes','n = nope'])
         inputBox.setValidValues(['q', 'y', 'n'])
         inputBox.setInitValue('y')
-        text = inputBox.show()
+        status, text = inputBox.show()
         stdscr.erase()
         stdscr.addstr(0, ulx, "Parent Window")
         stdscr.addstr(1, ulx, "Dialog was closed                      ")
-        stdscr.addstr(2, ulx, 'The value was: {}'.format(text))
+        stdscr.addstr(2, ulx, 'Staus: {}; Value: {}'.format(status,text))
         stdscr.getch()
 
     curses.wrapper(test_editbox)

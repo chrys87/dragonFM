@@ -39,6 +39,7 @@ It is essential that whatever we use be Unicode-compatible, because we will have
 (Done): present values in an human readable format
 (Done): Search by Typing: Typing makes cursor jump to file beginning in letter or letters that were typed by user.
 (Done): Update if current folder changes
+(Done): F2 to rename whatever the current file or directory is. (needs input dialog)
 
 (Needs Binding): Alt+up arrow should go to parent directory, like in pcmanfm etc.
 (Needs Binding): alt plus home should go directly to home folder.
@@ -58,12 +59,12 @@ place it in mainloop. make it use an multithreading queue and blocking mechanism
 (Done): add question text method
 (Done): add basic navigation and editation 
 (Done): add default value
+(Done): add return values for action True/ False (ok, cancle)
+(Done): make return work to close the dialog
+(Done): make ESC work to cancle the dialog
 (Todo): add modes for selection ['y', 'n'] for only yes no; range 1-100, folder
 input, freetext, 
 (Todo): add basic tab (autocomplete)
-(Todo): add return values for action True/ False (ok, cancle)
-(Todo): make return work to close the dialog
-(Todo): make ESC work to cancle the dialog
 (Todo): add posibility to spawn dialog from threads
 (Todo): add posibiltiy to pass return value back to the thread
 (Todo): add mechanisms to work with (create, rename, confirmation (do you realy wnat?), location bar)
@@ -72,7 +73,6 @@ input, freetext,
 # basic file operations (Priority)
 (WIP): control shift n, to create a new directory in current directory. (needs input dialog)
 (WIP): control alt n to create a new text file in current directory. Equivalent of touch command. (needs input dialog)
-(Done): F2 to rename whatever the current file or directory is. (needs input dialog)
 
 # Folder View (Priority)
 (WIP): Nice Formatting for column view (align them)
