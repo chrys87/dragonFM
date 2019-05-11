@@ -60,7 +60,7 @@ class inputBoxManager:
         parentSizeY, parentSizeX = self.parentWindow.getmaxyx()
         ncols, nlines = parentSizeX, height
         self.win = curses.newwin(nlines, ncols, 0, 0)
-        self.win.keypad(1)
+        self.win.keypad(True)
         self._update_max_yx()
         self.win.erase()
 
@@ -118,21 +118,23 @@ class inputBoxManager:
         self._update_max_yx()
         (y, x) = self.win.getyx()
         self.lastcmd = ch
+        # debug
+        #self.win.addstr(self.headerOffset, 0, str(int(ch)))
         if curses.ascii.isprint(ch):
             if y < self.maxy or x < self.maxx:
                 self._insert_printable_char(ch)
         elif ch == curses.ascii.SOH:                           # ^a
             self.win.move(y, 0)
-        elif ch in (curses.ascii.STX,curses.KEY_LEFT, curses.ascii.BS,curses.KEY_BACKSPACE):
+        elif ch in (curses.ascii.STX,curses.KEY_LEFT, curses.ascii.BS,curses.KEY_BACKSPACE, curses.ascii.DEL):
             if x > 0:
                 self.win.move(y, x-1)
-            elif y == 0:
+            elif y == self.headerOffset:
                 pass
             elif self.stripspaces:
                 self.win.move(y-1, self._end_of_line(y-1))
             else:
                 self.win.move(y-1, self.maxx)
-            if ch in (curses.ascii.BS, curses.KEY_BACKSPACE):
+            if ch in (curses.ascii.BS, curses.KEY_BACKSPACE, curses.ascii.DEL):
                 self.win.delch()
         elif ch == curses.ascii.EOT:                           # ^d
             self.win.delch()
@@ -148,15 +150,18 @@ class inputBoxManager:
                 pass
             else:
                 self.win.move(y+1, 0)
-        elif ch == curses.ascii.BEL:                           # ^g
-            return 0
-        elif ch == curses.ascii.NL:                            # ^j
+        elif ch in [curses.ascii.BEL, curses.ascii.NL, curses.ascii.CR]: # ^g
+            # complete
             return False
+        #elif ch in [curses.ascii.NL]:                            # ^j
             #if self.maxy == 0:
             #    return 0
             #elif y < self.maxy:
             #    return 0
             #    self.win.move(y+1, 0)
+        elif ch in [curses.ascii.ESC, curses.ascii.DC1]: # curses.ascii.DC1 = ^q
+            # abbording
+            return False
         elif ch == curses.ascii.VT:                            # ^k
             if x == 0 and self._end_of_line(y) == 0:
                 self.win.deleteln()
@@ -173,8 +178,10 @@ class inputBoxManager:
                     self.win.move(y+1, self._end_of_line(y+1))
         elif ch == curses.ascii.SI:                            # ^o
             self.win.insertln()
+        elif ch == curses.ascii.TAB: # autocompletion
+            pass
         elif ch in (curses.ascii.DLE, curses.KEY_UP):          # ^p
-            if y > 0:
+            if y > self.headerOffset:
                 self.win.move(y-1, x)
                 if x > self._end_of_line(y-1):
                     self.win.move(y-1, self._end_of_line(y-1))
@@ -193,8 +200,8 @@ class inputBoxManager:
                 if self.stripspaces and x >= stop:
                     break
                 result = result + chr(curses.ascii.ascii(self.win.inch(y, x)))
-            if self.maxy > 0:
-                result = result + "\n"
+            #if self.maxy > 0:
+            #    result = result + "\n"
         return result
     def setValidValues(self, validValues = []):
         self.validValues = validValues
@@ -212,6 +219,7 @@ class inputBoxManager:
         while not currValue or not self.isValidValues(currValue):
             if self.getInitValue() != '' :
                 self.win.addstr(self.headerOffset, 0, self.getInitValue())
+                self.win.clrtoeol()
             while True:
                 ch = self.win.getch()
                 if validate:
@@ -222,7 +230,7 @@ class inputBoxManager:
                     break
                 self.win.refresh()
             currValue = self.gather()
-            currValue = currValue.replace('\n','')
+            #currValue = currValue.replace('\n','')
             if self.getValidValues() == []:
                 break
         self.close()
@@ -237,7 +245,8 @@ if __name__ == '__main__':
         stdscr.getch()
         inputBox = inputBoxManager(stdscr, description=['Do You realy want?','q = quit','y = yes','n = nope'])
         inputBox.setValidValues(['q', 'y', 'n'])
-        text = inputBox.show(initValue='y')
+        inputBox.setInitValue('y')
+        text = inputBox.show()
         stdscr.erase()
         stdscr.addstr(0, ulx, "Parent Window")
         stdscr.addstr(1, ulx, "Dialog was closed                      ")
