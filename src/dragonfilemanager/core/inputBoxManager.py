@@ -230,7 +230,6 @@ class inputBoxManager:
                     break
                 self.win.refresh()
             currValue = self.gather()
-            #currValue = currValue.replace('\n','')
             if self.getValidValues() == []:
                 break
         self.close()
