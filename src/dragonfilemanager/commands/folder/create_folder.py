@@ -21,6 +21,12 @@ class command():
         folderManager = self.dragonfmManager.getCurrFolderManager()
         location = folderManager.getLocation()
         folderName = self.fileManager.getInitName(location, 'new_folder{0}{1}{2}', '_')
+
+        inputDialog = self.dragonfmManager.createInputDialog(description = ['Foldername:'], initValue = folderName)
+        exitStatus, folderName = inputDialog.show()
+        if not exitStatus:
+            return
+
         if not location.endswith('/'):
             location += '/'
         fullPath = '{0}{1}'.format(location, folderName)

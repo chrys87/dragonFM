@@ -39,6 +39,12 @@ class command():
                 nameTemplate += fileExtension
 
         linkName = self.fileManager.getInitName(location, nameTemplate, '_')
+
+        inputDialog = self.dragonfmManager.createInputDialog(description = ['Linkname:'], initValue = linkName)
+        exitStatus, linkName = inputDialog.show()
+        if not exitStatus:
+            return
+
         if not location.endswith('/'):
             location += '/'
         fullPath = '{0}{1}'.format(location, linkName)

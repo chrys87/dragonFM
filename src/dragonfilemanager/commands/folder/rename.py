@@ -27,7 +27,7 @@ class command():
         if not os.path.exists(currentCursor):
             return
         currEntryName = os.path.basename(currentCursor)
-        inputDialog = self.dragonfmManager.createInputDialog(description = ['Please enter a filename:'], initValue = currEntryName)
+        inputDialog = self.dragonfmManager.createInputDialog(description = ['Please enter a new name:'], initValue = currEntryName)
         exitStatus, newEntryName = inputDialog.show()
         if not exitStatus:
             return
