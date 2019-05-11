@@ -159,7 +159,7 @@ class inputBoxManager:
             #elif y < self.maxy:
             #    return 0
             #    self.win.move(y+1, 0)
-        elif ch in [curses.ascii.ESC, curses.ascii.DC1]: # curses.ascii.DC1 = ^q
+        elif ch in [curses.ascii.ESC, 17]: # 17 = ^q
             # abbording
             return False
         elif ch == curses.ascii.VT:                            # ^k
