@@ -25,7 +25,7 @@ class command():
         # selection mode
         elif folderManager.getSelectionMode() == 1:
             if folderManager.selectCurrentEntry():
-                folderManager.setRequestUpdate()        
+                folderManager.setRequestUpdate()
         # ignore mode
         elif folderManager.getSelectionMode() == 2:
             pass

@@ -21,7 +21,6 @@ class inputManager():
             key = curses.keyname(key).decode("utf-8")
             keys += ',{0}'.format(key)
         self.screen.timeout(150)
-
         return str(keys)
     def getKey(self):
         if not self.screen:

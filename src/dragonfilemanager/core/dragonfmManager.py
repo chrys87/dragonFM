@@ -10,6 +10,7 @@ from dragonfilemanager.core import commandManager
 from dragonfilemanager.core import clipboardManager
 from dragonfilemanager.core import processManager
 from dragonfilemanager.core import selectionManager
+from dragonfilemanager.core import inputBoxManager
 
 class dragonfmManager():
     def __init__(self):
@@ -99,6 +100,7 @@ class dragonfmManager():
         self.new_term_attr[6][termios.VINTR] = 0
         self.new_term_attr[6][termios.VQUIT] = 0
         self.new_term_attr[6][termios.VSUSP] = 0
+        os.environ.setdefault('ESCDELAY', '25')
         # store the old fcntl flags
         #self.oldflags = fcntl.fcntl(sys.stdin, fcntl.F_GETFL)
         # fcntl.fcntl(self.pty, fcntl.F_SETFD, fcntl.FD_CLOEXEC)
@@ -182,6 +184,13 @@ class dragonfmManager():
     def initEncoding(self):
         locale.setlocale(locale.LC_ALL, '')
         self.encoding =locale.getpreferredencoding()
+    def createInputDialog(self, description = [],initValue = '', validValues = []):
+        inputBox = inputBoxManager.inputBoxManager(self.getScreen(), description=description)
+        if validValues != []:
+            inputBox.setValidValues(validValues)
+        if initValue != '':
+            inputBox.setInitValue(initValue)
+        return inputBox
     # Get
     def getEncoding(self):
         return self.encoding

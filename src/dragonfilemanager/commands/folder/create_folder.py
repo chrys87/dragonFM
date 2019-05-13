@@ -18,11 +18,18 @@ class command():
     def getShortcut(self):
         return None
     def run(self, callback = None):   
-        folderManager = self.dragonfmManager.getCurrFolderManager()        
+        folderManager = self.dragonfmManager.getCurrFolderManager()
         location = folderManager.getLocation()
-        folderName = self.fileManager.getInitName(location, 'new_folder{0}{1}{2}', '_')        
-        fullPath = '{0}/{1}'.format(location, folderName)
+        folderName = self.fileManager.getInitName(location, 'new_folder{0}{1}{2}', '_')
+
+        inputDialog = self.dragonfmManager.createInputDialog(description = ['Foldername:'], initValue = folderName)
+        exitStatus, folderName = inputDialog.show()
+        if not exitStatus:
+            return
+
+        if not location.endswith('/'):
+            location += '/'
+        fullPath = '{0}{1}'.format(location, folderName)
         self.fileManager.spawnCreateFolderThread(fullPath)
-        
         if callback:
             callback()

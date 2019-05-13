@@ -1,14 +1,15 @@
 class command():
     def __init__(self, dragonfmManager):
         self.dragonfmManager = dragonfmManager
+        self.dragonfmManager = dragonfmManager
         self.screen = self.dragonfmManager.getScreen()
         self.settingsManager = self.dragonfmManager.getSettingsManager()
     def shutdown(self):
         pass
     def getName(self):
-        return _('Select All')
+        return _('Keep Selection Mode')
     def getDescription(self):
-        return _('Select All entries in the current folder')
+        return _('Keep Selection while navigation')
     def active(self):
         return True
     def getValue(self):
@@ -17,7 +18,6 @@ class command():
         return None
     def run(self, callback = None):
         folderManager = self.dragonfmManager.getCurrFolderManager()
-        if folderManager.selectAllEntries():
-            folderManager.setRequestUpdate()
+        folderManager.setSelectionMode(2)
         if callback:
             callback()

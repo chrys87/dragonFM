@@ -13,6 +13,7 @@ class folderManager():
         self.settingsManager = self.dragonfmManager.getSettingsManager()
         self.fileManager = self.dragonfmManager.getFileManager()
         self.commandManager = self.dragonfmManager.getCommandManager()
+        self.clipboardManager = self.dragonfmManager.getClipboardManager()
         self.autoUpdateManager = autoUpdateManager.autoUpdateManager(self.dragonfmManager)
         self.id = id
         self.message = ''
@@ -34,7 +35,7 @@ class folderManager():
         self.requestReloadLock = threading.RLock()
         self.selectionMode = 0 # 0 = unselect on navigation, 1 = select on navigation, 2 = ignore
         self.page = 0
-        self.columns = ['name','selected']
+        self.columns = ['name','selected', 'clipboard']
         self.setColumns(self.settingsManager.get('folder', 'columns'))
         self.sorting = ['name']
         self.reverseSorting = False
@@ -43,13 +44,6 @@ class folderManager():
         self.setReverseSorting(self.settingsManager.getBool('folder', 'reverse'))
         self.setCaseSensitiveSorting(self.settingsManager.getBool('folder', 'casesensitive'))
         self.initLocation(pwd)
-        '''
-        try:
-            self.autoUpdateManager.startWatch('/tmp/playzone', self.setRequestReload)
-            self.screen.addstr(0, 0, 'läuft')
-        except Exception as e:
-            self.screen.addstr(0, 0, str(e)+'nicht')
-        '''
     def doTypeAheadSearch(self, key):
         # useful for type ahead search?
         if key == None:
@@ -318,12 +312,19 @@ class folderManager():
     def loadEntriesFromFolder(self, path, entryName = None):
         if path == '':
             return False
+        if path.endswith('/') and path != '/':
+            path = path[:-1]
+        if not os.path.isdir(path):
+            return False
         if not os.access(path, os.R_OK):
             return False
         self.resetRequestReload()
         if path != self.getLocation():
             self.unselectAllEntries()
-            self.autoUpdateManager.requestStop()
+            try:
+                self.autoUpdateManager.requestStop()
+            except:
+                pass
 
         elements = os.listdir(path)
         entries = {}
@@ -344,10 +345,11 @@ class folderManager():
         if path != self.getLocation():
             self.autoUpdateManager.waitForStopWatch()
             self.setLocation(path)
-            self.autoUpdateManager.startWatch(path, self.setRequestReload)
-            self.setCurrentCursor(self.getIndex(), entryName)
-        else:
-            self.setCurrentCursor(self.getIndex(), entryName)
+            try:
+                self.autoUpdateManager.startWatch(path, self.setRequestReload)
+            except:
+                pass
+        self.setCurrentCursor(self.getIndex(), entryName)
         return True
     def createdSortedEntries(self, entries):
         self.entries = OrderedDict(sorted(entries.items(), reverse=self.reverseSorting, key=self.getSortingKey))
@@ -361,7 +363,7 @@ class folderManager():
                     if self.caseSensitiveSorting:
                         sortingKey.append(element[1][column])
                     else:
-                        sortingKey.append(element[1][column].lower())                
+                        sortingKey.append(element[1][column].lower())
                 else:
                     sortingKey.append(element[1][column])
         except:
@@ -480,16 +482,33 @@ class folderManager():
             for c in self.columns:
                 lowerColumn = c.lower()
                 if lowerColumn == 'selected':
-                    if self.isSelected(key):
-                        self.screen.addstr(i + self.headerOffset, pos, 'selected')
-                        pos += len('selected') + 2
+                    value = self.calcSelectionColumn(key)
+                    self.screen.addstr(i + self.headerOffset, pos, value)
+                    pos += len(value) + 2
+                elif lowerColumn == 'clipboard':
+                    #continue
+                    value = self.calcClipboardColumn(key)
+                    self.screen.addstr(i + self.headerOffset, pos, value)
+                    pos += len(value) + 2
                 else:
                     formattedValue = self.fileManager.formatColumn(lowerColumn, e[lowerColumn])
                     if i + len(formattedValue) < self.width:
                         self.screen.addstr(i + self.headerOffset, pos, formattedValue )
                         pos += len(formattedValue) + 2
             i += 1
-
+    def calcClipboardColumn(self, entry = ''):
+        if entry == '':
+            return ''
+        clipboard = self.clipboardManager.getClipboard()
+        if entry in clipboard:
+            return self.clipboardManager.getOperation()
+        return ''
+    def calcSelectionColumn(self, entry):
+        if entry == '':
+            return ''
+        if self.isSelected(entry):
+            return 'selected'
+        return ''
     def drawFooter(self):
         self.footerOffset = 0
         self.footerOffset += 1

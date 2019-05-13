@@ -47,12 +47,16 @@ class autoUpdateManager():
         self.watchdogThread.start()
     def requestStop(self):
         self.watchdogLock.acquire(True)
+        # something wents wrong, fix it
         if self.location == '':
+            self.watchdog == None
             self.watchdogLock.release()
             return
         if self.watchdog == None:
+            self.location == ''
             self.watchdogLock.release()
             return
+        # request the stop
         oldLocation = self.location
         self.location = ''
         if oldLocation != '':
@@ -80,13 +84,13 @@ class autoUpdateManager():
             if self.location == '':
                 self.watchdogLock.release()
                 return
-            events = self.watchdog.event_gen(yield_nones=False, timeout_s=0.2)
+            events = self.watchdog.event_gen(yield_nones=False, timeout_s=0.1)
             self.watchdogLock.release()
             elementList = list(events)
             if elementList != []:
                 wasChange = True
                 lastChangeTime = time.time()
             if wasChange:
-                if (time.time() - lastChangeTime) > 0.5:
+                if (time.time() - lastChangeTime) > 0.4:
                     wasChange = False
                     callback()

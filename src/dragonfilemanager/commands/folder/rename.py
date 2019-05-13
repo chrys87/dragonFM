@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 import os
-
 class command():
     def __init__(self, dragonfmManager):
         self.dragonfmManager = dragonfmManager
@@ -10,9 +9,9 @@ class command():
     def shutdown(self):
         pass
     def getName(self):
-        return _('Create Link')
+        return _('Rename')
     def getDescription(self):
-        return _('Create a link of the current entry')
+        return _('Rename a file or folder')
     def active(self):
         return True
     def getValue(self):
@@ -21,34 +20,22 @@ class command():
         return None
     def run(self, callback = None):   
         folderManager = self.dragonfmManager.getCurrFolderManager()
-        
-        # Get the files and directories that were selected.
+        location = folderManager.getLocation()
         currentCursor = self.selectionManager.getCursorCurrentTab()
         if currentCursor == None:
             return
         if not os.path.exists(currentCursor):
             return
-        filename_w_ext = os.path.basename(currentCursor)
-        fileName, fileExtension = os.path.splitext(filename_w_ext)
-        
-        location = folderManager.getLocation()
-        nameTemplate = fileName + '_link{0}{1}{2}'
-
-        if fileExtension != None:
-            if fileExtension != '':
-                nameTemplate += fileExtension
-
-        linkName = self.fileManager.getInitName(location, nameTemplate, '_')
-
-        inputDialog = self.dragonfmManager.createInputDialog(description = ['Linkname:'], initValue = linkName)
-        exitStatus, linkName = inputDialog.show()
+        currEntryName = os.path.basename(currentCursor)
+        inputDialog = self.dragonfmManager.createInputDialog(description = ['Please enter a new name:'], initValue = currEntryName)
+        exitStatus, newEntryName = inputDialog.show()
         if not exitStatus:
             return
-
+        if currEntryName == newEntryName:
+            return
         if not location.endswith('/'):
             location += '/'
-        fullPath = '{0}{1}'.format(location, linkName)
-
-        self.fileManager.spawnCreateLinkCursorThread(currentCursor, fullPath)
+        fullPath = '{0}{1}'.format(location, newEntryName)
+        self.fileManager.moveEntry(currentCursor, fullPath)
         if callback:
             callback()

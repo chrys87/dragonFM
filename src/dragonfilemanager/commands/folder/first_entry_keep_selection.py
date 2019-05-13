@@ -8,7 +8,7 @@ class command():
     def getName(self):
         return _('First Entry')
     def getDescription(self):
-        return _('Move cursor to first entry')
+        return _('Move cursor to first entry and keep selection')
     def active(self):
         return True
     def getValue(self):

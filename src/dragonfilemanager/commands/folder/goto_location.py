@@ -1,15 +1,16 @@
+from os.path import expanduser
+
 class command():
     def __init__(self, dragonfmManager):
-        self.dragonfmManager = dragonfmManager
         self.dragonfmManager = dragonfmManager
         self.screen = self.dragonfmManager.getScreen()
         self.settingsManager = self.dragonfmManager.getSettingsManager()
     def shutdown(self):
         pass
     def getName(self):
-        return _('Ignore Selection Mode')
+        return _('Goto Home')
     def getDescription(self):
-        return _('Ignore Selection while navigation')
+        return _('Goto Home folder')
     def active(self):
         return True
     def getValue(self):
@@ -18,6 +19,11 @@ class command():
         return None
     def run(self, callback = None):
         folderManager = self.dragonfmManager.getCurrFolderManager()
-        folderManager.setSelectionMode(2)
+        location = folderManager.getLocation()
+        inputDialog = self.dragonfmManager.createInputDialog(description = ['Location:'], initValue = location)
+        exitStatus, location = inputDialog.show()
+        if not exitStatus:
+            return
+        folderManager.gotoFolder(location)
         if callback:
             callback()
