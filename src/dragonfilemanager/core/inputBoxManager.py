@@ -244,6 +244,11 @@ class inputBoxManager:
 
         # check for file or path
         if self.getLocationMode():
+            try:
+                os.chdir(self.getLocation())
+                currValue = os.path.abspath(currValue)
+            except:
+                pass
             if currValue.endswith('/') and currValue != '/':
                 currValue = currValue[:-1]
             currValue = expanduser(currValue)
@@ -297,8 +302,6 @@ class inputBoxManager:
                     break
                 self.win.refresh()
             self.setCurrValue(self.gather())
-            self.win.addstr(0, 0, self.gather())
-            self.win.refresh()
         self.close()
         del self.win
         return self.getExitStatus(), self.getCurrValue()
@@ -311,7 +314,7 @@ if __name__ == '__main__':
         stdscr.getch()
         inputBox = inputBoxManager(stdscr, description=['Do You realy want?','q = quit','y = yes','n = nope'])
         #inputBox.setMultipleChoiceMode(True,['q', 'y', 'n'])
-        inputBox.setLocationMode(True, '',True,False)
+        inputBox.setLocationMode(True, '/tmp/playzone',True,False)
         inputBox.setInitValue('y')
         status, text = inputBox.show()
         stdscr.erase()
