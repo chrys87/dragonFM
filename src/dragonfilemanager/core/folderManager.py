@@ -314,6 +314,8 @@ class folderManager():
             return False
         if path.endswith('/') and path != '/':
             path = path[:-1]
+        if not os.path.isdir(path):
+            return False
         if not os.access(path, os.R_OK):
             return False
         self.resetRequestReload()
