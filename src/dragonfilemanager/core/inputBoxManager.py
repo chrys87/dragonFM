@@ -1,5 +1,5 @@
-"""Simple textbox editing widget with Emacs-like keybindings."""
-
+import os
+from os.path import expanduser
 import curses
 import curses.ascii
 
@@ -52,9 +52,14 @@ class inputBoxManager:
         self.lastcmd = None
         self.parentWindow = None
         self.win = None
-        self.validValues = []
         self.headerOffset = 0
         self.initValue = ''
+        self.locationMode = False
+        self.location = ''
+        self.acceptFiles = False
+        self.acceptFolders = False
+        self.multipleChoiceMode = False
+        self.validValues = []
         self.exitStatus = None # None = error, True = ok, False = cancle
     def createWindow(self, parentWindow, height):
         self.parentWindow = parentWindow
@@ -153,7 +158,7 @@ class inputBoxManager:
                 self.win.move(y+1, 0)
         elif ch in [curses.ascii.BEL, curses.ascii.NL, curses.ascii.CR]: # ^g
             # complete
-            self.exitStatus = True
+            self.setExitStatus(True)
             return False
         #elif ch in [curses.ascii.NL]:                            # ^j
             #if self.maxy == 0:
@@ -163,7 +168,7 @@ class inputBoxManager:
             #    self.win.move(y+1, 0)
         elif ch in [curses.ascii.ESC, 17]: # 17 = ^q
             # abbording
-            self.exitStatus = False
+            self.setExitStatus(False)
             return False
         elif ch == curses.ascii.VT:                            # ^k
             if x == 0 and self._end_of_line(y) == 0:
@@ -206,23 +211,82 @@ class inputBoxManager:
             #if self.maxy > 0:
             #    result = result + "\n"
         return result
-    def setValidValues(self, validValues = []):
-        self.validValues = validValues
     def getValidValues(self):
         return self.validValues
-    def isValidValues(self, value):
-        return value in self.validValues
+    def setMultipleChoiceMode(self, mode, validValues = []):
+        if mode:
+            self.validValues = validValues
+        else:
+            self.validValues = []
+        self.multipleChoiceMode = mode
+    def getMultipleChoiceMode(self):
+        return self.multipleChoiceMode
+    def setLocationMode(self, mode, location, acceptFolders = True, acceptFiles = False):
+        if not mode:
+            self.acceptFolders = False
+            self.acceptFiles = False
+            self.location = ''
+        else:
+            self.acceptFolders = acceptFolders
+            self.acceptFiles = acceptFiles
+        self.locationMode = mode
+        self.location = expanduser(location)
+    def getLocationMode(self):
+        return self.locationMode
+    def getLocation(self):
+        return self.location
+    def isValidValues(self):
+        currValue = self.getCurrValue()
+        # no input yet/ error
+        if currValue == None:
+            return False
+        isValid = True
+
+        # check for file or path
+        if self.getLocationMode():
+            if currValue.endswith('/') and currValue != '/':
+                currValue = currValue[:-1]
+            currValue = expanduser(currValue)
+            self.setCurrValue(currValue)
+            validLocation = False
+            if self.acceptFiles:
+                if os.path.isfile(currValue):
+                    validLocation = True
+            if self.acceptFolders:
+                if os.path.isdir(currValue):
+                    validLocation = True
+            isValid = validLocation
+            # not a valid path/ File
+            if not isValid:
+                return isValid 
+        # check for multiple choice
+        if self.getMultipleChoiceMode():
+            isValid = currValue in self.getValidValues()
+            # is not a valid choice
+            if not isValid:
+                return isValid 
+        return isValid
     def setInitValue(self, initValue):
         self.initValue = initValue
     def getInitValue(self):
         return self.initValue
+    def getCurrValue(self):
+        return self.currValue
+    def setCurrValue(self, currValue):
+        self.currValue = currValue
+    def setExitStatus(self, exitStatus):
+        self.exitStatus = exitStatus
+    def getExitStatus(self):
+        return self.exitStatus
     def show(self, validate=None):
         "Edit in the widget window and collect the results."
-        currValue = None
-        while not currValue or not self.isValidValues(currValue):
+        self.setCurrValue(None)
+        while not self.isValidValues():
             if self.getInitValue() != '' :
                 self.win.addstr(self.headerOffset, 0, self.getInitValue())
-                self.win.clrtoeol()
+            else:
+                self.win.move(self.headerOffset, 0)
+            self.win.clrtoeol()
             while True:
                 ch = self.win.getch()
                 if validate:
@@ -232,12 +296,12 @@ class inputBoxManager:
                 if not self.do_command(ch):
                     break
                 self.win.refresh()
-            currValue = self.gather()
-            if self.getValidValues() == []:
-                break
+            self.setCurrValue(self.gather())
+            self.win.addstr(0, 0, self.gather())
+            self.win.refresh()
         self.close()
         del self.win
-        return self.exitStatus, currValue
+        return self.getExitStatus(), self.getCurrValue()
 
 if __name__ == '__main__':
     def test_editbox(stdscr):
@@ -246,7 +310,8 @@ if __name__ == '__main__':
         stdscr.refresh()
         stdscr.getch()
         inputBox = inputBoxManager(stdscr, description=['Do You realy want?','q = quit','y = yes','n = nope'])
-        inputBox.setValidValues(['q', 'y', 'n'])
+        #inputBox.setMultipleChoiceMode(True,['q', 'y', 'n'])
+        inputBox.setLocationMode(True, '',True,False)
         inputBox.setInitValue('y')
         status, text = inputBox.show()
         stdscr.erase()

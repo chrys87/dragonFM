@@ -21,6 +21,7 @@ class command():
         folderManager = self.dragonfmManager.getCurrFolderManager()
         location = folderManager.getLocation()
         inputDialog = self.dragonfmManager.createInputDialog(description = ['Location:'], initValue = location)
+        inputDialog.setLocationMode(True, location, True, False)
         exitStatus, location = inputDialog.show()
         if not exitStatus:
             return
