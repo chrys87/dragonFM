@@ -1,3 +1,40 @@
-#!/usr/bin/env bash
+#!/bin/bash
+# generate_translations.sh
+# Description: A small script to create gettext translation files .pot, .po
+#
+# Copyright 2019, F123 Consulting, <information@f123.org>
+# Copyright 2019, Storm Dragon, <storm_dragon@linux-a11y.org>
+#
+# This is free software; you can redistribute it and/or modify it under the
+# terms of the GNU General Public License as published by the Free
+# Software Foundation; either version 3, or (at your option) any later
+# version.
+#
+# This software is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this package; see the file COPYING.  If not, write to the Free
+# Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
+# 02110-1301, USA.
+#
+#--code--
 
-xgettext -d dragonfm -L python -d ../src/*.py ../src/*/*.py ../src/*/*/*.py
+if [[ -f "dragonfm.pot" ]]; then
+    echo "dragonfm.pot already exists, remove it to regenerate it."
+else
+    xgettext -o dragonfm.pot -d dragonfm -L python -d ../src/*.py ../src/*/*.py ../src/*/*/*.py
+fi
+
+if [[ $# -eq 1 ]]; then
+    if grep -qw "$1" /etc/locale.gen ; then
+        echo "Generating .po file for $1."
+        msginit -i "dragonfm.pot" -l $1
+    else
+        echo "No locale $1 found, skipping."
+    fi
+fi
+
+exit 0
