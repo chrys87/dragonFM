@@ -312,6 +312,7 @@ class folderManager():
     def loadEntriesFromFolder(self, path, entryName = None):
         if path == '':
             return False
+        path = expanduser(path)
         if path.endswith('/') and path != '/':
             path = path[:-1]
         if not os.path.isdir(path):
