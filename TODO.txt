@@ -65,7 +65,7 @@ place it in mainloop. make it use an multithreading queue and blocking mechanism
 (Done): add return values for action True/ False (ok, cancle)
 (Done): make return work to close the dialog
 (Done): make ESC work to cancle the dialog
-(Todo): add modes for selection ['y', 'n'] for only yes no; range 1-100, folder
+(Done): add modes for selection ['y', 'n'] for only yes no; folder
 input, freetext, 
 (Todo): add basic tab (autocomplete)
 (Todo): add posibility to spawn dialog from threads
