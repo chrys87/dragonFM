@@ -65,11 +65,9 @@ class folderManager():
 
         startIndex = self.getIndex()
         searchIndex = startIndex
-        location = self.getLocation()
-        if not location.endswith('/'):
-            location += '/'
-        searchString = '{0}{1}'.format(location, self.typeAheadSearch)
-        
+
+        searchString = '{0}'.format(self.typeAheadSearch)
+
         while True:
             if len(self.typeAheadSearch) == 1:
                 # jump always to next match if only one first letter nav (==1)
@@ -78,7 +76,9 @@ class folderManager():
                     searchIndex = 0
                 if searchIndex == startIndex:
                     return False
-            if self.keys[searchIndex].lower().startswith(searchString):
+            # search by name column
+            entry = self.entries[self.keys[searchIndex]]
+            if entry['name'].lower().startswith(searchString):
                 self.setIndex(searchIndex)
                 self.lastTypeAheadTime = time.time()
                 return True
