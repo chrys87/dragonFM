@@ -35,6 +35,8 @@ if [[ $# -eq 1 ]]; then
     if grep -qw "$1" /etc/locale.gen ; then
         echo "Generating .po file for $1."
         msginit -i "${projectName}.pot" -l $1
+        sed -i -e "s/PACKAGE package.$/PACKAGE $projectName./g" \
+            -e 's/THE PACKAGE.S COPYRIGHT HOLDER$/F123 Consulting <info@f123.org>/' "${1%.*}.po"
     else
         echo "No locale $1 found, skipping."
     fi
