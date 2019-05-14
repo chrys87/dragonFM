@@ -41,11 +41,20 @@ class command():
         entries = {}
 
         for root, dirs, files in os.walk(path):
+            for dir in dirs:
+                if dir.startswith('.'):
+                    if not self.settingsManager.getBool('folder', 'showHidden'):
+                        continue
+                if searchString in dir:
+                    fullPath = os.path.join(root, dir)
+                    entry = self.fileManager.getInfo(fullPath)
+                    if entry != None:
+                        entries[fullPath] = entry
             for fn in files:
                 if fn.startswith('.'):
                     if not self.settingsManager.getBool('folder', 'showHidden'):
                         continue
-                if fn.endswith(searchString):
+                if searchString in fn:
                     fullPath = os.path.join(root, fn)
                     entry = self.fileManager.getInfo(fullPath)
                     if entry != None:
