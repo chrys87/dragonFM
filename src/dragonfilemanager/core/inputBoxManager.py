@@ -236,6 +236,10 @@ class inputBoxManager:
     def getLocation(self):
         return self.location
     def isValidValues(self):
+        exitStatus = self.getExitStatus()
+        # cancle is also always valid
+        if exitStatus == False:
+            return True
         currValue = self.getCurrValue()
         # no input yet/ error
         if currValue == None:
