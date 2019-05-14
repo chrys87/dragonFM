@@ -22,16 +22,19 @@
 #
 #--code--
 
-if [[ -f "dragonfm.pot" ]]; then
-    echo "dragonfm.pot already exists, remove it to regenerate it."
+# Set project name here.
+projectName="dragonfm"
+
+if [[ -f "${projectName}.pot" ]]; then
+    echo "${projectName}.pot already exists, remove it to regenerate it."
 else
-    xgettext -o dragonfm.pot -d dragonfm -L python -d ../src/*.py ../src/*/*.py ../src/*/*/*.py
+    xgettext -o ${projectName}.pot -d ${projectName} -L python -d $(find ../src -iname "*.py")
 fi
 
 if [[ $# -eq 1 ]]; then
     if grep -qw "$1" /etc/locale.gen ; then
         echo "Generating .po file for $1."
-        msginit -i "dragonfm.pot" -l $1
+        msginit -i "${projectName}.pot" -l $1
     else
         echo "No locale $1 found, skipping."
     fi
