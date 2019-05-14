@@ -20,6 +20,8 @@ class folderManager():
         self.location = ''
         self.Path = None
         self.keyDebugging = False
+        self.collector = None
+        self.collectorParam = {}
         self.index = 0
         self.entries = OrderedDict()
         self.keys = []
@@ -35,6 +37,7 @@ class folderManager():
         self.requestReloadLock = threading.RLock()
         self.selectionMode = 0 # 0 = unselect on navigation, 1 = select on navigation, 2 = ignore
         self.page = 0
+        self.mode = 0 # 0 = Folder, 1 = find
         self.columns = ['name','selected', 'clipboard']
         self.setColumns(self.settingsManager.get('folder', 'columns'))
         self.sorting = ['name']
@@ -43,6 +46,7 @@ class folderManager():
         self.setSorting(self.settingsManager.get('folder', 'sorting'))
         self.setReverseSorting(self.settingsManager.getBool('folder', 'reverse'))
         self.setCaseSensitiveSorting(self.settingsManager.getBool('folder', 'casesensitive'))
+        self.setCollector()
         self.initLocation(pwd)
     def doTypeAheadSearch(self, key):
         # useful for type ahead search?
@@ -292,27 +296,16 @@ class folderManager():
     def reloadFolder(self):
         entryName = self.getCurrentKey()
         self.gotoFolder(self.getLocation(), entryName)
-    def loadEntriesFromFolder(self, path, entryName = None):
-        if path == '':
-            return False
-        path = expanduser(path)
-        if path.endswith('/') and path != '/':
-            path = path[:-1]
-        if not os.path.isdir(path):
-            return False
-        if not os.access(path, os.R_OK):
-            return False
-        self.resetRequestReload()
+    def currFolderCollector(self, param):
+        path = param['path']
         if path != self.getLocation():
             self.unselectAllEntries()
             try:
                 self.autoUpdateManager.requestStop()
             except:
                 pass
-
         elements = os.listdir(path)
         entries = {}
-
         for e in elements:
             if e.startswith('.'):
                 if not self.settingsManager.getBool('folder', 'showHidden'):
@@ -325,7 +318,6 @@ class folderManager():
             if entry != None:
                 entries[fullPath] = entry
         # sort entries here
-        self.createdSortedEntries(entries)
         if path != self.getLocation():
             self.autoUpdateManager.waitForStopWatch()
             self.setLocation(path)
@@ -333,6 +325,34 @@ class folderManager():
                 self.autoUpdateManager.startWatch(path, self.setRequestReload)
             except:
                 pass
+        return entries
+    def setCollector(self, collector=None, collectorParam = {}):
+        if collector == None:
+            collector = self.currFolderCollector
+        self.collector = collector
+        self.collectorParam = collectorParam
+    def getCollector(self):
+        return self.collector
+    def getCollectorParam(self):
+        return self.collectorParam
+    def loadEntriesFromFolder(self, path, entryName = None):
+        if path == '':
+            return False
+        path = expanduser(path)
+        if path.endswith('/') and path != '/':
+            path = path[:-1]
+        if not os.path.isdir(path):
+            return False
+        if not os.access(path, os.R_OK):
+            return False
+        self.resetRequestReload()
+        if not self.getCollector():
+            return False#
+        collectorParam = self.getCollectorParam()
+        collectorParam['path'] = path
+        entries = self.getCollector()(collectorParam)
+
+        self.createdSortedEntries(entries)
         self.setCurrentCursor(self.getIndex(), entryName)
         return True
     def createdSortedEntries(self, entries):
