@@ -60,6 +60,7 @@ class inputBoxManager:
         self.acceptFolders = False
         self.multipleChoiceMode = False
         self.validValues = []
+        self.confirmationMode = False
         self.exitStatus = None # None = error, True = ok, False = cancle
     def createWindow(self, parentWindow, height):
         self.parentWindow = parentWindow
@@ -213,6 +214,18 @@ class inputBoxManager:
         return result
     def getValidValues(self):
         return self.validValues
+    def setConfirmationMode(self, mode):
+        if not mode:
+            self.setMultipleChoiceMode(mode)
+        else:
+            answers = ['yes', 'y', '1', # yes
+                       'no', 'n', '0', # no
+                       'quit', 'cancel', 'q', 'c' # quit
+                      ]
+            self.setMultipleChoiceMode(mode, answers)
+        self.confirmationMode = mode
+    def getConfirmationMode(self):
+        return self.confirmationMode
     def setMultipleChoiceMode(self, mode, validValues = []):
         if mode:
             self.validValues = validValues
@@ -229,8 +242,8 @@ class inputBoxManager:
         else:
             self.acceptFolders = acceptFolders
             self.acceptFiles = acceptFiles
+            self.location = expanduser(location)        
         self.locationMode = mode
-        self.location = expanduser(location)
     def getLocationMode(self):
         return self.locationMode
     def getLocation(self):
@@ -287,6 +300,28 @@ class inputBoxManager:
         self.exitStatus = exitStatus
     def getExitStatus(self):
         return self.exitStatus
+    def processConfirmationMode(self):
+        if not self.getConfirmationMode():
+            return
+        # normalize yes, no, cancle for confirmation mode
+        exitStatus = self.getExitStatus()
+        if exitStatus == False:
+            self.setCurrValue('q')
+            return    
+        value = self.getCurrValue()
+        # normalize answer for confirmation mode
+        # quit
+        if value in ['quit','cancel','q', 'c']:
+            self.setCurrValue('q')
+            self.setExitStatus(False)
+        # yes
+        elif value in ['yes', 'y', '1']:
+            self.setCurrValue('y')
+            self.setExitStatus(True)
+        # no
+        elif value in ['no', 'n', '0']:
+            self.setCurrValue('n')                   
+            self.setExitStatus(True)
     def show(self, validate=None):
         "Edit in the widget window and collect the results."
         self.setCurrValue(None)
@@ -306,6 +341,7 @@ class inputBoxManager:
                     break
                 self.win.refresh()
             self.setCurrValue(self.gather())
+            self.processConfirmationMode()
         self.close()
         del self.win
         return self.getExitStatus(), self.getCurrValue()
