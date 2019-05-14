@@ -124,23 +124,6 @@ class folderManager():
             self.caseSensitiveSorting = caseSensitiveSorting
         except:
             pass
-
-    def removeEntry(self, path):
-        try:
-            self.selection.remove(path)
-        except:
-            pass
-        try:
-            self.keys.remove(path)
-        except:
-            pass
-        try:
-            del(self.entries[path])
-        except:
-            pass
-        entry = self.getCurrentEntry(self)
-        if entry == None:
-            self.lastEntry()
     def initLocation(self, pwd):
         currFolder = expanduser(pwd)
         if (currFolder == '') or not os.access(currFolder, os.R_OK):
