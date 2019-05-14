@@ -95,7 +95,12 @@ for an example see below in "example context menu"
 (Todo): Find a file containing (Control+Shift+F)
   The first looks for a file based on the filename or filename segment you are prompted to type, and the second does a search for files which contain the string which you are prompted to type. Ideal situation here would be to use Recoll, which is apparently an excellent cli search engine, and is already installed in F123Light, but needs a nice easy way to use it.
   Searches are performed on current directory and all sub directories by default.
-
+import os
+for root, dirs, files in os.walk("/home/chrys"):
+    for file in files:
+        if file.endswith(".sh"):
+             print(os.path.join(root, file))
+             
 # Main Menu (low priority)
 (Todo): Menu
 (Todo): F10 should take you to menu of file manager if it has one. If not, maybe it can take you to our Static Menu, if we are not using Virtual menu.
