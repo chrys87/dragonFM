@@ -157,7 +157,7 @@ class inputBoxManager:
                 pass
             else:
                 self.win.move(y+1, 0)
-        elif ch in [curses.ascii.BEL, curses.ascii.NL, curses.ascii.CR]: # ^g
+        elif ch in [curses.ascii.BEL, curses.ascii.NL, curses.ascii.CR]:
             # complete
             self.setExitStatus(True)
             return False
@@ -242,7 +242,7 @@ class inputBoxManager:
         else:
             self.acceptFolders = acceptFolders
             self.acceptFiles = acceptFiles
-            self.location = expanduser(location)        
+            self.location = expanduser(location)
         self.locationMode = mode
     def getLocationMode(self):
         return self.locationMode
@@ -261,6 +261,8 @@ class inputBoxManager:
 
         # check for file or path
         if self.getLocationMode():
+            if currValue == '':
+                return False
             try:
                 os.chdir(self.getLocation())
                 currValue = os.path.abspath(currValue)
@@ -307,7 +309,7 @@ class inputBoxManager:
         exitStatus = self.getExitStatus()
         if exitStatus == False:
             self.setCurrValue('q')
-            return    
+            return
         value = self.getCurrValue()
         # normalize answer for confirmation mode
         # quit
@@ -320,7 +322,7 @@ class inputBoxManager:
             self.setExitStatus(True)
         # no
         elif value in ['no', 'n', '0']:
-            self.setCurrValue('n')                   
+            self.setCurrValue('n')
             self.setExitStatus(True)
     def show(self, validate=None):
         "Edit in the widget window and collect the results."
@@ -355,7 +357,8 @@ if __name__ == '__main__':
         inputBox = inputBoxManager(stdscr, description=['Do You realy want?','q = quit','y = yes','n = nope'])
         #inputBox.setMultipleChoiceMode(True,['q', 'y', 'n'])
         inputBox.setLocationMode(True, '/tmp/playzone',True,False)
-        inputBox.setInitValue('y')
+        #inputBox.setConfirmationMode(True)
+        #inputBox.setInitValue('y')
         status, text = inputBox.show()
         stdscr.erase()
         stdscr.addstr(0, ulx, "Parent Window")
