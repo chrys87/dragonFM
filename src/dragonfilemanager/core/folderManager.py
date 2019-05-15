@@ -24,7 +24,7 @@ class folderManager():
         self.collectorParam = {}
         self.index = 0
         self.entries = OrderedDict()
-        self.keys = []
+        self.keys = None
         self.selection = []
         self.typeAheadSearch = ''
         self.lastTypeAheadTime = time.time()
@@ -357,7 +357,7 @@ class folderManager():
         return True
     def createdSortedEntries(self, entries):
         self.entries = OrderedDict(sorted(entries.items(), reverse=self.reverseSorting, key=self.getSortingKey))
-        self.keys = list(self.entries.keys())
+        self.keys = tuple(self.entries.keys())
     def getSortingKey(self, element):
         #self.screen.addstr(self.headerOffset, 0, str(element))
         sortingKey = []
