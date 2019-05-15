@@ -8,7 +8,7 @@ It is essential that whatever we use be Unicode-compatible, because we will have
 # known bugs
 (BUG): Control+w to close current tab if there are multiple tabs opened, or close entire file manager if just one tab is opened, just like Firefox.
 (BUG): stop watchdog clean on close tabs
-
+(BUG): Find currently blocks mainloop
 
 (Done): displaying files in a list is possible, then it is more usable for screen reader users.
 (Done): make Columns configurable
@@ -44,6 +44,7 @@ It is essential that whatever we use be Unicode-compatible, because we will have
 (Done): control alt n to create a new text file in current directory. Equivalent of touch command. (needs input dialog)
 (Done): input for change location (needs input dialog)
 (Done): proper view update # make inputManager.get unblocking and handle the needUpdate then not async.
+(Done): Find a file (Control+f)
 (Needs Binding): Alt+up arrow should go to parent directory, like in pcmanfm etc.
 (Needs Binding): alt plus home should go directly to home folder.
 (Needs Binding) Alt+number to jump from one tab to another, if multiple ones are opened, just like in Firefox.
@@ -91,7 +92,6 @@ input, freetext,
 for an example see below in "example context menu"
 
 # Search (mid priority)
-(Todo): Find a file (Control+f)
 (Todo): Find a file containing (Control+Shift+F)
   The first looks for a file based on the filename or filename segment you are prompted to type, and the second does a search for files which contain the string which you are prompted to type. Ideal situation here would be to use Recoll, which is apparently an excellent cli search engine, and is already installed in F123Light, but needs a nice easy way to use it.
   Searches are performed on current directory and all sub directories by default.
