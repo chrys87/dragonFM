@@ -8,7 +8,7 @@ class command():
     def getName(self):
         return _('Display Help')
     def getDescription(self):
-        return _('Documentation for DragonFM')
+        return _('Documentation for the Dragon File Manager.')
     def active(self):
         return True
     def getValue(self):
