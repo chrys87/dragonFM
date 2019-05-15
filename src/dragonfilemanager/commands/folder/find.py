@@ -51,6 +51,11 @@ class command():
                 foundInString = False
                 found = False
                 if not found:
+                    # search exact name in string
+                    if searchString in e:
+                        foundInString = True
+                        found = foundInString or found                      
+                if not found:
                     # search glob
                     try:
                         globFound = fnmatch.fnmatch(e, searchString)
@@ -63,12 +68,7 @@ class command():
                         regextFound = re.search(searchString, e)
                         found = regextFound or found                    
                     except:
-                        pass
-                if not found:
-                    # search exact name in string
-                    if searchString in e:
-                        foundInString = True
-                        found = foundInString or found                    
+                        pass              
                 # add entry if it was match               
                 if found:
                     fullPath = os.path.join(root, e)
