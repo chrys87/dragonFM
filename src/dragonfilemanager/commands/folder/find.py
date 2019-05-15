@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-import os, re
+import os, re, fnmatch
 
 class command():
     def __init__(self, dragonfmManager):
@@ -46,9 +46,14 @@ class command():
                 if e.startswith('.'):
                     if not self.settingsManager.getBool('folder', 'showHidden'):
                         continue
+                globFound = False                        
                 regextFound = False
                 foundInString = False
                 found = False
+                try:
+                    globFound = fnmatch.fnmatch(searchString, e)
+                except:
+                    pass
                 try:
                     regextFound = re.search(searchString, e)
                 except:
