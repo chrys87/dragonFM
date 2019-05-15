@@ -249,6 +249,7 @@ class folderManager():
             return
         if os.path.isdir(path):
             self.gotoFolder(path, entryName)
+            self.setCollector()
         else:
             self.fileManager.openFile(entry, self.getLocation())
     
