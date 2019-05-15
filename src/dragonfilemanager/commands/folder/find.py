@@ -50,16 +50,21 @@ class command():
                 regextFound = False
                 foundInString = False
                 found = False
+                # search glob
                 try:
-                    globFound = fnmatch.fnmatch(searchString, e)
+                    globFound = fnmatch.fnmatch(e, searchString)
                 except:
                     pass
+                # search regex
                 try:
                     regextFound = re.search(searchString, e)
                 except:
                     pass
+                # search exact name in string
                 foundInString = searchString in e
-                found = foundInString or regextFound
+                
+                found = foundInString or regextFound or globFound
+                
                 if found:
                     fullPath = os.path.join(root, e)
                     entry = self.fileManager.getInfo(fullPath)
