@@ -316,21 +316,20 @@ class folderManager():
             return False
         if path != self.getLocation():
             self.unselectAllEntries()
-            try:
-                self.autoUpdateManager.requestStop()
-            except:
-                pass
+        try:
+            self.autoUpdateManager.requestStop()
+        except:
+            pass
         collectorParam = self.getCollectorParam()
         collectorParam['path'] = path
         entries = self.getCollector()(collectorParam)
         if path != self.getLocation():
-            self.autoUpdateManager.waitForStopWatch()
-            try:
-                self.autoUpdateManager.startWatch(path, self.setRequestReload)
-            except:
-                pass
             self.setLocation(path)
-
+        self.autoUpdateManager.waitForStopWatch()
+        try:
+            self.autoUpdateManager.startWatch(path, self.setRequestReload)
+        except:
+            pass
         self.createdSortedEntries(entries)
         self.setCurrentCursor(self.getIndex(), entryName)
         return True

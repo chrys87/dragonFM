@@ -17,9 +17,10 @@ class autoUpdateManager():
     def __init__(self, dragonfmManager):
         self.dragonfmManager = dragonfmManager
         self.settingsManager = self.dragonfmManager.getSettingsManager()
-        self.DRAGON_INOTIFY_EVENTS = (
-            inotify.constants.IN_MODIFY | inotify.constants.IN_ATTRIB |
-            inotify.constants.IN_CLOSE_WRITE | inotify.constants.IN_MOVED_FROM |
+        self.DRAGON_INOTIFY_EVENTS = (inotify.constants.IN_ACCESS |
+            inotify.constants.IN_MODIFY |inotify.constants.IN_ATTRIB |
+            inotify.constants.IN_CLOSE_WRITE | inotify.constants.IN_CLOSE_NOWRITE |
+            inotify.constants.IN_OPEN | inotify.constants.IN_MOVED_FROM |
             inotify.constants.IN_MOVED_TO | inotify.constants.IN_CREATE |
             inotify.constants.IN_DELETE | inotify.constants.IN_DELETE_SELF |
             inotify.constants.IN_MOVE_SELF
