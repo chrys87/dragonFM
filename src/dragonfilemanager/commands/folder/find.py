@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-import os
+import os, re
 
 class command():
     def __init__(self, dragonfmManager):
@@ -45,7 +45,7 @@ class command():
                 if dir.startswith('.'):
                     if not self.settingsManager.getBool('folder', 'showHidden'):
                         continue
-                if searchString in dir:
+                if re.search(searchString, dir):
                     fullPath = os.path.join(root, dir)
                     entry = self.fileManager.getInfo(fullPath)
                     if entry != None:
@@ -54,7 +54,7 @@ class command():
                 if fn.startswith('.'):
                     if not self.settingsManager.getBool('folder', 'showHidden'):
                         continue
-                if searchString in fn:
+                if re.search(searchString, fn):
                     fullPath = os.path.join(root, fn)
                     entry = self.fileManager.getInfo(fullPath)
                     if entry != None:
