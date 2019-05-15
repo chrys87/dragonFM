@@ -31,9 +31,7 @@ class folderManager():
         self.headerOffset = 0
         self.footerOffset = 0
         self.messageTimer = None
-        self.requestUpdate = False
         self.requestReload = False
-        self.requestUpdateLock = threading.RLock()
         self.requestReloadLock = threading.RLock()
         self.selectionMode = 0 # 0 = unselect on navigation, 1 = select on navigation, 2 = ignore
         self.page = 0
@@ -139,7 +137,6 @@ class folderManager():
                         currFolder = '/'
         self.gotoFolder(currFolder)
     def enter(self):
-        self.setRequestUpdate()
         self.dragonfmManager.update()
     def leave(self):
         pass
@@ -156,19 +153,6 @@ class folderManager():
         self.requestReloadLock.acquire(True)
         self.requestReload = False
         self.requestReloadLock.release()
-    def isRequestUpdate(self):
-        self.requestUpdateLock.acquire(True)
-        requestUpdate = self.requestUpdate
-        self.requestUpdateLock.release()
-        return requestUpdate
-    def setRequestUpdate(self):
-        self.requestUpdateLock.acquire(True)
-        self.requestUpdate = True
-        self.requestUpdateLock.release()
-    def resetRequestUpdate(self):
-        self.requestUpdateLock.acquire(True)
-        self.requestUpdate = False
-        self.requestUpdateLock.release()
     def setCurrentCursor(self, index, entryName = None):
         NoOfEntries = len(self.keys)
         # dont overrunt
@@ -203,7 +187,6 @@ class folderManager():
         size = self.getEntryAreaSize()
         page = int(index / size)
         if page != self.page:
-            self.setRequestUpdate()
             self.page = page
 
     def getIndex(self):
@@ -239,7 +222,6 @@ class folderManager():
         if path == '':
             return False
         self.openEntry(path, location)
-        self.setRequestUpdate()
         return True
     def openEntry(self, path, entryName=None, entry = None):
         if not path:
@@ -275,12 +257,11 @@ class folderManager():
     def update(self):
         if self.isRequestReload():
             self.reloadFolder()
-        if self.isRequestUpdate():
-            self.dragonfmManager.erase()
-            self.drawHeader()
-            self.drawFooter()
-            self.updatePage()
-            self.drawEntryList()
+        self.dragonfmManager.erase()
+        self.drawHeader()
+        self.drawFooter()
+        self.updatePage()
+        self.drawEntryList()
         screenIndex = self.getPositionForIndex()
         self.dragonfmManager.setCursor(screenIndex, 0)
         self.dragonfmManager.refresh()
@@ -290,7 +271,6 @@ class folderManager():
         return self.page
     def gotoFolder(self, path, entryName = None):
         if self.loadEntriesFromFolder(path, entryName):
-            self.setRequestUpdate()
             return True
         return False
     def reloadFolder(self):
@@ -298,12 +278,6 @@ class folderManager():
         self.gotoFolder(self.getLocation(), entryName)
     def currFolderCollector(self, param):
         path = param['path']
-        if path != self.getLocation():
-            self.unselectAllEntries()
-            try:
-                self.autoUpdateManager.requestStop()
-            except:
-                pass
         elements = os.listdir(path)
         entries = {}
         for e in elements:
@@ -317,14 +291,6 @@ class folderManager():
             entry = self.fileManager.getInfo(fullPath)
             if entry != None:
                 entries[fullPath] = entry
-        # sort entries here
-        if path != self.getLocation():
-            self.autoUpdateManager.waitForStopWatch()
-            self.setLocation(path)
-            try:
-                self.autoUpdateManager.startWatch(path, self.setRequestReload)
-            except:
-                pass
         return entries
     def setCollector(self, collector=None, collectorParam = {}):
         if collector == None:
@@ -348,9 +314,22 @@ class folderManager():
             return False
         if not self.getCollector():
             return False
+        if path != self.getLocation():
+            self.unselectAllEntries()
+            try:
+                self.autoUpdateManager.requestStop()
+            except:
+                pass
         collectorParam = self.getCollectorParam()
         collectorParam['path'] = path
         entries = self.getCollector()(collectorParam)
+        if path != self.getLocation():
+            self.autoUpdateManager.waitForStopWatch()
+            try:
+                self.autoUpdateManager.startWatch(path, self.setRequestReload)
+            except:
+                pass
+            self.setLocation(path)
 
         self.createdSortedEntries(entries)
         self.setCurrentCursor(self.getIndex(), entryName)
@@ -402,14 +381,12 @@ class folderManager():
         return self.message != ''
     def resetMessage(self):
         self.message = ''
-        self.setRequestUpdate()
     def setMessage(self, message):
         if self.messageTimer:
             if self.messageTimer.is_alive():
                 self.messageTimer.cancel()
         self.messageTimer = threading.Timer(0.5, self.resetMessage)
         self.message = message
-        self.setRequestUpdate()
         self.messageTimer.start()
     def drawHeader(self):
         self.headerOffset = 0
@@ -472,12 +449,13 @@ class folderManager():
     def getSelection(self):
         return self.selection.copy()
     def drawEntryList(self):
+        startingIndex = self.getPage() * self.getEntryAreaSize()
         for i in range(self.getEntryAreaSize()):
             if i == self.height - self.footerOffset:
                 break
-            if self.getPage() * self.getEntryAreaSize() + i >= len(self.entries):
+            if startingIndex + i >= len(self.entries):
                 break
-            key = self.getKeyByIndex(self.getPage() * self.getEntryAreaSize() + i)
+            key = self.getKeyByIndex(startingIndex + i)
             e = self.entries[key]
             pos = 0
             #debug

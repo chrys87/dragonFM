@@ -21,6 +21,5 @@ class command():
             folderManager.uncselectCurrentEntry()
         else:    
             folderManager.selectCurrentEntry()
-        folderManager.setRequestUpdate()
         if callback:
             callback()

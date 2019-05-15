@@ -46,7 +46,7 @@ class command():
                 if e.startswith('.'):
                     if not self.settingsManager.getBool('folder', 'showHidden'):
                         continue
-                globFound = False                        
+                globFound = False
                 regextFound = False
                 foundInString = False
                 found = False
@@ -54,7 +54,7 @@ class command():
                 if not found:
                     if searchString in e:
                         foundInString = True
-                        found = foundInString or found                      
+                        found = foundInString or found
                 # search glob
                 if not found:
                     try:
@@ -66,10 +66,10 @@ class command():
                 if not found:
                     try:
                         regextFound = re.search(searchString, e)
-                        found = regextFound or found                    
+                        found = regextFound or found
                     except:
-                        pass              
-                # add entry if it was match               
+                        pass
+                # add entry if it was match
                 if found:
                     fullPath = os.path.join(root, e)
                     entry = None

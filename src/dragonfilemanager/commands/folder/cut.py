@@ -26,7 +26,7 @@ class command():
 
         # Get the files and directories that were selected.
         selected = self.selectionManager.getSelectionOrCursorCurrentTab()
-                                                                                                                                                                
+
         self.clipboardManager.setClipboard(selected, operation = 'cut')
         if folderManager.getSelectionMode() != 0:
             folderManager.setSelectionMode(0)
