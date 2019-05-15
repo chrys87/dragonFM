@@ -37,7 +37,6 @@ class folderManager():
         self.requestReloadLock = threading.RLock()
         self.selectionMode = 0 # 0 = unselect on navigation, 1 = select on navigation, 2 = ignore
         self.page = 0
-        self.mode = 0 # 0 = Folder, 1 = find
         self.columns = ['name','selected', 'clipboard']
         self.setColumns(self.settingsManager.get('folder', 'columns'))
         self.sorting = ['name']
