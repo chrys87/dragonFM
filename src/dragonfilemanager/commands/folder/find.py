@@ -41,39 +41,22 @@ class command():
         entries = {}
 
         for root, dirs, files in os.walk(path):
-            for dir in dirs:
-                if dir.startswith('.'):
+            allElements = dirs + files
+            for e in allElements:
+                if e.startswith('.'):
                     if not self.settingsManager.getBool('folder', 'showHidden'):
                         continue
                 regextFound = False
                 foundInString = False
                 found = False
                 try:
-                    regextFound = re.search(searchString, dir)
+                    regextFound = re.search(searchString, e)
                 except:
                     pass
-                foundInString = searchString in dir
+                foundInString = searchString in e
                 found = foundInString or regextFound
                 if found:
-                    fullPath = os.path.join(root, dir)
-                    entry = self.fileManager.getInfo(fullPath)
-                    if entry != None:
-                        entries[fullPath] = entry
-            for fn in files:
-                if fn.startswith('.'):
-                    if not self.settingsManager.getBool('folder', 'showHidden'):
-                        continue
-                regextFound = False
-                foundInString = False
-                found = False
-                try:
-                    regextFound = re.search(searchString, fn)
-                except:
-                    pass
-                foundInString = searchString in fn
-                found = foundInString or regextFound
-                if found:
-                    fullPath = os.path.join(root, fn)
+                    fullPath = os.path.join(root, e)
                     entry = self.fileManager.getInfo(fullPath)
                     if entry != None:
                         entries[fullPath] = entry
