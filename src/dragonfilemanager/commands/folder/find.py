@@ -45,7 +45,16 @@ class command():
                 if dir.startswith('.'):
                     if not self.settingsManager.getBool('folder', 'showHidden'):
                         continue
-                if re.search(searchString, dir) or (searchString in dir):
+                regextFound = False
+                foundInString = False
+                found = False
+                try:
+                    regextFound = re.search(searchString, dir)
+                except:
+                    pass
+                foundInString = searchString in dir
+                found = foundInString or regextFound
+                if found:
                     fullPath = os.path.join(root, dir)
                     entry = self.fileManager.getInfo(fullPath)
                     if entry != None:
@@ -54,7 +63,16 @@ class command():
                 if fn.startswith('.'):
                     if not self.settingsManager.getBool('folder', 'showHidden'):
                         continue
-                if re.search(searchString, fn) or (searchString in fn):
+                regextFound = False
+                foundInString = False
+                found = False
+                try:
+                    regextFound = re.search(searchString, fn)
+                except:
+                    pass
+                foundInString = searchString in fn
+                found = foundInString or regextFound
+                if found:
                     fullPath = os.path.join(root, fn)
                     entry = self.fileManager.getInfo(fullPath)
                     if entry != None:
