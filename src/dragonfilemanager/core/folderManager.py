@@ -314,24 +314,33 @@ class folderManager():
             return False
         if not self.getCollector():
             return False
-        if path != self.getLocation():
-            self.unselectAllEntries()
+        # stop watchdog
         try:
             self.autoUpdateManager.requestStop()
         except:
             pass
+        # unselect on new location
+        if path != self.getLocation():
+            self.unselectAllEntries()
+        # collect data
         collectorParam = self.getCollectorParam()
         collectorParam['path'] = path
         entries = self.getCollector()(collectorParam)
+        # set new location
         if path != self.getLocation():
             self.setLocation(path)
-        self.autoUpdateManager.waitForStopWatch()
+        # do sorting and place cursor
+        self.createdSortedEntries(entries)
+        self.setCurrentCursor(self.getIndex(), entryName)
+        # wait and [re]start watchdog
+        try:
+            self.autoUpdateManager.waitForStopWatch()
+        except:
+            pass
         try:
             self.autoUpdateManager.startWatch(path, self.setRequestReload)
         except:
             pass
-        self.createdSortedEntries(entries)
-        self.setCurrentCursor(self.getIndex(), entryName)
         return True
     def createdSortedEntries(self, entries):
         self.entries = OrderedDict(sorted(entries.items(), reverse=self.reverseSorting, key=self.getSortingKey))
@@ -433,11 +442,9 @@ class folderManager():
         key = self.getCurrentKey()
         return self.isSelected(key)
     def selectAllEntries(self):
-        selected = False
-        for key in self.keys:
-            if self.selectEntry(key):
-                selected = True
-        return selected
+        self.unselectAllEntries()
+        self.selection = list(self.keys)
+        return self.selection != []
     def unselectAllEntries(self):
         if self.selection != []:
             self.selection = []
