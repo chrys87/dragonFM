@@ -247,8 +247,8 @@ class folderManager():
         if path == '':
             return
         if os.path.isdir(path):
-            self.gotoFolder(path, entryName)
             self.setCollector()
+            self.gotoFolder(path, entryName)
         else:
             self.fileManager.openFile(entry, self.getLocation())
     
@@ -336,6 +336,7 @@ class folderManager():
     def getCollectorParam(self):
         return self.collectorParam
     def loadEntriesFromFolder(self, path, entryName = None):
+        self.resetRequestReload()
         if path == '':
             return False
         path = expanduser(path)
@@ -345,9 +346,8 @@ class folderManager():
             return False
         if not os.access(path, os.R_OK):
             return False
-        self.resetRequestReload()
         if not self.getCollector():
-            return False#
+            return False
         collectorParam = self.getCollectorParam()
         collectorParam['path'] = path
         entries = self.getCollector()(collectorParam)
