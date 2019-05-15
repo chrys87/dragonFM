@@ -12,7 +12,7 @@ class command():
     def getName(self):
         return _('Create Link')
     def getDescription(self):
-        return _('Create a link of the current entry')
+        return _('Create a link to the current entry')
     def active(self):
         return True
     def getValue(self):

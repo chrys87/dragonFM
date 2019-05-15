@@ -9,7 +9,7 @@ class command():
     def getName(self):
         return _('Keep Selection Mode')
     def getDescription(self):
-        return _('Keep Selection while navigation')
+        return _('Keep Selection while navigating')
     def active(self):
         return True
     def getValue(self):

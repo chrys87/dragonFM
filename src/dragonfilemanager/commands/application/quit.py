@@ -8,7 +8,7 @@ class command():
     def getName(self):
         return _('Quit')
     def getDescription(self):
-        return _('Quit dragonFM')
+        return _('Quit/Exit the file manager.')
     def active(self):
         return True
     def getValue(self):
