@@ -37,14 +37,13 @@ class command():
     def findCollector(self, collectorParam):
         path = collectorParam['path']
         searchString = collectorParam['search']
-
+        showHidden = self.settingsManager.getBool('folder', 'showHidden')
         entries = {}
-
         for root, dirs, files in os.walk(path):
             allElements = dirs + files
             for e in allElements:
-                if e.startswith('.'):
-                    if not self.settingsManager.getBool('folder', 'showHidden'):
+                if not showHidden:
+                    if e.startswith('.'):
                         continue
                 globFound = False
                 regextFound = False
