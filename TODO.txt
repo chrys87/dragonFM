@@ -46,6 +46,9 @@ It is essential that whatever we use be Unicode-compatible, because we will have
 (Done): proper view update # make inputManager.get unblocking and handle the needUpdate then not async.
 (Done): Find a file (Control+f)
 (Needs Binding): Alt+up arrow should go to parent directory, like in pcmanfm etc.
+(Needs Binding): Create File
+(Needs Binding): Create Folder
+(Needs Binding): Create Link
 (Needs Binding): alt plus home should go directly to home folder.
 (Needs Binding) Alt+number to jump from one tab to another, if multiple ones are opened, just like in Firefox.
 (Needs Binding): Control+Tab and Control+Shift+Tab to move from one tab to another.
