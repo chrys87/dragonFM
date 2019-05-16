@@ -279,10 +279,11 @@ class folderManager():
     def currFolderCollector(self, param):
         path = param['path']
         elements = os.listdir(path)
+        showHidden = self.settingsManager.getBool('folder', 'showHidden')
         entries = {}
         for e in elements:
             if e.startswith('.'):
-                if not self.settingsManager.getBool('folder', 'showHidden'):
+                if not showHidden:
                     continue
             fullPath = path
             if not fullPath.endswith('/'):
@@ -305,29 +306,37 @@ class folderManager():
         self.resetRequestReload()
         if path == '':
             return False
+        if not self.getCollector():
+            return False     
         path = expanduser(path)
         if path.endswith('/') and path != '/':
             path = path[:-1]
-        if not os.path.isdir(path):
-            return False
+        locationChanged = path != self.getLocation()
         if not os.access(path, os.R_OK):
+            if not locationChanged:
+                self.unselectAllEntries()
+                entries = {}
             return False
-        if not self.getCollector():
+        if not os.path.isdir(path):
+            if not locationChanged:
+                self.unselectAllEntries()
+                entries = {}
             return False
+
         # stop watchdog
         try:
             self.autoUpdateManager.requestStop()
         except:
             pass
         # unselect on new location
-        if path != self.getLocation():
+        if locationChanged:
             self.unselectAllEntries()
         # collect data
         collectorParam = self.getCollectorParam()
         collectorParam['path'] = path
         entries = self.getCollector()(collectorParam)
         # set new location
-        if path != self.getLocation():
+        if locationChanged:
             self.setLocation(path)
         # do sorting and place cursor
         self.createdSortedEntries(entries)
