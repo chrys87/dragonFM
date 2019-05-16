@@ -282,8 +282,8 @@ class folderManager():
         showHidden = self.settingsManager.getBool('folder', 'showHidden')
         entries = {}
         for e in elements:
-            if e.startswith('.'):
-                if not showHidden:
+            if not showHidden:
+                if e.startswith('.'):
                     continue
             fullPath = path
             if not fullPath.endswith('/'):
