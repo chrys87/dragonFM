@@ -1,4 +1,4 @@
-import sys, os, time, threading, curses, math
+import sys, os, time, threading, curses
 from pathlib import Path
 from os.path import expanduser
 from collections import OrderedDict
