@@ -8,6 +8,5 @@ dragonFM is plugin driven and fully configurable and supports:
 - open files in CLI based on mimetypes
 - tab navigation
 - context menu (TODO)
-- settigs menu (TODO)
-- search (TODO)
+- search
 - simple keybindings (similar to GUI filemanagers)
