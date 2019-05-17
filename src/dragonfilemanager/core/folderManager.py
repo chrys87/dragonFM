@@ -18,6 +18,7 @@ class folderManager():
         self.id = id
         self.message = ''
         self.location = ''
+        self.folderCollectorLocation = ''
         self.Path = None
         self.keyDebugging = False
         self.collector = None
@@ -299,7 +300,9 @@ class folderManager():
         if collector == None:
             collector = self.currFolderCollector
             self.setColumns(self.settingsManager.get('folder', 'columns'))
-
+            self.setLocation(self.folderCollectorLocation)
+        else:
+            self.folderCollectorLocation = self.getLocation()
         self.collector = collector
         self.collectorParam = collectorParam
     def getCollector(self):
@@ -355,7 +358,7 @@ class folderManager():
         except:
             pass
         try:
-            self.autoUpdateManager.startWatch(path, self.setRequestReload)
+            self.autoUpdateManager.startWatch(newPath, self.setRequestReload)
         except:
             pass
         return True

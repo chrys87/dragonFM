@@ -45,4 +45,4 @@ class command():
             entry = self.fileManager.getInfo(fullPath)
             if entry != None:
                 entries[fullPath] = entry
-        return entries, collectorParam['path']
+        return entries, favDir
