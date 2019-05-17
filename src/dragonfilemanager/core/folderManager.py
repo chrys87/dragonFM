@@ -35,9 +35,9 @@ class folderManager():
         self.requestReloadLock = threading.RLock()
         self.selectionMode = 0 # 0 = unselect on navigation, 1 = select on navigation, 2 = ignore
         self.page = 0
-        self.columns = ['name','selected', 'clipboard']
+        self.columns = []
         self.setColumns(self.settingsManager.get('folder', 'columns'))
-        self.sorting = ['name']
+        self.sorting = []
         self.reverseSorting = False
         self.caseSensitiveSorting = False
         self.setSorting(self.settingsManager.get('folder', 'sorting'))
@@ -94,17 +94,19 @@ class folderManager():
     def resetTypeAheadSearch(self, force = False):
         if (time.time() - self.lastTypeAheadTime > 1.5) or force:
             self.typeAheadSearch = ''
-    def setColumns(self, columsString):
-        self.columns = columsString.split(',')
-        if self.columns == '':
-            self.columns = ['name','selected']
-    def setSorting(self, sortingString):
-        try:
+    def setColumns(self, colums):
+        if isinstance(colums, str):
+            colums = colums.split(',')
+        self.columns = colums
+        if self.columns == []:
+            self.columns = ['name','selected', 'clipboard']
+    def setSorting(self, sorting):
+        if isinstance(sorting, str):
             self.sorting = sortingString.split(',')
-            if self.sorting == '':
-                self.sorting = ['name']
-        except:
-            pass
+        self.sorting = sorting
+        if self.sorting == []:
+            self.sorting = ['name']
+
     def setSelectionMode(self, mode):
         self.selectionMode = mode
     def getSelectionMode(self):
@@ -296,6 +298,8 @@ class folderManager():
     def setCollector(self, collector=None, collectorParam = {}):
         if collector == None:
             collector = self.currFolderCollector
+            self.setColumns(self.settingsManager.get('folder', 'columns'))
+       
         self.collector = collector
         self.collectorParam = collectorParam
     def getCollector(self):
