@@ -78,4 +78,4 @@ class command():
                         pass
                     if entry != None:
                         entries[fullPath] = entry
-        return entries
+        return entries, collectorParam['path']
