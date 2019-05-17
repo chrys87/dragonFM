@@ -299,7 +299,7 @@ class folderManager():
         if collector == None:
             collector = self.currFolderCollector
             self.setColumns(self.settingsManager.get('folder', 'columns'))
-       
+
         self.collector = collector
         self.collectorParam = collectorParam
     def getCollector(self):

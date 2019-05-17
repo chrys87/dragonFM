@@ -21,5 +21,6 @@ class command():
         folderManager.resetTypeAheadSearch(True)
         folderManager.unselectAllEntries()
         folderManager.setCollector()
+        folderManager.setRequestReload()
         if callback:
             callback()

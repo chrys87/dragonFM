@@ -28,7 +28,8 @@ class command():
             return
         collectorParam = {'search':searchString}
         folderManager.setCollector(self.findCollector, collectorParam)
-
+        folderManager.setCollector(self.findCollector, collectorParam)
+        folderManager.setColumns(self.settingsManager.get('search', 'columns'))
         folderManager.setRequestReload()
 
         if callback:
