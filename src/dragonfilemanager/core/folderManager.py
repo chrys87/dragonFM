@@ -339,6 +339,7 @@ class folderManager():
         
         collectorParam = self.getCollectorParam()
         collectorParam['path'] = path
+        collectorParam['folderManager'] = self        
         entries, newPath = self.getCollector()(collectorParam)
         locationChanged = newPath != self.getLocation()        
     
