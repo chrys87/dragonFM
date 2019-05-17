@@ -102,7 +102,7 @@ class folderManager():
             self.columns = ['name','selected', 'clipboard']
     def setSorting(self, sorting):
         if isinstance(sorting, str):
-            self.sorting = sortingString.split(',')
+            self.sorting = sorting.split(',')
         self.sorting = sorting
         if self.sorting == []:
             self.sorting = ['name']
@@ -335,16 +335,16 @@ class folderManager():
         # unselect on new location
         if locationChanged:
             self.unselectAllEntries()
+
         # collect data
-        
         collectorParam = self.getCollectorParam()
         collectorParam['path'] = path
-        collectorParam['folderManager'] = self        
+        collectorParam['folderManager'] = self
         entries, newPath = self.getCollector()(collectorParam)
-        locationChanged = newPath != self.getLocation()        
-    
+
+        locationChanged = newPath != self.getLocation()
         # set new location
-        if newPath != :
+        if locationChanged:
             self.setLocation(newPath)
         # do sorting and place cursor
         self.createdSortedEntries(entries)
