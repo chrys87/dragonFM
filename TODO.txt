@@ -81,6 +81,8 @@ input, freetext,
 (WIP): Nice Formatting for column view (align them)
 (Todo): Track history
 (Todo): navigate in history (prev, next folder in history)
+(Todo): add bookmark
+(Todo): view bookmarks
 
 # general (Priority)
 (WIP): message area
