@@ -294,7 +294,7 @@ class folderManager():
             entry = self.fileManager.getInfo(fullPath)
             if entry != None:
                 entries[fullPath] = entry
-        return entries
+        return entries, param['path']
     def setCollector(self, collector=None, collectorParam = {}):
         if collector == None:
             collector = self.currFolderCollector
@@ -336,12 +336,15 @@ class folderManager():
         if locationChanged:
             self.unselectAllEntries()
         # collect data
+        
         collectorParam = self.getCollectorParam()
         collectorParam['path'] = path
-        entries = self.getCollector()(collectorParam)
+        entries, newPath = self.getCollector()(collectorParam)
+        locationChanged = newPath != self.getLocation()        
+    
         # set new location
-        if locationChanged:
-            self.setLocation(path)
+        if newPath != :
+            self.setLocation(newPath)
         # do sorting and place cursor
         self.createdSortedEntries(entries)
         self.setCurrentCursor(self.getIndex(), entryName)
