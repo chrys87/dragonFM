@@ -1,5 +1,6 @@
 import os, sys 
 from os.path import expanduser
+from dragonfilemanager.utils import path_utils
 
 class favManager(object):
     def __init__(self, dragonfmManager):
@@ -8,6 +9,8 @@ class favManager(object):
         self.fileManager = self.dragonfmManager.getFileManager()
     def isFavoritFolder(self, location):
         return location == expanduser(self.settingsManager.get('favorits', 'path'))
+    def isInFavoritFolder(self, location):
+        return location.startswith(expanduser(self.settingsManager.get('favorits', 'path')))
 
     def addToFav(self, location):
 
@@ -20,12 +23,10 @@ class favManager(object):
         exitStatus, favoritName = inputDialog.show()
         if not exitStatus:
             return
-        favDir = expanduser(self.settingsManager.get('favorits', 'path'))
+        favDir = path_utils.normalizePath(self.settingsManager.get('favorits', 'path'))
         if not os.path.exists(favDir):
             os.makedirs(favDir)
 
-        if not favDir.endswith('/'):
-            favDir += '/'
         if not location.endswith('/'):
             location += '/'
 
