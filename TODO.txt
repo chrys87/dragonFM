@@ -45,6 +45,8 @@ It is essential that whatever we use be Unicode-compatible, because we will have
 (Done): input for change location (needs input dialog)
 (Done): proper view update # make inputManager.get unblocking and handle the needUpdate then not async.
 (Done): Find a file (Control+f)
+(Needs Binding): add bookmark
+(Needs Binding): view bookmarks
 (Needs Binding): Alt+up arrow should go to parent directory, like in pcmanfm etc.
 (Needs Binding): Create File
 (Needs Binding): Create Folder
@@ -81,8 +83,6 @@ input, freetext,
 (WIP): Nice Formatting for column view (align them)
 (Todo): Track history
 (Todo): navigate in history (prev, next folder in history)
-(Todo): add bookmark
-(Todo): view bookmarks
 
 # general (Priority)
 (WIP): message area

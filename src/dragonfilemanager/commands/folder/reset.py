@@ -20,6 +20,8 @@ class command():
         folderManager.setSelectionMode(0)
         folderManager.resetTypeAheadSearch(True)
         folderManager.unselectAllEntries()
+        if folderManager.getFolderCollectorLocation() != '':
+            folderManager.setLocation(folderManager.getFolderCollectorLocation())
         folderManager.setCollector()
         folderManager.setRequestReload()
         if callback:

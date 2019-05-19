@@ -1,13 +1,12 @@
 #!/usr/bin/env python
 import os
-from os.path import expanduser
+from dragonfilemanager.core import favManager
 
 class command():
     def __init__(self, dragonfmManager):
         self.dragonfmManager = dragonfmManager
-        self.settingsManager = self.dragonfmManager.getSettingsManager()
-        self.selectionManager = self.dragonfmManager.getSelectionManager()
-        self.fileManager = self.dragonfmManager.getFileManager()
+        self.favManager = favManager.favManager(self.dragonfmManager)
+
     def shutdown(self):
         pass
     def getName(self):
@@ -23,27 +22,7 @@ class command():
     def run(self, callback = None):   
         folderManager = self.dragonfmManager.getCurrFolderManager()
         location = folderManager.getLocation()
+        self.favManager.addToFav(location)
 
-        if not os.path.exists(location):
-            return
-
-        favoritName = os.path.basename(location)
-
-        inputDialog = self.dragonfmManager.createInputDialog(description = ['Favoritname:'], initValue = favoritName)
-        exitStatus, favoritName = inputDialog.show()
-        if not exitStatus:
-            return
-        favDir = expanduser(self.settingsManager.get('favorits', 'path'))
-        if not os.path.exists(favDir):
-            os.makedirs(favDir)
-
-        if not favDir.endswith('/'):
-            favDir += '/'
-        if not location.endswith('/'):
-            location += '/'
-
-        destPath = '{0}{1}'.format(favDir, favoritName)
-
-        self.fileManager.spawnCreateLinkCursorThread(location, destPath)
         if callback:
             callback()
