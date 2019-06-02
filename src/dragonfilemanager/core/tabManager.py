@@ -12,7 +12,7 @@ class tabManager():
         self.listManager = listManager.listManager(self.id, self.dragonfmManager)        
         self.detailManager = detailManager.detailManager(self.id, self.dragonfmManager)
         self.commandManager = self.dragonfmManager.getCommandManager()
-        self.mode = 0 # 0: folder, 1: context menu
+        self.mode = 0 # 0: folder, 1: details
     def enter(self):
         self.update()
     def leave(self):

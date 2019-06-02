@@ -436,7 +436,7 @@ class listManager():
     def drawHeader(self):
         self.headerOffset = 0
         # paint header
-        self.screen.addstr(self.headerOffset, 0, _('Tab: {0}').format(self.getID()))
+        self.screen.addstr(self.headerOffset, 0, _('Tab: {0} List').format(self.getID()))
         self.headerOffset += 1
         location = self.getLocation()
         if not self.favManager.isFavoritFolder(location):

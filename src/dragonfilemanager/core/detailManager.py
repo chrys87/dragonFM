@@ -408,7 +408,7 @@ class detailManager():
                 return True
             return False
         try:
-            result = self.commandManager.runCommand('folder', command)
+            result = self.commandManager.runCommand('detail', command)
             if debug:
                 self.setMessage('debug Sequence: {0} Command: {1} Command Success: {2}'.format(shortcut, command, result))
             return result
@@ -436,7 +436,7 @@ class detailManager():
     def drawHeader(self):
         self.headerOffset = 0
         # paint header
-        self.screen.addstr(self.headerOffset, 0, _('Tab: {0}').format(self.getID()))
+        self.screen.addstr(self.headerOffset, 0, _('Tab: {0} Details').format(self.getID()))
         self.headerOffset += 1
         location = self.getLocation()
         if not self.favManager.isFavoritFolder(location):
