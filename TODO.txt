@@ -88,7 +88,7 @@ input, freetext,
 (WIP): message area
 
 # Context menu (Priority)
-(Todo): properties / Context menu: Shift+10, and selecting "properties", user can see file size, date of last modification, owner, permissions, etc.
+(WIP): properties / Context menu: Shift+10, and selecting "properties", user can see file size, date of last modification, owner, permissions, etc.
 (Todo): Context menu: Shift+F10 should give you menu of things you can do to current file or directory, like rename, compress, uncompress, zip and email, open-with, etc. It should vary according to file type.
 (Todo): Shift+F10 should be customizable by user or at least by one of our scripts.
 (Todo): Shift+F10 usually gives you options like compressing file or directory, open, open-with, e-mailing as an attachment, uncompressing, etc. It should be different depending on file type, and we need to be able to modify this on a conf file or something.
