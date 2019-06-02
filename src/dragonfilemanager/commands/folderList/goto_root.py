@@ -14,6 +14,8 @@ class command():
         return _('Goto root folder')
     def active(self):
         return True
+    def visible(self):
+        return True
     def getValue(self):
         return None
     def getShortcut(self):

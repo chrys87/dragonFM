@@ -17,6 +17,8 @@ class command():
         return _('Cut current entry or selection')
     def active(self):
         return True
+    def visible(self):
+        return True
     def getValue(self):
         return None
     def getShortcut(self):

@@ -89,7 +89,15 @@ class commandManager():
             print(e)
             return None
         return None
-
+    def isCommandActive(self, section, command):
+        if not self.commandExist(section, command):
+            return False
+        c = self.getCommand(section, command)
+        try:
+            return c.active()
+        except Exception as e:
+            print(e)
+        return False
     def runCommand(self, section, command, callback = None):
         #self.dragonfmManager.leave()
 

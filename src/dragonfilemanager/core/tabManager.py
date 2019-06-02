@@ -40,6 +40,8 @@ class tabManager():
         command = self.settingsManager.getShortcut('tab-keyboard', shortcut)
         if command == '':
             return False
+        if not self.commandManager.isCommandActive('tab', command):
+            return False
         return self.commandManager.runCommand('tab', command)
     def handleInput(self, shortcut):
         if not self.handleTabInput(shortcut):

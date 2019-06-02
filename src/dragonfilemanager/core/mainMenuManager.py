@@ -16,6 +16,8 @@ class mainMenuManager():
         command = self.settingsManager.getShortcut('main-keyboard', shortcut)
         if command == '':
             return False
+        if not self.commandManager.isCommandActive('main', command):
+            return False
         return self.commandManager.runCommand('main', command)
     def handleInput(self, shortcut):
         return self.handleMainInput(shortcut)

@@ -12,6 +12,8 @@ class command():
         return _('Opens a new Tab')
     def active(self):
         return True
+    def visible(self):
+        return True
     def getValue(self):
         return None
     def getShortcut(self):

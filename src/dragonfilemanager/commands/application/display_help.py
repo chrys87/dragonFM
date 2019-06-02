@@ -11,6 +11,8 @@ class command():
         return _('Documentation for the Dragon File Manager.')
     def active(self):
         return True
+    def visible(self):
+        return True
     def getValue(self):
         return None
     def getShortcut(self):

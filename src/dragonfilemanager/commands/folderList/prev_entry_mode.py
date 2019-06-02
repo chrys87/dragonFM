@@ -12,6 +12,8 @@ class command():
         return _('Move Cursor to previous entry using current mode')
     def active(self):
         return True
+    def visible(self):
+        return True
     def getValue(self):
         return None
     def getShortcut(self):

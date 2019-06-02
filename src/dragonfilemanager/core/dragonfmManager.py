@@ -81,6 +81,8 @@ class dragonfmManager():
         command = self.settingsManager.getShortcut('application-keyboard', shortcut)
         if command == '':
             return False
+        if not self.commandManager.isCommandActive('application', command):
+            return False
         return self.commandManager.runCommand('application', command)
     def handleInput(self, shortcut):
         if not self.handleApplicationInput(shortcut):

@@ -13,6 +13,8 @@ class command():
         return _('Paste the clipboard to current location')
     def active(self):
         return True
+    def visible(self):
+        return True
     def getValue(self):
         return None
     def getShortcut(self):

@@ -408,6 +408,8 @@ class detailManager():
                 return True
             return False
         try:
+            if not self.commandManager.isCommandActive('detail', command):
+                return False
             result = self.commandManager.runCommand('detail', command)
             if debug:
                 self.setMessage('debug Sequence: {0} Command: {1} Command Success: {2}'.format(shortcut, command, result))

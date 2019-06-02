@@ -15,6 +15,8 @@ class command():
         return _('Open current location in terminal')
     def active(self):
         return True
+    def visible(self):
+        return True
     def getValue(self):
         return None
     def getShortcut(self):

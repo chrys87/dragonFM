@@ -15,6 +15,8 @@ class command():
         return _('Create a link to the current entry')
     def active(self):
         return True
+    def visible(self):
+        return True
     def getValue(self):
         return None
     def getShortcut(self):

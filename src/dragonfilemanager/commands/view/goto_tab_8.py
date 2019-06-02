@@ -12,6 +12,8 @@ class command():
         return _('Change to tab 8')
     def active(self):
         return True
+    def visible(self):
+        return True
     def getValue(self):
         return None
     def getShortcut(self):

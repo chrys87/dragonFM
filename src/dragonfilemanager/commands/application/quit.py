@@ -11,6 +11,8 @@ class command():
         return _('Quit/Exit the file manager.')
     def active(self):
         return True
+    def visible(self):
+        return True
     def getValue(self):
         return None
     def getShortcut(self):

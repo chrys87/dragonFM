@@ -11,6 +11,8 @@ class command():
         return _('Go to parent')
     def active(self):
         return True
+    def visible(self):
+        return True
     def getValue(self):
         return None
     def getShortcut(self):
