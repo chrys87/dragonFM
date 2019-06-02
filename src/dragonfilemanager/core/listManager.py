@@ -308,9 +308,9 @@ class listManager():
     def getCollectorLocation(self):
         return self.collectorLocation
 
-    def setFolderCollectorLocation(self, collectorLocation):
+    def setCollectorLocation(self, collectorLocation):
         if self.getCollectorLocation() == '':
-            self.CollectorLocation = collectorLocation
+            self.collectorLocation = collectorLocation
 
     def resetCollectorLocation(self):
         self.CollectorLocation = ''

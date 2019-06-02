@@ -22,8 +22,8 @@ class command():
         listManager.setSelectionMode(0)
         listManager.resetTypeAheadSearch(True)
         listManager.unselectAllEntries()
-        if listManager.getFolderCollectorLocation() != '':
-            listManager.setLocation(listManager.getFolderCollectorLocation())
+        if listManager.getCollectorLocation() != '':
+            listManager.setLocation(listManager.getCollectorLocation())
         listManager.setCollector()
         listManager.setRequestReload()
         if callback:

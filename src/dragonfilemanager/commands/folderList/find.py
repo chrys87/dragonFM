@@ -30,7 +30,6 @@ class command():
             return
         collectorParam = {'search':searchString}
         listManager.setCollector(self.findCollector, collectorParam)
-        listManager.setCollector(self.findCollector, collectorParam)
         listManager.setColumns(self.settingsManager.get('search', 'columns'))
         listManager.setRequestReload()
 
