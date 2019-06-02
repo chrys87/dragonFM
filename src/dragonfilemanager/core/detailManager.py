@@ -398,7 +398,7 @@ class detailManager():
             return element[0]
         return sortingKey
     def handleFolderInput(self, shortcut):
-        command = self.settingsManager.getShortcut('folder-keyboard', shortcut)
+        command = self.settingsManager.getShortcut('details-keyboard', shortcut)
         debug = self.settingsManager.getBool('debug', 'input')
         self.resetTypeAheadSearch(command != '')
         if command == '':
