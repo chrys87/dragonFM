@@ -40,13 +40,12 @@ class inputBoxManager:
     def __init__(self, parentWindow, insert_mode=True, description = []):
         self.init()
         self.setInsertMode(insert_mode)
-        height = len(description) + 1
-        self.createWindow(parentWindow, height)
+        self.setParentWindow(parentWindow)
         self.setDescription(description)
     def setDescription(self, description):
-        for d in description:
-            self.win.addstr(self.headerOffset, 0, d)
-            self.headerOffset += 1
+        self.description = description
+    def getDescription(self):
+        return self.description
     def init(self):
         self.stripspaces = 1
         self.lastcmd = None
@@ -54,6 +53,7 @@ class inputBoxManager:
         self.win = None
         self.headerOffset = 0
         self.initValue = ''
+        self.description = []
         self.locationMode = False
         self.location = ''
         self.acceptFiles = False
@@ -61,11 +61,15 @@ class inputBoxManager:
         self.multipleChoiceMode = False
         self.validValues = []
         self.confirmationMode = False
+        self.editable = True
+        self.defaultValue = ''
+        self.parentWindow = None
         self.exitStatus = None # None = error, True = ok, False = cancle
-    def createWindow(self, parentWindow, height):
+    def setParentWindow(self, parentWindow):
         self.parentWindow = parentWindow
+    def createWindow(self):
         parentSizeY, parentSizeX = self.parentWindow.getmaxyx()
-        ncols, nlines = parentSizeX, height
+        ncols, nlines = parentSizeX, self.calculateMaxHight()
         self.win = curses.newwin(nlines, ncols, 0, 0)
         self.win.keypad(True)
         self._update_max_yx()
@@ -128,6 +132,8 @@ class inputBoxManager:
         # debug
         #self.win.addstr(self.headerOffset, 0, str(int(ch)))
         if curses.ascii.isprint(ch):
+            if not self.getEditable():
+                return True
             if y < self.maxy or x < self.maxx:
                 self._insert_printable_char(ch)
         elif ch == curses.ascii.SOH:                           # ^a
@@ -142,8 +148,12 @@ class inputBoxManager:
             else:
                 self.win.move(y-1, self.maxx)
             if ch in (curses.ascii.BS, curses.KEY_BACKSPACE, curses.ascii.DEL):
+                if not self.getEditable():
+                    return True
                 self.win.delch()
         elif ch == curses.ascii.EOT:                           # ^d
+            if not self.getEditable():
+                return True
             self.win.delch()
         elif ch == curses.ascii.ENQ:                           # ^e
             if self.stripspaces:
@@ -172,6 +182,8 @@ class inputBoxManager:
             self.setExitStatus(False)
             return False
         elif ch == curses.ascii.VT:                            # ^k
+            if not self.getEditable():
+                return True
             if x == 0 and self._end_of_line(y) == 0:
                 self.win.deleteln()
             else:
@@ -186,8 +198,12 @@ class inputBoxManager:
                 if x > self._end_of_line(y+1):
                     self.win.move(y+1, self._end_of_line(y+1))
         elif ch == curses.ascii.SI:                            # ^o
+            if not self.getEditable():
+                return True
             self.win.insertln()
         elif ch == curses.ascii.TAB: # autocompletion
+            if not self.getEditable():
+                return True
             pass
         elif ch in (curses.ascii.DLE, curses.KEY_UP):          # ^p
             if y > self.headerOffset:
@@ -248,6 +264,14 @@ class inputBoxManager:
         return self.locationMode
     def getLocation(self):
         return self.location
+    def setEditable(self, editable):
+        self.editable = editable
+    def getEditable(self):
+        return self.editable
+    def setDefaultValue(self, defaultValue):
+        self.defaultValue = defaultValue
+    def getDefaultValue(self):
+        return self.defaultValue
     def isValidValues(self):
         exitStatus = self.getExitStatus()
         # cancle is also always valid
@@ -297,6 +321,9 @@ class inputBoxManager:
     def getCurrValue(self):
         return self.currValue
     def setCurrValue(self, currValue):
+        if self.getDefaultValue() != '':
+            if currValue == '':
+                currValue = self.getDefaultValue()
         self.currValue = currValue
     def setExitStatus(self, exitStatus):
         self.exitStatus = exitStatus
@@ -324,9 +351,29 @@ class inputBoxManager:
         elif value in ['no', 'n', '0']:
             self.setCurrValue('n')
             self.setExitStatus(True)
+    def printHeader(self):
+        description = self.getDescription()
+        for d in description:
+            self.win.addstr(self.headerOffset, 0, d)
+            self.headerOffset += 1
+        defaultValue = self.getDefaultValue()
+        if defaultValue != '':
+            self.win.addstr(self.headerOffset, 0, 'Default Value: ({})'.format(defaultValue))
+            self.headerOffset += 1
+    def calculateMaxHight(self):
+        # input box
+        height = 1
+        # description
+        height += len(self.getDescription())
+        # init value
+        if self.getDefaultValue() != '':
+            height += 1
+        return height
     def show(self, validate=None):
         "Edit in the widget window and collect the results."
+        self.createWindow()
         self.setCurrValue(None)
+        self.printHeader()
         while not self.isValidValues():
             if self.getInitValue() != '' :
                 self.win.addstr(self.headerOffset, 0, self.getInitValue())
@@ -355,10 +402,12 @@ if __name__ == '__main__':
         stdscr.refresh()
         stdscr.getch()
         inputBox = inputBoxManager(stdscr, description=['Do You realy want?','q = quit','y = yes','n = nope'])
+        inputBox.setDefaultValue('test')
         #inputBox.setMultipleChoiceMode(True,['q', 'y', 'n'])
-        inputBox.setLocationMode(True, '/tmp/playzone',True,True)
+        #inputBox.setLocationMode(True, '/tmp/playzone',True,True)
         #inputBox.setConfirmationMode(True)
-        #inputBox.setInitValue('y')
+        #inputBox.setEditable(False)
+        ##inputBox.setInitValue('/tmp/playzone')
         status, text = inputBox.show()
         stdscr.erase()
         stdscr.addstr(0, ulx, "Parent Window")

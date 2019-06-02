@@ -22,7 +22,9 @@ class command():
         location = folderManager.getLocation()
         folderName = self.fileManager.getInitName(location, 'new_folder{0}{1}{2}', '_')
 
-        inputDialog = self.dragonfmManager.createInputDialog(description = ['Foldername:'], initValue = folderName)
+        inputDialog = self.dragonfmManager.createInputDialog(description = ['Foldername:'])
+        inputDialog.setDefaultValue(folderName)
+
         exitStatus, folderName = inputDialog.show()
         if not exitStatus:
             return

@@ -40,7 +40,8 @@ class command():
 
         linkName = self.fileManager.getInitName(location, nameTemplate, '_')
 
-        inputDialog = self.dragonfmManager.createInputDialog(description = ['Linkname:'], initValue = linkName)
+        inputDialog = self.dragonfmManager.createInputDialog(description = ['Linkname:'])
+        inputDialog.setDefaultValue(linkName)
         exitStatus, linkName = inputDialog.show()
         if not exitStatus:
             return
