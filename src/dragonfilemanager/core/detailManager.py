@@ -3,8 +3,9 @@ from pathlib import Path
 from os.path import expanduser
 from collections import OrderedDict
 from dragonfilemanager.core import autoUpdateManager
+from dragonfilemanager.core import favManager
 
-class folderManager():
+class detailManager():
     def __init__(self, id, dragonfmManager, pwd= ''):
         self.dragonfmManager = dragonfmManager
         self.screen = self.dragonfmManager.getScreen()
@@ -15,6 +16,7 @@ class folderManager():
         self.commandManager = self.dragonfmManager.getCommandManager()
         self.clipboardManager = self.dragonfmManager.getClipboardManager()
         self.autoUpdateManager = autoUpdateManager.autoUpdateManager(self.dragonfmManager)
+        self.favManager = favManager.favManager(self.dragonfmManager)
         self.id = id
         self.message = ''
         self.location = ''
@@ -219,6 +221,8 @@ class folderManager():
         location = self.getLocation()
         if location.endswith('/'):
             location = location[:-1]
+        if self.favManager.isFavoritFolder(location):
+            return False
         if location == '':
             return False
         path = os.path.dirname(location)
@@ -232,6 +236,9 @@ class folderManager():
         if path == '':
             return
         if os.path.isdir(path):
+            if self.favManager.isFavoritFolder(self.getLocation()):
+                if os.path.islink(path):
+                    path = os.path.realpath(path)
             self.setCollector()
             self.gotoFolder(path, entryName)
         else:
@@ -431,9 +438,12 @@ class folderManager():
         # paint header
         self.screen.addstr(self.headerOffset, 0, _('Tab: {0}').format(self.getID()))
         self.headerOffset += 1
-        self.screen.addstr(self.headerOffset, 0, _('Location: {0}').format(self.getLocation()))
-        self.headerOffset += 1
-        self.screen.addstr(self.headerOffset, 0, _('Page: {0}').format(self.getPage() + 1))
+        location = self.getLocation()
+        if not self.favManager.isFavoritFolder(location):
+            self.screen.addstr(self.headerOffset, 0, _('Location: {0}').format(location))
+        else:
+            self.screen.addstr(self.headerOffset, 0, _('Location: {0}'.format(_('Favorits'))))
+
         self.headerOffset += 1
         self.screen.addstr(self.headerOffset, 0, _('Page: {0}').format(self.getPage() + 1))
         self.headerOffset += 1
@@ -464,6 +474,28 @@ class folderManager():
             except:
                 pass
         return False
+    def selectCurrentEntry(self):
+        key = self.getCurrentKey()
+        return self.selectEntry(key)
+    def uncselectCurrentEntry(self):
+        key = self.getCurrentKey()
+        return self.unselectEntry(key)
+    def isCurrentEntrySelected(self):
+        key = self.getCurrentKey()
+        return self.isSelected(key)
+    def selectAllEntries(self):
+        self.unselectAllEntries()
+        self.selection = list(self.keys)
+        return self.selection != []
+    def unselectAllEntries(self):
+        if self.selection != []:
+            self.selection = []
+            return True
+        return False
+    def isSelected(self, key):
+        return key in self.selection
+    def getSelection(self):
+        return self.selection.copy()
     def drawEntryList(self):
         startingIndex = self.getPage() * self.getEntryAreaSize()
         for i in range(self.getEntryAreaSize()):
@@ -474,8 +506,25 @@ class folderManager():
             key = self.getKeyByIndex(startingIndex + i)
             e = self.entries[key]
             pos = 0
+            #debug
+            #self.screen.addstr(i + self.headerOffset, pos, key)
+            #continue
             for c in self.columns:
-                pass
+                lowerColumn = c.lower()
+                if lowerColumn == 'selected':
+                    value = self.calcSelectionColumn(key)
+                    self.screen.addstr(i + self.headerOffset, pos, value)
+                    pos += len(value) + 2
+                elif lowerColumn == 'clipboard':
+                    #continue
+                    value = self.calcClipboardColumn(key)
+                    self.screen.addstr(i + self.headerOffset, pos, value)
+                    pos += len(value) + 2
+                else:
+                    formattedValue = self.fileManager.formatColumn(lowerColumn, e[lowerColumn])
+                    if i + len(formattedValue) < self.width:
+                        self.screen.addstr(i + self.headerOffset, pos, formattedValue )
+                        pos += len(formattedValue) + 2
             i += 1
     def calcClipboardColumn(self, entry = ''):
         if entry == '':

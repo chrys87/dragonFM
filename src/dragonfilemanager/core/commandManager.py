@@ -12,8 +12,8 @@ class commandManager():
         self.loadCommands('menu')
         self.loadCommands('view')
         self.loadCommands('tab')
-        self.loadCommands('context')
-        self.loadCommands('folder')
+        self.loadCommands('detail')
+        self.loadCommands('folderList')
     def loadFile(self, filepath = ''):
         if filepath == '':
             return None

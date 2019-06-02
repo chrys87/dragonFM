@@ -408,7 +408,7 @@ class folderManager():
                 return True
             return False
         try:
-            result = self.commandManager.runCommand('folder', command)
+            result = self.commandManager.runCommand('folderList', command)
             if debug:
                 self.setMessage('debug Sequence: {0} Command: {1} Command Success: {2}'.format(shortcut, command, result))
             return result

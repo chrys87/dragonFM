@@ -1,6 +1,6 @@
 import sys, os, curses
 
-from dragonfilemanager.core import contextMenuManager
+from dragonfilemanager.core import detailManager
 from dragonfilemanager.core import folderManager
 
 class tabManager():
@@ -10,7 +10,7 @@ class tabManager():
         self.screen = self.dragonfmManager.getScreen()
         self.settingsManager = self.dragonfmManager.getSettingsManager()
         self.folderManager = folderManager.folderManager(self.id, self.dragonfmManager)        
-        self.contextMenuManager = contextMenuManager.contextMenuManager(self.id, self.dragonfmManager)
+        self.detailManager = detailManager.detailManager(self.id, self.dragonfmManager)
         self.commandManager = self.dragonfmManager.getCommandManager()
         self.mode = 0 # 0: folder, 1: context menu
     def enter(self):
@@ -23,19 +23,19 @@ class tabManager():
         if self.mode == 0:
             self.folderManager.leave()
         elif self.mode == 1:
-            self.contextMenuManager.leave()
+            self.detailManager.leave()
 
         if mode == 0:
             self.folderManager.enter()
         elif mode == 1:
-            self.contextMenuManager.enter()
+            self.detailManager.enter()
 
         self.mode = mode
     def update(self):
         if self.mode == 0:
             self.folderManager.update()
         elif self.mode == 1:
-            self.contextMenuManager.update()
+            self.detailManager.update()
     def handleTabInput(self, shortcut):
         command = self.settingsManager.getShortcut('tab-keyboard', shortcut)
         if command == '':
@@ -46,8 +46,8 @@ class tabManager():
             if self.mode == 0:
                 self.folderManager.handleInput(shortcut)
             elif self.mode == 1:
-                self.contextMenuManager.handleInput(shortcut)
+                self.detailManager.handleInput(shortcut)
     def getFolderManager(self):
         return self.folderManager
     def getContextMenuManager(self):
-        return self.contextMenuManager
+        return self.detailManager
