@@ -20,7 +20,8 @@ class listManager():
         self.id = id
         self.message = ''
         self.location = ''
-        self.folderCollectorLocation = ''
+        self.collectorLocation = ''
+        self.collectorIdentity = ''
         self.Path = None
         self.keyDebugging = False
         self.collector = None
@@ -286,7 +287,7 @@ class listManager():
     def reloadFolder(self):
         entryName = self.getCurrentKey()
         self.gotoFolder(self.getLocation(), entryName)
-    def currFolderCollector(self, param):
+    def defaultCollector(self, param):
         path = param['path']
         elements = os.listdir(path)
         showHidden = self.settingsManager.getBool('folder', 'showHidden')
@@ -304,24 +305,27 @@ class listManager():
                 entries[fullPath] = entry
         return entries, param['path']
 
-    def getFolderCollectorLocation(self):
-        return self.folderCollectorLocation
+    def getCollectorLocation(self):
+        return self.collectorLocation
 
-    def setFolderCollectorLocation(self, folderCollectorLocation):
-        if self.getFolderCollectorLocation() == '':
-            self.folderCollectorLocation = folderCollectorLocation
+    def setFolderCollectorLocation(self, collectorLocation):
+        if self.getCollectorLocation() == '':
+            self.CollectorLocation = collectorLocation
 
-    def resetFolderCollectorLocation(self):
-        self.folderCollectorLocation = ''
-    def setCollector(self, collector=None, collectorParam = {}):
+    def resetCollectorLocation(self):
+        self.CollectorLocation = ''
+    def getCollectorIdentity(self):
+        return self.collectorIdentity
+    def setCollector(self, collector=None, collectorParam = {}, collectorIdentity = 'folderList'):
         if collector == None:
-            collector = self.currFolderCollector
+            collector = self.defaultCollector
             self.setColumns(self.settingsManager.get('folder', 'columns'))
-            self.resetFolderCollectorLocation()
+            self.resetCollectorLocation()
         else:
-            self.setFolderCollectorLocation(self.getLocation())
+            self.setCollectorLocation(self.getLocation())
         self.collector = collector
         self.collectorParam = collectorParam
+        self.collectorIdentity = collectorIdentity
     def getCollector(self):
         return self.collector
     def getCollectorParam(self):
@@ -398,7 +402,7 @@ class listManager():
             return element[0]
         return sortingKey
     def handleFolderInput(self, shortcut):
-        command = self.settingsManager.getShortcut('folder-keyboard', shortcut)
+        command = self.settingsManager.getShortcut('folderList-keyboard', shortcut)
         debug = self.settingsManager.getBool('debug', 'input')
         self.resetTypeAheadSearch(command != '')
         if command == '':
