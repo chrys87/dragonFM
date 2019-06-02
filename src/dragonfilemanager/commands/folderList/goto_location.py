@@ -18,13 +18,13 @@ class command():
     def getShortcut(self):
         return None
     def run(self, callback = None):
-        folderManager = self.dragonfmManager.getCurrFolderManager()
-        location = folderManager.getLocation()
+        listManager = self.dragonfmManager.getCurrListManager()
+        location = listManager.getLocation()
         inputDialog = self.dragonfmManager.createInputDialog(description = ['Location:'], initValue = location)
         inputDialog.setLocationMode(True, location, True, False)
         exitStatus, location = inputDialog.show()
         if not exitStatus:
             return
-        folderManager.gotoFolder(location)
+        listManager.gotoFolder(location)
         if callback:
             callback()

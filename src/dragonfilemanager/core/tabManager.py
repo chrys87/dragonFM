@@ -1,7 +1,7 @@
 import sys, os, curses
 
 from dragonfilemanager.core import detailManager
-from dragonfilemanager.core import folderManager
+from dragonfilemanager.core import listManager
 
 class tabManager():
     def __init__(self, id, dragonfmManager):
@@ -9,7 +9,7 @@ class tabManager():
         self.dragonfmManager = dragonfmManager
         self.screen = self.dragonfmManager.getScreen()
         self.settingsManager = self.dragonfmManager.getSettingsManager()
-        self.folderManager = folderManager.folderManager(self.id, self.dragonfmManager)        
+        self.listManager = listManager.listManager(self.id, self.dragonfmManager)        
         self.detailManager = detailManager.detailManager(self.id, self.dragonfmManager)
         self.commandManager = self.dragonfmManager.getCommandManager()
         self.mode = 0 # 0: folder, 1: context menu
@@ -21,19 +21,19 @@ class tabManager():
         if self.mode == mode:
             return
         if self.mode == 0:
-            self.folderManager.leave()
+            self.listManager.leave()
         elif self.mode == 1:
             self.detailManager.leave()
 
         if mode == 0:
-            self.folderManager.enter()
+            self.listManager.enter()
         elif mode == 1:
             self.detailManager.enter()
 
         self.mode = mode
     def update(self):
         if self.mode == 0:
-            self.folderManager.update()
+            self.listManager.update()
         elif self.mode == 1:
             self.detailManager.update()
     def handleTabInput(self, shortcut):
@@ -44,10 +44,10 @@ class tabManager():
     def handleInput(self, shortcut):
         if not self.handleTabInput(shortcut):
             if self.mode == 0:
-                self.folderManager.handleInput(shortcut)
+                self.listManager.handleInput(shortcut)
             elif self.mode == 1:
                 self.detailManager.handleInput(shortcut)
-    def getFolderManager(self):
-        return self.folderManager
-    def getContextMenuManager(self):
+    def getListManager(self):
+        return self.listManager
+    def getDetailManager(self):
         return self.detailManager

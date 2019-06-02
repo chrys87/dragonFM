@@ -22,14 +22,14 @@ class command():
     def getShortcut(self):
         return None
     def run(self, callback = None):
-        folderManager = self.dragonfmManager.getCurrFolderManager()
+        listManager = self.dragonfmManager.getCurrListManager()
 
         # Get the files and directories that were selected.
         selected = self.selectionManager.getSelectionOrCursorCurrentTab()
 
         self.clipboardManager.setClipboard(selected, operation = 'cut')
-        if folderManager.getSelectionMode() != 0:
-            folderManager.setSelectionMode(0)
+        if listManager.getSelectionMode() != 0:
+            listManager.setSelectionMode(0)
 
         if callback:
             callback()

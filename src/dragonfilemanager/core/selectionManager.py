@@ -5,11 +5,11 @@ class selectionManager():
         self.dragonfmManager = dragonfmManager
         self.settingsManager = self.dragonfmManager.getSettingsManager()
     def getSelectionCurrentTab(self):
-        folderManager = self.dragonfmManager.getCurrFolderManager()
-        return folderManager.getSelection()
+        listManager = self.dragonfmManager.getCurrListManager()
+        return listManager.getSelection()
     def getCursorCurrentTab(self):
-        folderManager = self.dragonfmManager.getCurrFolderManager() 
-        return folderManager.getCurrentKey()
+        listManager = self.dragonfmManager.getCurrListManager() 
+        return listManager.getCurrentKey()
     def getSelectionOrCursorCurrentTab(self):
         #return [self.getCursorCurrentTab()]
         # use active cursor if no selection is done.

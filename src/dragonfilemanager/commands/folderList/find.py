@@ -19,18 +19,18 @@ class command():
     def getShortcut(self):
         return None
     def run(self, callback = None):   
-        folderManager = self.dragonfmManager.getCurrFolderManager()
-        location = folderManager.getLocation()
+        listManager = self.dragonfmManager.getCurrListManager()
+        location = listManager.getLocation()
 
         inputDialog = self.dragonfmManager.createInputDialog(description = ['Find:'], initValue = '')
         exitStatus, searchString = inputDialog.show()
         if not exitStatus:
             return
         collectorParam = {'search':searchString}
-        folderManager.setCollector(self.findCollector, collectorParam)
-        folderManager.setCollector(self.findCollector, collectorParam)
-        folderManager.setColumns(self.settingsManager.get('search', 'columns'))
-        folderManager.setRequestReload()
+        listManager.setCollector(self.findCollector, collectorParam)
+        listManager.setCollector(self.findCollector, collectorParam)
+        listManager.setColumns(self.settingsManager.get('search', 'columns'))
+        listManager.setRequestReload()
 
         if callback:
             callback()

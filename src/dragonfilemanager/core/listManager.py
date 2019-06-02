@@ -5,7 +5,7 @@ from collections import OrderedDict
 from dragonfilemanager.core import autoUpdateManager
 from dragonfilemanager.core import favManager
 
-class folderManager():
+class listManager():
     def __init__(self, id, dragonfmManager, pwd= ''):
         self.dragonfmManager = dragonfmManager
         self.screen = self.dragonfmManager.getScreen()

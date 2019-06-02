@@ -20,15 +20,15 @@ class command():
     def getShortcut(self):
         return None
     def run(self, callback = None):   
-        folderManager = self.dragonfmManager.getCurrFolderManager()
-        location = folderManager.getLocation()
+        listManager = self.dragonfmManager.getCurrListManager()
+        location = listManager.getLocation()
 
-        folderManager.setColumns(self.settingsManager.get('favorits', 'columns'))
+        listManager.setColumns(self.settingsManager.get('favorits', 'columns'))
         favDir = expanduser(self.settingsManager.get('favorits', 'path'))
         collectorParam = {'favPath':favDir}
-        folderManager.setCollector(self.favCollector, collectorParam)
+        listManager.setCollector(self.favCollector, collectorParam)
 
-        folderManager.setRequestReload()
+        listManager.setRequestReload()
 
         if callback:
             callback()

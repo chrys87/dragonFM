@@ -20,7 +20,7 @@ class command():
     def getShortcut(self):
         return None
     def run(self, callback = None):   
-        folderManager = self.dragonfmManager.getCurrFolderManager()
+        listManager = self.dragonfmManager.getCurrListManager()
         
         # Get the files and directories that were selected.
         currentCursor = self.selectionManager.getCursorCurrentTab()
@@ -31,7 +31,7 @@ class command():
         filename_w_ext = os.path.basename(currentCursor)
         fileName, fileExtension = os.path.splitext(filename_w_ext)
         
-        location = folderManager.getLocation()
+        location = listManager.getLocation()
         nameTemplate = fileName + '_link{0}{1}{2}'
 
         if fileExtension != None:

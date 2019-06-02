@@ -200,8 +200,8 @@ class dragonfmManager():
         return self.height
     def getClipboardManager(self):
         return self.clipboardManager
-    def getCurrFolderManager(self):
-        return self.viewManager.getCurrentTab().getFolderManager()
+    def getCurrListManager(self):
+        return self.viewManager.getCurrentTab().getListManager()
     def getSelectionManager(self):
         return self.selectionManager
     def getProcessManager(self):

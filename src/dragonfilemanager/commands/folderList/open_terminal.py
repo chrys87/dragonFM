@@ -23,8 +23,8 @@ class command():
         terminalcmd = self.settingsManager.get('application', 'commandline')
         if terminalcmd == '':
             return
-        folderManager = self.dragonfmManager.getCurrFolderManager()
-        location = folderManager.getLocation()
+        listManager = self.dragonfmManager.getCurrListManager()
+        location = listManager.getLocation()
         terminalcmd = terminalcmd.format(shlex.quote(location))
         self.processManager.startExternal(terminalcmd)
         if callback:

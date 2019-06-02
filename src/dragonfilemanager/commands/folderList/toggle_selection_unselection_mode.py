@@ -16,12 +16,12 @@ class command():
     def getShortcut(self):
         return None
     def run(self, callback = None):
-        folderManager = self.dragonfmManager.getCurrFolderManager()
-        if folderManager.getSelectionMode() == 0:
-            folderManager.setSelectionMode(1)
-            folderManager.selectCurrentEntry()
+        listManager = self.dragonfmManager.getCurrListManager()
+        if listManager.getSelectionMode() == 0:
+            listManager.setSelectionMode(1)
+            listManager.selectCurrentEntry()
         else:
-            folderManager.setSelectionMode(0)
-            folderManager.unselectAllEntries()
+            listManager.setSelectionMode(0)
+            listManager.unselectAllEntries()
         if callback:
             callback()

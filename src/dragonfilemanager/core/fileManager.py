@@ -143,11 +143,11 @@ class fileManager():
         if self.clipboardManager.isClipboardEmpty():
             return
         # Loop through the files and directories and copy them.
-        folderManager = self.dragonfmManager.getCurrFolderManager()
+        listManager = self.dragonfmManager.getCurrListManager()
 
         operation = self.clipboardManager.getOperation()
         clipboard = self.clipboardManager.getClipboard()
-        newLocation = folderManager.getLocation()
+        newLocation = listManager.getLocation()
 
         valueParam = {}
         valueParam['operation'] = operation

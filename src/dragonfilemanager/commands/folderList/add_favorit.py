@@ -20,8 +20,8 @@ class command():
     def getShortcut(self):
         return None
     def run(self, callback = None):   
-        folderManager = self.dragonfmManager.getCurrFolderManager()
-        location = folderManager.getLocation()
+        listManager = self.dragonfmManager.getCurrListManager()
+        location = listManager.getLocation()
         self.favManager.addToFav(location)
 
         if callback:

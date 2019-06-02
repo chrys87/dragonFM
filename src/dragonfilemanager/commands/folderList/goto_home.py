@@ -18,7 +18,7 @@ class command():
     def getShortcut(self):
         return None
     def run(self, callback = None):
-        folderManager = self.dragonfmManager.getCurrFolderManager()
-        folderManager.gotoFolder(expanduser("~"))
+        listManager = self.dragonfmManager.getCurrListManager()
+        listManager.gotoFolder(expanduser("~"))
         if callback:
             callback()

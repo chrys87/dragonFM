@@ -17,7 +17,7 @@ class command():
     def getShortcut(self):
         return None
     def run(self, callback = None):
-        folderManager = self.dragonfmManager.getCurrFolderManager()
-        folderManager.setSelectionMode(2)
+        listManager = self.dragonfmManager.getCurrListManager()
+        listManager.setSelectionMode(2)
         if callback:
             callback()
