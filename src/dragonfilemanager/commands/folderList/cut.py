@@ -1,7 +1,5 @@
 #!/usr/bin/env python
 
-import shutil
-
 class command():
     def __init__(self, dragonfmManager):
         self.dragonfmManager = dragonfmManager

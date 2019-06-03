@@ -78,7 +78,9 @@ setup(
     install_requires=[
         "setuptools",
     ],
-
+    install_requires=[
+        "sh",
+    ],
 )
 
 if not forceSettings:

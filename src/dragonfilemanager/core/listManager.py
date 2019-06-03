@@ -402,7 +402,7 @@ class listManager():
             return element[0]
         return sortingKey
     def handleFolderInput(self, shortcut):
-        command = self.settingsManager.getShortcut('folderList-keyboard', shortcut)
+        command = self.settingsManager.getShortcut(self.getCollectorIdentity()+'-keyboard', shortcut)
         debug = self.settingsManager.getBool('debug', 'input')
         self.resetTypeAheadSearch(command != '')
         if command == '':
@@ -412,9 +412,9 @@ class listManager():
                 return True
             return False
         try:
-            if not self.commandManager.isCommandActive('folderList', command):
+            if not self.commandManager.isCommandActive(self.getCollectorIdentity(), command):
                 return False
-            result = self.commandManager.runCommand('folderList', command)
+            result = self.commandManager.runCommand(self.getCollectorIdentity(), command)
             if debug:
                 self.setMessage('debug Sequence: {0} Command: {1} Command Success: {2}'.format(shortcut, command, result))
             return result
