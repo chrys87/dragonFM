@@ -436,7 +436,7 @@ class listManager():
         if self.messageTimer:
             if self.messageTimer.is_alive():
                 self.messageTimer.cancel()
-        self.messageTimer = threading.Timer(0.5, self.resetMessage)
+        self.messageTimer = threading.Timer(10, self.resetMessage)
         self.message = message
         self.messageTimer.start()
     def drawHeader(self):

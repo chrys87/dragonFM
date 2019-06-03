@@ -67,16 +67,20 @@ place it in mainloop. make it use an multithreading queue and blocking mechanism
 (Done): add "set default value" method
 (Done): add question text method
 (Done): add basic navigation and editation 
-(Done): add default value
+(Done): add default value to dialog
+(Done): add init value to dialog
+(Done): ReadOnly Mode in dialog
 (Done): add return values for action True/ False (ok, cancle)
 (Done): make return work to close the dialog
 (Done): make ESC work to cancle the dialog
 (Done): add modes for selection ['y', 'n'] for only yes no; folder
 input, freetext, 
+(Done): add mechanisms to work with (create, rename, confirmation (do you realy wnat?), location bar)
+(Done): Shift+F10 should be customizable by user or at least by one of our scripts.
 (Todo): add basic tab (autocomplete)
 (Todo): add posibility to spawn dialog from threads
 (Todo): add posibiltiy to pass return value back to the thread
-(Todo): add mechanisms to work with (create, rename, confirmation (do you realy wnat?), location bar)
+
 (WIP): Keybindings similar to nautilus
 
 # Folder View (Priority)
@@ -90,7 +94,6 @@ input, freetext,
 # Context menu (Priority)
 (WIP): properties / Context menu: Shift+10, and selecting "properties", user can see file size, date of last modification, owner, permissions, etc.
 (Todo): Context menu: Shift+F10 should give you menu of things you can do to current file or directory, like rename, compress, uncompress, zip and email, open-with, etc. It should vary according to file type.
-(Todo): Shift+F10 should be customizable by user or at least by one of our scripts.
 (Todo): Shift+F10 usually gives you options like compressing file or directory, open, open-with, e-mailing as an attachment, uncompressing, etc. It should be different depending on file type, and we need to be able to modify this on a conf file or something.
 (Todo): Shift+F10 be accessible. After pressing Shift+F10, Fenrir should read each option, and nothing else, when we move it up and down with arrow keys.
 (Todo): It should also be possible to activate the option one wants by pressing a letter which we define as the shortcut letter, just like we do with main menu etc on pdmenu. So in a menu of any kind where you can hear:

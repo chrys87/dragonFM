@@ -19,7 +19,7 @@ class inputManager():
             if key == curses.ERR:
                 break
             key = curses.keyname(key).decode("utf-8")
-            keys += ',{0}'.format(key)
+            keys += '{0}'.format(key)
         self.screen.timeout(150)
         return str(keys)
     def getKey(self):
