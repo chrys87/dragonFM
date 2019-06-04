@@ -8,12 +8,26 @@ class commandManager():
         self.screen = self.dragonfmManager.getScreen()
         self.settingsManager = self.dragonfmManager.getSettingsManager()
         self.commands = {}
+        # defaults
         self.loadCommands('application')
         self.loadCommands('menu')
         self.loadCommands('view')
         self.loadCommands('tab')
         self.loadCommands('detail')
         self.loadCommands('folderList')
+        # custom
+        try:
+            # ignore if not possible
+            customPath = self.settingsManager.get('application', 'pluginFolder')
+            if customPath.strip() != '':
+                self.loadCommands('application', customPath)
+                self.loadCommands('menu', customPath)
+                self.loadCommands('view', customPath)
+                self.loadCommands('tab', customPath)
+                self.loadCommands('detail', customPath)
+                self.loadCommands('folderList', customPath)
+        except:
+            pass
     def loadFile(self, filepath = ''):
         if filepath == '':
             return None
@@ -49,7 +63,10 @@ class commandManager():
             return
         if not os.access(commandFolder, os.R_OK):
             return
-        self.commands[section.upper()] = {}
+        try:
+            e = self.commands[section.upper()]
+        except:
+            self.commands[section.upper()] = {}
         commandList = glob.glob(commandFolder+'*')
         for command in commandList:
             try:
