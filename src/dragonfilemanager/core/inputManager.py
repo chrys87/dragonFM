@@ -19,9 +19,21 @@ class inputManager():
             if key == curses.ERR:
                 break
             key = curses.keyname(key).decode("utf-8")
-            keys += '{0}'.format(key)
+            keys += key
         self.screen.timeout(150)
+        keys = self.unifyKey(keys)
         return str(keys)
+    def unifyKey(self, keys):
+        if not key:
+            return key
+        newKey = ''
+        for k in key:
+            if ord(k) == 9:
+                newKey += 'KEY_TAB'
+            elif (len(key) > 1) and (ord(k) == 33):
+                newKey += 'KEY_TAB'
+            else newKey += k
+        return newKey
     def getKey(self):
         if not self.screen:
             return None
