@@ -24,13 +24,13 @@ class inputManager():
         keys = self.unifyKey(keys)
         return str(keys)
     def unifyKey(self, keys):
-        if not key:
-            return key
         newKey = ''
-        for k in key:
+        if not keys:
+            return newKey
+        for k in keys:
             if ord(k) == 9:
                 newKey += 'KEY_TAB'
-            elif (len(key) > 1) and (ord(k) == 33):
+            elif (len(keys) > 1) and (ord(k) == 33):
                 newKey += 'KEY_TAB'
             else newKey += k
         return newKey
