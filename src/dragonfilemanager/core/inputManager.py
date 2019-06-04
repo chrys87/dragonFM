@@ -21,7 +21,7 @@ class inputManager():
             key = curses.keyname(key).decode("utf-8")
             keys += key
         self.screen.timeout(150)
-        keys = self.unifyKey(keys)
+        #keys = self.unifyKey(keys)
         return str(keys)
     def unifyKey(self, keys):
         newKey = ''
