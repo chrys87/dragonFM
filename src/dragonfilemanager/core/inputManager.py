@@ -34,7 +34,8 @@ class inputManager():
                 newKey += 'KEY_TAB'
             elif (len(keys) > 1) and (ord(k) == 33):
                 newKey += 'KEY_TAB'
-            else newKey += k
+            else:
+                newKey += k
         return newKey
     def getKey(self):
         if not self.screen:
