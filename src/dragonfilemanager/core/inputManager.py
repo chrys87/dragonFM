@@ -27,6 +27,8 @@ class inputManager():
         newKey = ''
         if not keys:
             return newKey
+        if keys == '':
+            return newKey
         for k in keys:
             if ord(k) == 9:
                 newKey += 'KEY_TAB'
