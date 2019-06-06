@@ -78,6 +78,7 @@ setup(
     install_requires=[
         "setuptools",
         "sh",
+        "inotify"
     ],
 )
 
