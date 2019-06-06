@@ -3,6 +3,7 @@ class command():
         self.dragonfmManager = dragonfmManager
         self.screen = self.dragonfmManager.getScreen()
         self.settingsManager = self.dragonfmManager.getSettingsManager()
+        self.selectionManager = self.dragonfmManager.getSelectionManager()
     def shutdown(self):
         pass
     def getName(self):
@@ -19,6 +20,9 @@ class command():
         return None
     def run(self, callback = None):
         tabManager = self.dragonfmManager.getViewManager().getCurrentTab()
+        detailManager = tabManager.getDetailManager()
+        elements = self.selectionManager.getSelectionOrCursorCurrentTab()
+        detailManager.setDetails(elements)
         tabManager.changeMode(1) # details
         if callback:
             callback()

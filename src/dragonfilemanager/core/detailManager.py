@@ -18,11 +18,11 @@ class detailManager():
         self.autoUpdateManager = autoUpdateManager.autoUpdateManager(self.dragonfmManager)
         self.favManager = favManager.favManager(self.dragonfmManager)
         self.id = id
-        self.message = ''
         self.location = ''
-        self.folderCollectorLocation = ''
+        self.details = []
+        self.collectorLocation = ''
+        self.collectorIdentity = ''
         self.Path = None
-        self.keyDebugging = False
         self.collector = None
         self.collectorParam = {}
         self.index = 0
@@ -31,23 +31,20 @@ class detailManager():
         self.selection = []
         self.typeAheadSearch = ''
         self.lastTypeAheadTime = time.time()
-        self.headerOffset = 0
-        self.footerOffset = 0
-        self.messageTimer = None
         self.requestReload = False
         self.requestReloadLock = threading.RLock()
         self.selectionMode = 0 # 0 = unselect on navigation, 1 = select on navigation, 2 = ignore
         self.page = 0
         self.columns = []
-        self.setColumns(self.settingsManager.get('folder', 'columns'))
+        self.setColumns('actions')
         self.sorting = []
         self.reverseSorting = False
         self.caseSensitiveSorting = False
         self.setSorting(self.settingsManager.get('folder', 'sorting'))
         self.setReverseSorting(self.settingsManager.getBool('folder', 'reverse'))
         self.setCaseSensitiveSorting(self.settingsManager.getBool('folder', 'casesensitive'))
-        self.setCollector()
-        self.initLocation(pwd)
+        #self.setCollector()
+        #self.initLocation(pwd)
     def doTypeAheadSearch(self, key):
         # useful for type ahead search?
         if key == None:
@@ -102,7 +99,7 @@ class detailManager():
             colums = colums.split(',')
         self.columns = colums
         if self.columns == []:
-            self.columns = ['name','selected', 'clipboard']
+            self.columns = ['actions','selected', 'clipboard']
     def setSorting(self, sorting):
         if isinstance(sorting, str):
             self.sorting = sorting.split(',')
@@ -216,7 +213,7 @@ class detailManager():
         else:
             self.lastEntry()
     def getEntryAreaSize(self):
-        return self.height - self.headerOffset- self.footerOffset
+        return self.height - self.dragonfmManager.getHeaderOffset()
     def parentEntry(self):
         location = self.getLocation()
         if location.endswith('/'):
@@ -262,16 +259,15 @@ class detailManager():
         # page to index
         screenIndex = index - page * size
         # header bar
-        screenIndex += self.headerOffset
+        screenIndex += self.dragonfmManager.getHeaderOffset()
         return screenIndex
     def update(self):
         if self.isRequestReload():
             self.reloadFolder()
         self.dragonfmManager.erase()
         self.drawHeader()
-        self.drawFooter()
         self.updatePage()
-        self.drawEntryList()
+        #self.drawEntryList()
         screenIndex = self.getPositionForIndex()
         self.dragonfmManager.setCursor(screenIndex, 0)
         self.dragonfmManager.refresh()
@@ -286,7 +282,7 @@ class detailManager():
     def reloadFolder(self):
         entryName = self.getCurrentKey()
         self.gotoFolder(self.getLocation(), entryName)
-    def currFolderCollector(self, param):
+    def defaultCollector(self, param):
         path = param['path']
         elements = os.listdir(path)
         showHidden = self.settingsManager.getBool('folder', 'showHidden')
@@ -304,24 +300,27 @@ class detailManager():
                 entries[fullPath] = entry
         return entries, param['path']
 
-    def getFolderCollectorLocation(self):
-        return self.folderCollectorLocation
+    def getCollectorLocation(self):
+        return self.collectorLocation
 
-    def setFolderCollectorLocation(self, folderCollectorLocation):
-        if self.getFolderCollectorLocation() == '':
-            self.folderCollectorLocation = folderCollectorLocation
+    def setCollectorLocation(self, collectorLocation):
+        if self.getCollectorLocation() == '':
+            self.collectorLocation = collectorLocation
 
-    def resetFolderCollectorLocation(self):
-        self.folderCollectorLocation = ''
-    def setCollector(self, collector=None, collectorParam = {}):
+    def resetCollectorLocation(self):
+        self.CollectorLocation = ''
+    def getCollectorIdentity(self):
+        return self.collectorIdentity
+    def setCollector(self, collector=None, collectorParam = {}, collectorIdentity = 'folderList'):
         if collector == None:
-            collector = self.currFolderCollector
+            collector = self.defaultCollector
             self.setColumns(self.settingsManager.get('folder', 'columns'))
-            self.resetFolderCollectorLocation()
+            self.resetCollectorLocation()
         else:
-            self.setFolderCollectorLocation(self.getLocation())
+            self.setCollectorLocation(self.getLocation())
         self.collector = collector
         self.collectorParam = collectorParam
+        self.collectorIdentity = collectorIdentity
     def getCollector(self):
         return self.collector
     def getCollectorParam(self):
@@ -331,7 +330,7 @@ class detailManager():
         if path == '':
             return False
         if not self.getCollector():
-            return False     
+            return False
         path = expanduser(path)
         if path.endswith('/') and path != '/':
             path = path[:-1]
@@ -383,7 +382,7 @@ class detailManager():
         self.entries = OrderedDict(sorted(entries.items(), reverse=self.reverseSorting, key=self.getSortingKey))
         self.keys = tuple(self.entries.keys())
     def getSortingKey(self, element):
-        #self.screen.addstr(self.headerOffset, 0, str(element))
+        #self.screen.addstr(self.dragonfmManager.getHeaderOffset(), 0, str(element))
         sortingKey = []
         try:
             for column in self.sorting:
@@ -398,12 +397,12 @@ class detailManager():
             return element[0]
         return sortingKey
     def handleFolderInput(self, shortcut):
-        command = self.settingsManager.getShortcut('details-keyboard', shortcut)
+        command = self.settingsManager.getShortcut('detail-keyboard', shortcut)
         debug = self.settingsManager.getBool('debug', 'input')
         self.resetTypeAheadSearch(command != '')
         if command == '':
             if debug:
-                self.setMessage('debug Sequence: {0}'.format(shortcut))
+                self.dragonfmManager.setMessage('debug Sequence: {0}'.format(shortcut))
             if self.doTypeAheadSearch(shortcut):
                 return True
             return False
@@ -412,48 +411,34 @@ class detailManager():
                 return False
             result = self.commandManager.runCommand('detail', command)
             if debug:
-                self.setMessage('debug Sequence: {0} Command: {1} Command Success: {2}'.format(shortcut, command, result))
+                self.dragonfmManager.setMessage('debug Sequence: {0} Command: {1} Command Success: {2}'.format(shortcut, command, result))
             return result
         except Exception as e:
             if debug:
-                self.setMessage('debug Sequence: {0} Command: {1} Error: {2}'.format(shortcut, command, e))
+                self.dragonfmManager.setMessage('debug Sequence: {0} Command: {1} Error: {2}'.format(shortcut, command, e))
     def handleInput(self, shortcut):
         return self.handleFolderInput(shortcut)
     def getLocation(self):
         return self.location
-    def showMessage(self):
-        if self.isMessage():
-            self.screen.addstr(self.height - self.footerOffset, 0, self.message)
-    def isMessage(self):
-        return self.message != ''
-    def resetMessage(self):
-        self.message = ''
-    def setMessage(self, message):
-        if self.messageTimer:
-            if self.messageTimer.is_alive():
-                self.messageTimer.cancel()
-        self.messageTimer = threading.Timer(0.5, self.resetMessage)
-        self.message = message
-        self.messageTimer.start()
+    def getDetails(self):
+        return self.details
+    def setDetails(self, details = []):
+        self.details = details
     def drawHeader(self):
-        self.headerOffset = 0
         # paint header
-        self.screen.addstr(self.headerOffset, 0, _('Tab: {0} Details').format(self.getID()))
-        self.headerOffset += 1
+        self.screen.addstr(self.dragonfmManager.getHeaderOffset(), 0, _('Tab: {0} Detail').format(self.getID()))
+        self.dragonfmManager.incHeaderOffset()
         location = self.getLocation()
-        if not self.favManager.isFavoritFolder(location):
-            self.screen.addstr(self.headerOffset, 0, _('Location: {0}').format(location))
-        else:
-            self.screen.addstr(self.headerOffset, 0, _('Location: {0}'.format(_('Favorits'))))
-
-        self.headerOffset += 1
-        self.screen.addstr(self.headerOffset, 0, _('Page: {0}').format(self.getPage() + 1))
-        self.headerOffset += 1
+        details = self.getDetails()
+        self.screen.addstr(self.dragonfmManager.getHeaderOffset(), 0, _('Active Elements: {0}').format(len(details)))
+        self.dragonfmManager.incHeaderOffset()
+        self.screen.addstr(self.dragonfmManager.getHeaderOffset(), 0, _('Page: {0}').format(self.getPage() + 1))
+        self.dragonfmManager.incHeaderOffset()
         pos = 0
         for c in self.columns:
-            self.screen.addstr(self.headerOffset, pos, c )
+            self.screen.addstr(self.dragonfmManager.getHeaderOffset(), pos, c )
             pos += len(c) + 3
-        self.headerOffset += 1
+        self.dragonfmManager.incHeaderOffset()
     def selectEntry(self, key):
         if not key:
             return False
@@ -501,7 +486,7 @@ class detailManager():
     def drawEntryList(self):
         startingIndex = self.getPage() * self.getEntryAreaSize()
         for i in range(self.getEntryAreaSize()):
-            if i == self.height - self.footerOffset:
+            if i == self.height:
                 break
             if startingIndex + i >= len(self.entries):
                 break
@@ -509,39 +494,22 @@ class detailManager():
             e = self.entries[key]
             pos = 0
             #debug
-            #self.screen.addstr(i + self.headerOffset, pos, key)
+            #self.screen.addstr(i + self.dragonfmManager.getHeaderOffset(), pos, key)
             #continue
             for c in self.columns:
                 lowerColumn = c.lower()
                 if lowerColumn == 'selected':
                     value = self.calcSelectionColumn(key)
-                    self.screen.addstr(i + self.headerOffset, pos, value)
+                    self.screen.addstr(i + self.dragonfmManager.getHeaderOffset(), pos, value)
                     pos += len(value) + 2
                 elif lowerColumn == 'clipboard':
                     #continue
                     value = self.calcClipboardColumn(key)
-                    self.screen.addstr(i + self.headerOffset, pos, value)
+                    self.screen.addstr(i + self.dragonfmManager.getHeaderOffset(), pos, value)
                     pos += len(value) + 2
                 else:
                     formattedValue = self.fileManager.formatColumn(lowerColumn, e[lowerColumn])
                     if i + len(formattedValue) < self.width:
-                        self.screen.addstr(i + self.headerOffset, pos, formattedValue )
+                        self.screen.addstr(i + self.dragonfmManager.getHeaderOffset(), pos, formattedValue )
                         pos += len(formattedValue) + 2
             i += 1
-    def calcClipboardColumn(self, entry = ''):
-        if entry == '':
-            return ''
-        clipboard = self.clipboardManager.getClipboard()
-        if entry in clipboard:
-            return self.clipboardManager.getOperation()
-        return ''
-    def calcSelectionColumn(self, entry):
-        if entry == '':
-            return ''
-        if self.isSelected(entry):
-            return 'selected'
-        return ''
-    def drawFooter(self):
-        self.footerOffset = 0
-        self.footerOffset += 1
-        self.showMessage()

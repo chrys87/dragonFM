@@ -19,8 +19,10 @@ class dragonfmManager():
         self.new_term_attr = None
         self.disabled = True
         self.screen = None
+        self.messageTimer = None
         self.height = 0
         self.width = 0
+        self.headerOffset = 0
         self.encoding = 'UTF8'
         self.currentdir = os.path.dirname(os.path.realpath(os.path.abspath(inspect.getfile(inspect.currentframe()))))
         self.dragonFmPath = os.path.dirname(self.currentdir)
@@ -75,6 +77,7 @@ class dragonfmManager():
         if self.getDisabled():
             return
         self.updateLock.acquire(True)
+        self.resetHeaderOffset()
         self.viewManager.update()
         self.updateLock.release()
     def handleApplicationInput(self, shortcut):
@@ -147,6 +150,27 @@ class dragonfmManager():
         except:
             pass
         return False
+    def showMessage(self):
+        if self.isMessage():
+            self.screen.addstr(self.headerOffset, 0, self.message)
+            self.headerOffset += 1
+    def isMessage(self):
+        return self.message != ''
+    def resetMessage(self):
+        self.message = ''
+    def setMessage(self, message):
+        if self.messageTimer:
+            if self.messageTimer.is_alive():
+                self.messageTimer.cancel()
+        self.messageTimer = threading.Timer(0.5, self.resetMessage)
+        self.message = message
+        self.messageTimer.start()
+    def resetHeaderOffset(self):
+        self.headerOffset = 0
+    def incHeaderOffset(self):
+        self.headerOffset += 1
+    def getHeaderOffset(self):
+        return self.headerOffset
     def enter(self):
         screen = curses.initscr()
         if self.new_term_attr != None:

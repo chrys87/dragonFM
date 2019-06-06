@@ -6,7 +6,7 @@ class command():
         self.screen = self.dragonfmManager.getScreen()
         self.settingsManager = self.dragonfmManager.getSettingsManager()
         self.selectionManager = self.dragonfmManager.getSelectionManager()
-        self.clipboardManager = self.dragonfmManager.getClipboardManager()        
+        self.clipboardManager = self.dragonfmManager.getClipboardManager()
     def shutdown(self):
         pass
     def getName(self):

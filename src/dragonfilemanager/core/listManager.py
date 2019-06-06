@@ -18,12 +18,10 @@ class listManager():
         self.autoUpdateManager = autoUpdateManager.autoUpdateManager(self.dragonfmManager)
         self.favManager = favManager.favManager(self.dragonfmManager)
         self.id = id
-        self.message = ''
         self.location = ''
         self.collectorLocation = ''
         self.collectorIdentity = ''
         self.Path = None
-        self.keyDebugging = False
         self.collector = None
         self.collectorParam = {}
         self.index = 0
@@ -32,9 +30,6 @@ class listManager():
         self.selection = []
         self.typeAheadSearch = ''
         self.lastTypeAheadTime = time.time()
-        self.headerOffset = 0
-        self.footerOffset = 0
-        self.messageTimer = None
         self.requestReload = False
         self.requestReloadLock = threading.RLock()
         self.selectionMode = 0 # 0 = unselect on navigation, 1 = select on navigation, 2 = ignore
@@ -217,7 +212,7 @@ class listManager():
         else:
             self.lastEntry()
     def getEntryAreaSize(self):
-        return self.height - self.headerOffset- self.footerOffset
+        return self.height - self.dragonfmManager.getHeaderOffset()
     def parentEntry(self):
         location = self.getLocation()
         if location.endswith('/'):
@@ -263,14 +258,13 @@ class listManager():
         # page to index
         screenIndex = index - page * size
         # header bar
-        screenIndex += self.headerOffset
+        screenIndex += self.dragonfmManager.getHeaderOffset()
         return screenIndex
     def update(self):
         if self.isRequestReload():
             self.reloadFolder()
         self.dragonfmManager.erase()
         self.drawHeader()
-        self.drawFooter()
         self.updatePage()
         self.drawEntryList()
         screenIndex = self.getPositionForIndex()
@@ -387,7 +381,7 @@ class listManager():
         self.entries = OrderedDict(sorted(entries.items(), reverse=self.reverseSorting, key=self.getSortingKey))
         self.keys = tuple(self.entries.keys())
     def getSortingKey(self, element):
-        #self.screen.addstr(self.headerOffset, 0, str(element))
+        #self.screen.addstr(self.dragonfmManager.getHeaderOffset(), 0, str(element))
         sortingKey = []
         try:
             for column in self.sorting:
@@ -407,7 +401,7 @@ class listManager():
         self.resetTypeAheadSearch(command != '')
         if command == '':
             if debug:
-                self.setMessage('debug Sequence: {0}'.format(shortcut))
+                self.dragonfmManager.setMessage('debug Sequence: {0}'.format(shortcut))
             if self.doTypeAheadSearch(shortcut):
                 return True
             return False
@@ -416,48 +410,34 @@ class listManager():
                 return False
             result = self.commandManager.runCommand(self.getCollectorIdentity(), command)
             if debug:
-                self.setMessage('debug Sequence: {0} Command: {1} Command Success: {2}'.format(shortcut, command, result))
+                self.dragonfmManager.setMessage('debug Sequence: {0} Command: {1} Command Success: {2}'.format(shortcut, command, result))
             return result
         except Exception as e:
             if debug:
-                self.setMessage('debug Sequence: {0} Command: {1} Error: {2}'.format(shortcut, command, e))
+                self.dragonfmManager.setMessage('debug Sequence: {0} Command: {1} Error: {2}'.format(shortcut, command, e))
     def handleInput(self, shortcut):
         return self.handleFolderInput(shortcut)
     def getLocation(self):
         return self.location
-    def showMessage(self):
-        if self.isMessage():
-            self.screen.addstr(self.height - self.footerOffset, 0, self.message)
-    def isMessage(self):
-        return self.message != ''
-    def resetMessage(self):
-        self.message = ''
-    def setMessage(self, message):
-        if self.messageTimer:
-            if self.messageTimer.is_alive():
-                self.messageTimer.cancel()
-        self.messageTimer = threading.Timer(10, self.resetMessage)
-        self.message = message
-        self.messageTimer.start()
+
     def drawHeader(self):
-        self.headerOffset = 0
         # paint header
-        self.screen.addstr(self.headerOffset, 0, _('Tab: {0} List').format(self.getID()))
-        self.headerOffset += 1
+        self.screen.addstr(self.dragonfmManager.getHeaderOffset(), 0, _('Tab: {0} List').format(self.getID()))
+        self.dragonfmManager.incHeaderOffset()
         location = self.getLocation()
         if not self.favManager.isFavoritFolder(location):
-            self.screen.addstr(self.headerOffset, 0, _('Location: {0}').format(location))
+            self.screen.addstr(self.dragonfmManager.getHeaderOffset(), 0, _('Location: {0}').format(location))
         else:
-            self.screen.addstr(self.headerOffset, 0, _('Location: {0}'.format(_('Favorits'))))
+            self.screen.addstr(self.dragonfmManager.getHeaderOffset(), 0, _('Location: {0}'.format(_('Favorits'))))
 
-        self.headerOffset += 1
-        self.screen.addstr(self.headerOffset, 0, _('Page: {0}').format(self.getPage() + 1))
-        self.headerOffset += 1
+        self.dragonfmManager.incHeaderOffset()
+        self.screen.addstr(self.dragonfmManager.getHeaderOffset(), 0, _('Page: {0}').format(self.getPage() + 1))
+        self.dragonfmManager.incHeaderOffset()
         pos = 0
         for c in self.columns:
-            self.screen.addstr(self.headerOffset, pos, c )
+            self.screen.addstr(self.dragonfmManager.getHeaderOffset(), pos, c )
             pos += len(c) + 3
-        self.headerOffset += 1
+        self.dragonfmManager.incHeaderOffset()
     def selectEntry(self, key):
         if not key:
             return False
@@ -505,7 +485,7 @@ class listManager():
     def drawEntryList(self):
         startingIndex = self.getPage() * self.getEntryAreaSize()
         for i in range(self.getEntryAreaSize()):
-            if i == self.height - self.footerOffset:
+            if i == self.height:
                 break
             if startingIndex + i >= len(self.entries):
                 break
@@ -513,23 +493,23 @@ class listManager():
             e = self.entries[key]
             pos = 0
             #debug
-            #self.screen.addstr(i + self.headerOffset, pos, key)
+            #self.screen.addstr(i + self.dragonfmManager.getHeaderOffset(), pos, key)
             #continue
             for c in self.columns:
                 lowerColumn = c.lower()
                 if lowerColumn == 'selected':
                     value = self.calcSelectionColumn(key)
-                    self.screen.addstr(i + self.headerOffset, pos, value)
+                    self.screen.addstr(i + self.dragonfmManager.getHeaderOffset(), pos, value)
                     pos += len(value) + 2
                 elif lowerColumn == 'clipboard':
                     #continue
                     value = self.calcClipboardColumn(key)
-                    self.screen.addstr(i + self.headerOffset, pos, value)
+                    self.screen.addstr(i + self.dragonfmManager.getHeaderOffset(), pos, value)
                     pos += len(value) + 2
                 else:
                     formattedValue = self.fileManager.formatColumn(lowerColumn, e[lowerColumn])
                     if i + len(formattedValue) < self.width:
-                        self.screen.addstr(i + self.headerOffset, pos, formattedValue )
+                        self.screen.addstr(i + self.dragonfmManager.getHeaderOffset(), pos, formattedValue )
                         pos += len(formattedValue) + 2
             i += 1
     def calcClipboardColumn(self, entry = ''):
@@ -545,7 +525,3 @@ class listManager():
         if self.isSelected(entry):
             return 'selected'
         return ''
-    def drawFooter(self):
-        self.footerOffset = 0
-        self.footerOffset += 1
-        self.showMessage()

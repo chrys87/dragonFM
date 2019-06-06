@@ -6,9 +6,9 @@ class command():
     def shutdown(self):
         pass
     def getName(self):
-        return _('Open Details')
+        return _('Open List')
     def getDescription(self):
-        return _('Opens the Details')
+        return _('Opens the List')
     def active(self):
         return True
     def visible(self):
