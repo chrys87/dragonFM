@@ -20,6 +20,7 @@ class dragonfmManager():
         self.disabled = True
         self.screen = None
         self.messageTimer = None
+        self.message = ''
         self.height = 0
         self.width = 0
         self.headerOffset = 0
@@ -78,6 +79,8 @@ class dragonfmManager():
             return
         self.updateLock.acquire(True)
         self.resetHeaderOffset()
+        self.showMessage()
+        self.incHeaderOffset()
         self.viewManager.update()
         self.updateLock.release()
     def handleApplicationInput(self, shortcut):
@@ -155,8 +158,7 @@ class dragonfmManager():
         return False
     def showMessage(self):
         if self.isMessage():
-            self.screen.addstr(self.headerOffset, 0, self.message)
-            self.headerOffset += 1
+            self.addText(self.getHeaderOffset(), 0, self.message)
     def isMessage(self):
         return self.message != ''
     def resetMessage(self):
