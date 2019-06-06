@@ -24,8 +24,9 @@ class command():
         listManager = self.dragonfmManager.getCurrListManager()
 
         # Get the files and directories that were selected.
-        selection = self.selectionManager.getSelectionOrCursorCurrentTab()
-        inputDialog = self.dragonfmManager.createInputDialog(description = [_('Do you realy want to delete {} elements:').format(len(selection))])
+        selected = self.selectionManager.getSelectionOrCursorCurrentTab()
+
+        inputDialog = self.dragonfmManager.createInputDialog(description = [_('Do you realy want to delete {} elements:').format(len(selected))])
         inputDialog.setDefaultValue('n')
         inputDialog.setConfirmationMode(True)
         exitStatus, answer = inputDialog.show()
@@ -33,7 +34,7 @@ class command():
             return
         if answer == 'n':
             return
-        self.fileManager.spawnDeleteSelectionThread(selection)
+        self.fileManager.spawnDeleteSelectionThread(selected)
         if listManager.getSelectionMode() != 0:
             listManager.setSelectionMode(0)
 

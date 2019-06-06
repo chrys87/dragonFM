@@ -26,10 +26,12 @@ class command():
 
         # Get the files and directories that were selected.
         selected = self.selectionManager.getSelectionOrCursorCurrentTab()
-                                                                                                                                                                
+        countSelected = len(selected)
+
         self.clipboardManager.setClipboard(selected)
         if listManager.getSelectionMode() != 0:
             listManager.setSelectionMode(0)
+        self.dragonfmManager.setMessage('copy {0} elements'.format(countSelected))
 
         if callback:
             callback()
