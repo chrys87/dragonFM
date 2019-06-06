@@ -85,6 +85,7 @@ class dragonfmManager():
         self.viewManager.update()
         self.updateLock.release()
     def handleApplicationInput(self, shortcut):
+        self.resetMessage(True)
         command = self.settingsManager.getShortcut('application-keyboard', shortcut)
         if command == '':
             return False
@@ -172,8 +173,8 @@ class dragonfmManager():
             self.addText(self.getHeaderOffset(), 0, self.message)
     def isMessage(self):
         return self.message != ''
-    def resetMessage(self):
-        if time.time() - self.messageTime > self.settingsManager.getInt('application', 'messageTimeout'):
+    def resetMessage(self, force = False):
+        if force or (time.time() - self.messageTime > self.settingsManager.getInt('application', 'messageTimeout')):
             self.message = ''
     def setMessage(self, message):
         self.message = message
