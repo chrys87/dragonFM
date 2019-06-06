@@ -120,21 +120,45 @@ class dragonfmManager():
         self.setRunning(False)
     def shutdown(self):
         pass
-    def refresh(self):
-        self.getScreen().refresh()
-    def clear(self):
-        self.getScreen().clear()
-    def addText(self, x, y, text):
+    def refresh(self, screen = None):
+       if not self.getRunning():
+           return
+       if self.getDisabled():
+            return
+       if screen == None:
+            screen = self.getScreen()
+       screen.refresh()
+    def clear(self, screen = None):
+        if not self.getRunning():
+            return
+        if self.getDisabled():
+            return
+        if screen == None:
+            screen = self.getScreen()
+        screen.clear()
+    def addText(self, x, y, text, screen = None):
+        if not self.getRunning():
+            return
+        if self.getDisabled():
+            return
         text = text
+        if screen == None:
+            screen = self.getScreen()
         try:
-            self.getScreen().addstr(x, y, text)
+            screen.addstr(x, y, text)
         except:
             try:
-                self.getScreen().addstr(x, y, '<CURSES ERROR>')
+                screen.addstr(x, y, '<CURSES ERROR>')
             except:
                 pass
-    def erase(self):
-        self.getScreen().erase()
+    def erase(self, screen = None):
+        if not self.getRunning():
+            return
+        if self.getDisabled():
+            return
+        if screen == None:
+            screen = self.getScreen()
+        screen.erase()
     # Set
     def setScreen(self, screen):
         if not screen:
