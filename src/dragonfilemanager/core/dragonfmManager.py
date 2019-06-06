@@ -172,7 +172,7 @@ class dragonfmManager():
     def isMessage(self):
         return self.message != ''
     def resetMessage(self):
-        if time.time() - self.messageTime > 10:
+        if time.time() - self.messageTime > self.settingsManager.getInt('application', 'messageTimeout'):
             self.message = ''
     def setMessage(self, message):
         self.message = message
