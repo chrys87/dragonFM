@@ -19,8 +19,8 @@ class dragonfmManager():
         self.new_term_attr = None
         self.disabled = True
         self.screen = None
-        self.messageTimer = None
         self.message = ''
+        self.messageTime = 0
         self.height = 0
         self.width = 0
         self.headerOffset = 0
@@ -79,8 +79,8 @@ class dragonfmManager():
             return
         self.updateLock.acquire(True)
         self.resetHeaderOffset()
-        self.showMessage()
-        self.incHeaderOffset()
+        self.erase()
+        self.handleMessage()
         self.viewManager.update()
         self.updateLock.release()
     def handleApplicationInput(self, shortcut):
@@ -124,7 +124,13 @@ class dragonfmManager():
         self.getScreen().clear()
     def addText(self, x, y, text):
         text = text
-        self.getScreen().addstr(x, y, text)
+        try:
+            self.getScreen().addstr(x, y, text)
+        except:
+            try:
+                self.getScreen().addstr(x, y, '<CURSES ERROR>')
+            except:
+                pass
     def erase(self):
         self.getScreen().erase()
     # Set
@@ -156,20 +162,21 @@ class dragonfmManager():
         except:
             pass
         return False
+    def handleMessage(self):
+        self.resetMessage()
+        self.showMessage()
+        self.incHeaderOffset()
     def showMessage(self):
         if self.isMessage():
             self.addText(self.getHeaderOffset(), 0, self.message)
     def isMessage(self):
         return self.message != ''
     def resetMessage(self):
-        self.message = ''
+        if time.time() - self.messageTime > 10:
+            self.message = ''
     def setMessage(self, message):
-        if self.messageTimer:
-            if self.messageTimer.is_alive():
-                self.messageTimer.cancel()
-        self.messageTimer = threading.Timer(0.5, self.resetMessage)
         self.message = message
-        self.messageTimer.start()
+        self.messageTime = time.time()
     def resetHeaderOffset(self):
         self.headerOffset = 0
     def incHeaderOffset(self):

@@ -265,7 +265,6 @@ class listManager():
     def update(self):
         if self.isRequestReload():
             self.reloadFolder()
-        self.dragonfmManager.erase()
         self.drawHeader()
         self.updatePage()
         self.drawEntryList()
