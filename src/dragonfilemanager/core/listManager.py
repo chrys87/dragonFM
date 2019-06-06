@@ -95,10 +95,12 @@ class listManager():
             self.typeAheadSearch = ''
     def setColumns(self, colums):
         if isinstance(colums, str):
-            colums = colums.split(',')
+            colums = colums.lower().split(',')
         self.columns = colums
         if self.columns == []:
             self.columns = ['name','selected', 'clipboard']
+    def getColumns(self):
+        return self.columns
     def setSorting(self, sorting):
         if isinstance(sorting, str):
             self.sorting = sorting.split(',')
@@ -381,7 +383,7 @@ class listManager():
         self.entries = OrderedDict(sorted(entries.items(), reverse=self.reverseSorting, key=self.getSortingKey))
         self.keys = tuple(self.entries.keys())
     def getSortingKey(self, element):
-        #self.screen.addstr(self.dragonfmManager.getHeaderOffset(), 0, str(element))
+        #self.dragonfmManager.addText(self.dragonfmManager.getHeaderOffset(), 0, str(element))
         sortingKey = []
         try:
             for column in self.sorting:
@@ -422,20 +424,20 @@ class listManager():
 
     def drawHeader(self):
         # paint header
-        self.screen.addstr(self.dragonfmManager.getHeaderOffset(), 0, _('Tab: {0} List').format(self.getID()))
+        self.dragonfmManager.addText(self.dragonfmManager.getHeaderOffset(), 0, _('Tab: {0} List').format(self.getID()))
         self.dragonfmManager.incHeaderOffset()
         location = self.getLocation()
         if not self.favManager.isFavoritFolder(location):
-            self.screen.addstr(self.dragonfmManager.getHeaderOffset(), 0, _('Location: {0}').format(location))
+            self.dragonfmManager.addText(self.dragonfmManager.getHeaderOffset(), 0, _('Location: {0}').format(location))
         else:
-            self.screen.addstr(self.dragonfmManager.getHeaderOffset(), 0, _('Location: {0}'.format(_('Favorits'))))
+            self.dragonfmManager.addText(self.dragonfmManager.getHeaderOffset(), 0, _('Location: {0}'.format(_('Favorits'))))
 
         self.dragonfmManager.incHeaderOffset()
-        self.screen.addstr(self.dragonfmManager.getHeaderOffset(), 0, _('Page: {0}').format(self.getPage() + 1))
+        self.dragonfmManager.addText(self.dragonfmManager.getHeaderOffset(), 0, _('Page: {0}').format(self.getPage() + 1))
         self.dragonfmManager.incHeaderOffset()
         pos = 0
-        for c in self.columns:
-            self.screen.addstr(self.dragonfmManager.getHeaderOffset(), pos, c )
+        for c in self.getColumns():
+            self.dragonfmManager.addText(self.dragonfmManager.getHeaderOffset(), pos, c )
             pos += len(c) + 3
         self.dragonfmManager.incHeaderOffset()
     def selectEntry(self, key):
@@ -493,23 +495,22 @@ class listManager():
             e = self.entries[key]
             pos = 0
             #debug
-            #self.screen.addstr(i + self.dragonfmManager.getHeaderOffset(), pos, key)
+            #self.dragonfmManager.addText(i + self.dragonfmManager.getHeaderOffset(), pos, key)
             #continue
             for c in self.columns:
-                lowerColumn = c.lower()
-                if lowerColumn == 'selected':
+                if c == 'selected':
                     value = self.calcSelectionColumn(key)
-                    self.screen.addstr(i + self.dragonfmManager.getHeaderOffset(), pos, value)
+                    self.dragonfmManager.addText(i + self.dragonfmManager.getHeaderOffset(), pos, value)
                     pos += len(value) + 2
-                elif lowerColumn == 'clipboard':
+                elif c == 'clipboard':
                     #continue
                     value = self.calcClipboardColumn(key)
-                    self.screen.addstr(i + self.dragonfmManager.getHeaderOffset(), pos, value)
+                    self.dragonfmManager.addText(i + self.dragonfmManager.getHeaderOffset(), pos, value)
                     pos += len(value) + 2
                 else:
-                    formattedValue = self.fileManager.formatColumn(lowerColumn, e[lowerColumn])
+                    formattedValue = self.fileManager.formatColumn(c, e[c])
                     if i + len(formattedValue) < self.width:
-                        self.screen.addstr(i + self.dragonfmManager.getHeaderOffset(), pos, formattedValue )
+                        self.dragonfmManager.addText(i + self.dragonfmManager.getHeaderOffset(), pos, formattedValue )
                         pos += len(formattedValue) + 2
             i += 1
     def calcClipboardColumn(self, entry = ''):

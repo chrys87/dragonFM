@@ -36,13 +36,13 @@ class detailManager():
         self.selectionMode = 0 # 0 = unselect on navigation, 1 = select on navigation, 2 = ignore
         self.page = 0
         self.columns = []
-        self.setColumns('actions')
+        self.setColumns(self.settingsManager.get('details', 'columns'))
         self.sorting = []
         self.reverseSorting = False
         self.caseSensitiveSorting = False
-        self.setSorting(self.settingsManager.get('folder', 'sorting'))
-        self.setReverseSorting(self.settingsManager.getBool('folder', 'reverse'))
-        self.setCaseSensitiveSorting(self.settingsManager.getBool('folder', 'casesensitive'))
+        #self.setSorting(self.settingsManager.get('folder', 'sorting'))
+        #self.setReverseSorting(self.settingsManager.getBool('folder', 'reverse'))
+        #self.setCaseSensitiveSorting(self.settingsManager.getBool('folder', 'casesensitive'))
         #self.setCollector()
         #self.initLocation(pwd)
     def doTypeAheadSearch(self, key):
@@ -96,10 +96,12 @@ class detailManager():
             self.typeAheadSearch = ''
     def setColumns(self, colums):
         if isinstance(colums, str):
-            colums = colums.split(',')
+            colums = colums.lower().split(',')
         self.columns = colums
         if self.columns == []:
-            self.columns = ['actions','selected', 'clipboard']
+            self.columns = ['full','type','size','uname','gname','mode','mtime','ctime','atime']
+    def getColumns(self):
+        return self.columns
     def setSorting(self, sorting):
         if isinstance(sorting, str):
             self.sorting = sorting.split(',')
@@ -382,7 +384,7 @@ class detailManager():
         self.entries = OrderedDict(sorted(entries.items(), reverse=self.reverseSorting, key=self.getSortingKey))
         self.keys = tuple(self.entries.keys())
     def getSortingKey(self, element):
-        #self.screen.addstr(self.dragonfmManager.getHeaderOffset(), 0, str(element))
+        #self.dragonfmManager.addText(self.dragonfmManager.getHeaderOffset(), 0, str(element))
         sortingKey = []
         try:
             for column in self.sorting:
@@ -426,18 +428,62 @@ class detailManager():
         self.details = details
     def drawHeader(self):
         # paint header
-        self.screen.addstr(self.dragonfmManager.getHeaderOffset(), 0, _('Tab: {0} Detail').format(self.getID()))
+        self.dragonfmManager.addText(self.dragonfmManager.getHeaderOffset(), 0, _('Tab: {0} Detail').format(self.getID()))
         self.dragonfmManager.incHeaderOffset()
         location = self.getLocation()
         details = self.getDetails()
-        self.screen.addstr(self.dragonfmManager.getHeaderOffset(), 0, _('Active Elements: {0}').format(len(details)))
+        self.dragonfmManager.addText(self.dragonfmManager.getHeaderOffset(), 0, _('Active Elements: {0}').format(len(details)))
+        '''
+        entry = {'name': name,
+        'object': pathObject,
+        'full': fullPath,
+        'path': path,
+        'type': None,
+        'mode': None,
+        'ino': None,
+        'dev': None,
+        'nlink': None,
+        'uid': None,
+        'uname': None,
+        'gid': None,
+        'gname': None,
+        'size': None,
+        'atime': None,
+        'mtime': None,
+        'ctime': None,
+        'mime': None,
+        'link': False
+        }
+        '''
+        if len(details) == 1:
+            try:
+                e = self.fileManager.getInfo(details[0])
+                for column in self.getColumns():
+                    if column in ['object', 'path']:
+                        continue
+                    formattedValue = self.fileManager.formatColumn(column, e[column])
+                    line = '{1}: {0}'.format(formattedValue, column)
+                    self.dragonfmManager.addText(self.dragonfmManager.getHeaderOffset(), 0, line)
+                    self.dragonfmManager.incHeaderOffset()
+            except:
+                pass
+        elif len(details) < 4:
+            for fullPath in details:
+                try:
+                    e = self.fileManager.getInfo(fullPath)
+                except:
+                    continue
+                self.dragonfmManager.incHeaderOffset()
+                line = 'Path: {0}'.format(e['full'])
+                self.dragonfmManager.addText(self.dragonfmManager.getHeaderOffset(), 0, line)
+
         self.dragonfmManager.incHeaderOffset()
-        self.screen.addstr(self.dragonfmManager.getHeaderOffset(), 0, _('Page: {0}').format(self.getPage() + 1))
+        self.dragonfmManager.addText(self.dragonfmManager.getHeaderOffset(), 0, _('Page: {0}').format(self.getPage() + 1))
         self.dragonfmManager.incHeaderOffset()
         pos = 0
-        for c in self.columns:
-            self.screen.addstr(self.dragonfmManager.getHeaderOffset(), pos, c )
-            pos += len(c) + 3
+        #for c in ['act']:
+        #    self.dragonfmManager.addText(self.dragonfmManager.getHeaderOffset(), pos, c )
+        #    pos += len(c) + 3
         self.dragonfmManager.incHeaderOffset()
     def selectEntry(self, key):
         if not key:
@@ -494,22 +540,22 @@ class detailManager():
             e = self.entries[key]
             pos = 0
             #debug
-            #self.screen.addstr(i + self.dragonfmManager.getHeaderOffset(), pos, key)
+            #self.dragonfmManager.addText(i + self.dragonfmManager.getHeaderOffset(), pos, key)
             #continue
             for c in self.columns:
                 lowerColumn = c.lower()
                 if lowerColumn == 'selected':
                     value = self.calcSelectionColumn(key)
-                    self.screen.addstr(i + self.dragonfmManager.getHeaderOffset(), pos, value)
+                    self.dragonfmManager.addText(i + self.dragonfmManager.getHeaderOffset(), pos, value)
                     pos += len(value) + 2
                 elif lowerColumn == 'clipboard':
                     #continue
                     value = self.calcClipboardColumn(key)
-                    self.screen.addstr(i + self.dragonfmManager.getHeaderOffset(), pos, value)
+                    self.dragonfmManager.addText(i + self.dragonfmManager.getHeaderOffset(), pos, value)
                     pos += len(value) + 2
                 else:
                     formattedValue = self.fileManager.formatColumn(lowerColumn, e[lowerColumn])
                     if i + len(formattedValue) < self.width:
-                        self.screen.addstr(i + self.dragonfmManager.getHeaderOffset(), pos, formattedValue )
+                        self.dragonfmManager.addText(i + self.dragonfmManager.getHeaderOffset(), pos, formattedValue )
                         pos += len(formattedValue) + 2
             i += 1

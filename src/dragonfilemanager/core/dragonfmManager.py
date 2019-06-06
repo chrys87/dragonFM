@@ -116,11 +116,14 @@ class dragonfmManager():
     def shutdown(self):
         pass
     def refresh(self):
-        self.screen.refresh()
+        self.getScreen().refresh()
     def clear(self):
-        self.screen.clear()
+        self.getScreen().clear()
+    def addText(self, x, y, text):
+        text = text
+        self.getScreen().addstr(x, y, text)
     def erase(self):
-        self.screen.erase()
+        self.getScreen().erase()
     # Set
     def setScreen(self, screen):
         if not screen:
