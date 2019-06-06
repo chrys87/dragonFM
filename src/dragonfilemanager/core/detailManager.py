@@ -6,7 +6,7 @@ from dragonfilemanager.core import autoUpdateManager
 from dragonfilemanager.core import favManager
 
 class detailManager():
-    def __init__(self, id, dragonfmManager, pwd= ''):
+    def __init__(self, id, dragonfmManager):
         self.dragonfmManager = dragonfmManager
         self.screen = self.dragonfmManager.getScreen()
         self.height = self.dragonfmManager.getScreenHeight()
@@ -43,8 +43,8 @@ class detailManager():
         #self.setSorting(self.settingsManager.get('folder', 'sorting'))
         #self.setReverseSorting(self.settingsManager.getBool('folder', 'reverse'))
         #self.setCaseSensitiveSorting(self.settingsManager.getBool('folder', 'casesensitive'))
-        #self.setCollector()
-        #self.initLocation(pwd)
+        self.setCollector()
+        self.initLocation()
     def doTypeAheadSearch(self, key):
         # useful for type ahead search?
         if key == None:
@@ -129,16 +129,10 @@ class detailManager():
             self.caseSensitiveSorting = caseSensitiveSorting
         except:
             pass
-    def initLocation(self, pwd):
+    def initLocation(self, pwd = ''):
+        if pwd == '':
+            pwd = self.dragonfmManager.getDragonFmPath() + '/commands/fileOperations/'
         currFolder = expanduser(pwd)
-        if (currFolder == '') or not os.access(currFolder, os.R_OK):
-            currFolder = os.getcwd()
-            if (currFolder == '') or not os.access(currFolder, os.R_OK):
-                currFolder = expanduser(self.settingsManager.get('folder', 'pwd'))
-                if (currFolder == '') or not os.access(currFolder, os.R_OK):
-                    currFolder = expanduser("~")
-                    if (currFolder == '') or not os.access(currFolder, os.R_OK):
-                        currFolder = '/'
         self.gotoFolder(currFolder)
     def enter(self):
         self.dragonfmManager.update()
@@ -268,7 +262,7 @@ class detailManager():
             self.reloadFolder()
         self.drawHeader()
         self.updatePage()
-        #self.drawEntryList()
+        self.drawEntryList()
         screenIndex = self.getPositionForIndex()
         self.dragonfmManager.setCursor(screenIndex, 0)
         self.dragonfmManager.refresh()
@@ -348,10 +342,10 @@ class detailManager():
             return False
 
         # stop watchdog
-        try:
-            self.autoUpdateManager.requestStop()
-        except:
-            pass
+        #try:
+        #    self.autoUpdateManager.requestStop()
+        #except:
+        #    pass
         # unselect on new location
         if locationChanged:
             self.unselectAllEntries()
@@ -370,14 +364,14 @@ class detailManager():
         self.createdSortedEntries(entries)
         self.setCurrentCursor(self.getIndex(), entryName)
         # wait and [re]start watchdog
-        try:
-            self.autoUpdateManager.waitForStopWatch()
-        except:
-            pass
-        try:
-            self.autoUpdateManager.startWatch(newPath, self.setRequestReload)
-        except:
-            pass
+        #try:
+        #    self.autoUpdateManager.waitForStopWatch()
+        #except:
+        #    pass
+        #try:
+        #    self.autoUpdateManager.startWatch(newPath, self.setRequestReload)
+        #except:
+        #    pass
         return True
     def createdSortedEntries(self, entries):
         self.entries = OrderedDict(sorted(entries.items(), reverse=self.reverseSorting, key=self.getSortingKey))
@@ -480,9 +474,9 @@ class detailManager():
         self.dragonfmManager.addText(self.dragonfmManager.getHeaderOffset(), 0, _('Page: {0}').format(self.getPage() + 1))
         self.dragonfmManager.incHeaderOffset()
         pos = 0
-        #for c in ['act']:
-        #    self.dragonfmManager.addText(self.dragonfmManager.getHeaderOffset(), pos, c )
-        #    pos += len(c) + 3
+        for c in ['name']:
+            self.dragonfmManager.addText(self.dragonfmManager.getHeaderOffset(), pos, c )
+            pos += len(c) + 3
         self.dragonfmManager.incHeaderOffset()
     def selectEntry(self, key):
         if not key:
@@ -539,9 +533,9 @@ class detailManager():
             e = self.entries[key]
             pos = 0
             #debug
-            #self.dragonfmManager.addText(i + self.dragonfmManager.getHeaderOffset(), pos, key)
+            #self.dragonfmManager.addText(i + self.dragonfmManager.getHeaderOffset(), 0, self.location)
             #continue
-            for c in self.columns:
+            for c in ['name']: #self.columns:
                 lowerColumn = c.lower()
                 if lowerColumn == 'selected':
                     value = self.calcSelectionColumn(key)
