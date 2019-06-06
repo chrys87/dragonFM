@@ -467,7 +467,7 @@ class detailManager():
                     self.dragonfmManager.incHeaderOffset()
             except:
                 pass
-        elif len(details) < 4:
+        elif len(details) <= 5:
             for fullPath in details:
                 try:
                     e = self.fileManager.getInfo(fullPath)
