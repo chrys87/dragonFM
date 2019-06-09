@@ -45,6 +45,12 @@ class detailManager():
         #self.setCaseSensitiveSorting(self.settingsManager.getBool('folder', 'casesensitive'))
         self.setCollector()
         self.initLocation()
+    def shutdown(self):
+        # stop watchdog
+        try:
+            self.autoUpdateManager.requestStop()
+        except:
+            pass
     def doTypeAheadSearch(self, key):
         # useful for type ahead search?
         if key == None:
