@@ -53,3 +53,10 @@ class tabManager():
         return self.listManager
     def getDetailManager(self):
         return self.detailManager
+    def __del__(self):
+        # stop watchdog
+        try:
+            self.getListManager().shutdown()
+            self.getDetailManager().shutdown()
+        except:
+            pass
