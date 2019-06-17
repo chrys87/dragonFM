@@ -30,6 +30,7 @@ class settingsManager():
         settingsFile = self.getSettingsPath()
         if settingsFile != '':
             return self.load(settingsFile)
+        return False
     def load(self, path):
         if not os.access(path, os.R_OK):
             return False
@@ -39,7 +40,7 @@ class settingsManager():
             self.loadedSettingFile = path
             return True
         except Exception as e:
-            pass
+            print(e)
         return False
     def save(self, path):
         if not os.access(path, os.W_OK):
