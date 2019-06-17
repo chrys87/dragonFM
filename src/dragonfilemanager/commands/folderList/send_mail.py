@@ -30,7 +30,7 @@ class command():
             return
 
         fileParameter = ' '.join(selected)
-        cmd = 'echo mutt -x -a {0} | less'
+        cmd = self.settingsManager.get('application', 'sendmail')
         cmd = cmd.format(fileParameter)
         self.processManager.startExternal(cmd)
 
