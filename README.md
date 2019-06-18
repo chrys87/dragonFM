@@ -7,6 +7,12 @@ dragonFM is plugin driven and fully configurable and supports:
 - Folder navigation
 - open files in CLI based on mimetypes
 - tab navigation
-- context menu (TODO)
+- context menu (WIP)
 - search
 - simple keybindings (similar to GUI filemanagers)
+
+# Binding help
+showkey -a
+cat -v
+https://invisible-island.net/ncurses/ncurses.faq.html#modified_keys
+https://stackoverflow.com/questions/9750588/how-to-get-ctrl-shift-or-alt-with-getch-ncurses
