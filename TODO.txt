@@ -7,7 +7,6 @@ It is essential that whatever we use be Unicode-compatible, because we will have
 
 # known bugs
 (BUG): Control+w to close current tab if there are multiple tabs opened, or close entire file manager if just one tab is opened, just like Firefox.
-(BUG): Find currently blocks mainloop
 
 ______ToDo_Chrys______
 # general (Priority)
@@ -25,12 +24,12 @@ for an example see below in "example context menu"
   The first looks for a file based on the filename or filename segment you are prompted to type, and the second does a search for files which contain the string which you are prompted to type. Ideal situation here would be to use Recoll, which is apparently an excellent cli search engine, and is already installed in F123Light, but needs a nice easy way to use it.
   Searches are performed on current directory and all sub directories by default.
 
-
 # Process View (mid Priority)
 (Todo): show current copy / move processes
 (Todo): be able to abbort them
 (Todo): unique API to handle processes/ threads
 (Todo): convert all commands with wait potential to this API
+(Todo): Find currently blocks mainloop - make listManager loading async
 
 # Main Menu (low priority)
 (Todo): Menu
@@ -62,9 +61,9 @@ filesize: 500 KB
 MimeType: txt
 Owner User: chrys
 Owner Group: users
-Permission User:  read write execute
-Permission Group:  read write execute
-Permission ohters:  read write execute
+Permission User: read write execute
+Permission Group: read write execute
+Permission ohters: read write execute
 Compress (Z)
 Rename (F2)
 Copy (Ctrl + C)
