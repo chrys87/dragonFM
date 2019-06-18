@@ -41,12 +41,6 @@ for an example see below in "example context menu"
 # Cleanup (low Priority)
 (Todo): verify/ move selection code from folder to selection manager where possible.
 
-# Binding help
-showkey -a
-cat -v
-https://invisible-island.net/ncurses/ncurses.faq.html#modified_keys
-https://stackoverflow.com/questions/9750588/how-to-get-ctrl-shift-or-alt-with-getch-ncurses
-
 # example context menu
 ***example context menu start***
 filename: test.txt
