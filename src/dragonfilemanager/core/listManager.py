@@ -428,6 +428,7 @@ class listManager():
         return self.location
 
     def drawHeader(self):
+        """
         # paint header
         self.dragonfmManager.addText(self.dragonfmManager.getHeaderOffset(), 0, _('Tab: {0} List').format(self.getID()))
         self.dragonfmManager.incHeaderOffset()
@@ -445,6 +446,7 @@ class listManager():
             self.dragonfmManager.addText(self.dragonfmManager.getHeaderOffset(), pos, c )
             pos += len(c) + 3
         self.dragonfmManager.incHeaderOffset()
+        """
     def selectEntry(self, key):
         if not key:
             return False
@@ -491,6 +493,18 @@ class listManager():
         return self.selection.copy()
     def drawEntryList(self):
         startingIndex = self.getPage() * self.getEntryAreaSize()
+        ColumnElementMaxLength = []
+        ColumnPosList = [0]
+        
+        for c in self.columns:
+            ColumnElementMaxLength.append(0)
+            ColumnPosList.append(0)
+        
+        pos = 0
+        for c in self.getColumns():
+            if len(c) > ColumnElementMaxLength[self.columns.index(c)]:
+                ColumnElementMaxLength[self.columns.index(c)] = len(c) + 2 
+        
         for i in range(self.getEntryAreaSize()):
             if i == self.height:
                 break
@@ -505,18 +519,66 @@ class listManager():
             for c in self.columns:
                 if c == 'selected':
                     value = self.calcSelectionColumn(key)
-                    self.dragonfmManager.addText(i + self.dragonfmManager.getHeaderOffset(), pos, value)
-                    pos += len(value) + 2
+                    if len(value) > ColumnElementMaxLength[self.columns.index(c)]:
+                        ColumnElementMaxLength[self.columns.index(c)] = len(value) + 2
                 elif c == 'clipboard':
                     #continue
                     value = self.calcClipboardColumn(key)
-                    self.dragonfmManager.addText(i + self.dragonfmManager.getHeaderOffset(), pos, value)
-                    pos += len(value) + 2
+                    if len(value) > ColumnElementMaxLength[self.columns.index(c)]:
+                        ColumnElementMaxLength[self.columns.index(c)] = len(value) + 2
                 else:
                     formattedValue = self.fileManager.formatColumn(c, e[c])
                     if i + len(formattedValue) < self.width:
-                        self.dragonfmManager.addText(i + self.dragonfmManager.getHeaderOffset(), pos, formattedValue )
-                        pos += len(formattedValue) + 2
+                        if len(formattedValue) > ColumnElementMaxLength[self.columns.index(c)]:
+                            ColumnElementMaxLength[self.columns.index(c)] = len(formattedValue) + 2
+            i += 1
+        # get actual positions from Max Element Length per Column
+        MyList = []
+        for c in self.columns:
+            MyList.clear()
+            for x in range(self.columns.index(c)):
+                MyList.append(ColumnElementMaxLength[x])
+            ColumnPosList[self.columns.index(c)] = sum(MyList)
+        
+        # paint header
+        self.dragonfmManager.addText(self.dragonfmManager.getHeaderOffset(), 0, _('Tab: {0} List').format(self.getID()))
+        self.dragonfmManager.incHeaderOffset()
+        location = self.getLocation()
+        if not self.favManager.isFavoritFolder(location):
+            self.dragonfmManager.addText(self.dragonfmManager.getHeaderOffset(), 0, _('Location: {0}').format(location))
+        else:
+            self.dragonfmManager.addText(self.dragonfmManager.getHeaderOffset(), 0, _('Location: {0}'.format(_('Favorits'))))
+
+        self.dragonfmManager.incHeaderOffset()
+        self.dragonfmManager.addText(self.dragonfmManager.getHeaderOffset(), 0, _('Page: {0}').format(self.getPage() + 1))
+        self.dragonfmManager.incHeaderOffset()
+        for c in self.getColumns():
+            self.dragonfmManager.addText(self.dragonfmManager.getHeaderOffset(), ColumnPosList[self.columns.index(c)], c )
+        self.dragonfmManager.incHeaderOffset()        
+        
+        for i in range(self.getEntryAreaSize()):
+            if i == self.height:
+                break
+            if startingIndex + i >= len(self.entries):
+                break
+            key = self.getKeyByIndex(startingIndex + i)
+            e = self.entries[key]
+            pos = 0
+            #debug
+            #self.dragonfmManager.addText(i + self.dragonfmManager.getHeaderOffset(), pos, key)
+            #continue
+            for c in self.columns:
+                if c == 'selected':
+                    value = self.calcSelectionColumn(key)
+                    self.dragonfmManager.addText(i + self.dragonfmManager.getHeaderOffset(), ColumnPosList[self.columns.index(c)], value)
+                elif c == 'clipboard':
+                    #continue
+                    value = self.calcClipboardColumn(key)
+                    self.dragonfmManager.addText(i + self.dragonfmManager.getHeaderOffset(), ColumnPosList[self.columns.index(c)], value)
+                else:
+                    formattedValue = self.fileManager.formatColumn(c, e[c])
+                    if i + len(formattedValue) < self.width:
+                        self.dragonfmManager.addText(i + self.dragonfmManager.getHeaderOffset(), ColumnPosList[self.columns.index(c)], formattedValue )
             i += 1
     def calcClipboardColumn(self, entry = ''):
         if entry == '':
