@@ -440,11 +440,6 @@ class listManager():
         self.dragonfmManager.incHeaderOffset()
         self.dragonfmManager.addText(self.dragonfmManager.getHeaderOffset(), 0, _('Page: {0}').format(self.getPage() + 1))
         self.dragonfmManager.incHeaderOffset()
-        pos = 0
-        for c in self.getColumns():
-            self.dragonfmManager.addText(self.dragonfmManager.getHeaderOffset(), pos, c )
-            pos += len(c) + 3
-        self.dragonfmManager.incHeaderOffset()
     def selectEntry(self, key):
         if not key:
             return False
@@ -491,33 +486,37 @@ class listManager():
         return self.selection.copy()
     def drawEntryList(self):
         startingIndex = self.getPage() * self.getEntryAreaSize()
-        for i in range(self.getEntryAreaSize()):
-            if i == self.height:
-                break
-            if startingIndex + i >= len(self.entries):
-                break
-            key = self.getKeyByIndex(startingIndex + i)
-            e = self.entries[key]
-            pos = 0
-            #debug
-            #self.dragonfmManager.addText(i + self.dragonfmManager.getHeaderOffset(), pos, key)
-            #continue
-            for c in self.columns:
+        self.dragonfmManager.incHeaderOffset()
+        pos = 0
+        for c in self.getColumns():
+            columnLen = len(c) + 2
+            for i in range(self.getEntryAreaSize()):
+                if i == self.height:
+                    break
+                if startingIndex + i >= len(self.entries):
+                    break
+                key = self.getKeyByIndex(startingIndex + i)
+                e = self.entries[key]
                 if c == 'selected':
-                    value = self.calcSelectionColumn(key)
-                    self.dragonfmManager.addText(i + self.dragonfmManager.getHeaderOffset(), pos, value)
-                    pos += len(value) + 2
+                    formattedValue = self.calcSelectionColumn(key)
+                    if columnLen < len(formattedValue) + 2:
+                        columnLen = len(formattedValue) + 2
+                    self.dragonfmManager.addText(i + self.dragonfmManager.getHeaderOffset(), pos, formattedValue)
                 elif c == 'clipboard':
                     #continue
-                    value = self.calcClipboardColumn(key)
-                    self.dragonfmManager.addText(i + self.dragonfmManager.getHeaderOffset(), pos, value)
-                    pos += len(value) + 2
+                    formattedValue = self.calcClipboardColumn(key)
+                    if columnLen < len(formattedValue) + 2:
+                        columnLen = len(formattedValue) + 2
+                    self.dragonfmManager.addText(i + self.dragonfmManager.getHeaderOffset(), pos, formattedValue)
                 else:
                     formattedValue = self.fileManager.formatColumn(c, e[c])
-                    if i + len(formattedValue) < self.width:
-                        self.dragonfmManager.addText(i + self.dragonfmManager.getHeaderOffset(), pos, formattedValue )
-                        pos += len(formattedValue) + 2
-            i += 1
+                    if columnLen < len(formattedValue) + 2:
+                        columnLen = len(formattedValue) + 2
+                    self.dragonfmManager.addText(i + self.dragonfmManager.getHeaderOffset(), pos, formattedValue )
+                i += 1
+            self.dragonfmManager.addText(self.dragonfmManager.getHeaderOffset() - 1, pos, c )
+            pos += columnLen
+
     def calcClipboardColumn(self, entry = ''):
         if entry == '':
             return ''
