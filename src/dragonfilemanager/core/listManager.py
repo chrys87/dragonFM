@@ -496,23 +496,17 @@ class listManager():
                 if startingIndex + i >= len(self.entries):
                     break
                 key = self.getKeyByIndex(startingIndex + i)
-                e = self.entries[key]
+                formattedValue = ''
                 if c == 'selected':
                     formattedValue = self.calcSelectionColumn(key)
-                    if columnLen < len(formattedValue) + 2:
-                        columnLen = len(formattedValue) + 2
-                    self.dragonfmManager.addText(i + self.dragonfmManager.getHeaderOffset(), pos, formattedValue)
                 elif c == 'clipboard':
-                    #continue
                     formattedValue = self.calcClipboardColumn(key)
-                    if columnLen < len(formattedValue) + 2:
-                        columnLen = len(formattedValue) + 2
-                    self.dragonfmManager.addText(i + self.dragonfmManager.getHeaderOffset(), pos, formattedValue)
                 else:
+                    e = self.entries[key]
                     formattedValue = self.fileManager.formatColumn(c, e[c])
-                    if columnLen < len(formattedValue) + 2:
-                        columnLen = len(formattedValue) + 2
-                    self.dragonfmManager.addText(i + self.dragonfmManager.getHeaderOffset(), pos, formattedValue )
+                if columnLen < len(formattedValue) + 2:
+                    columnLen = len(formattedValue) + 2
+                self.dragonfmManager.addText(i + self.dragonfmManager.getHeaderOffset(), pos, formattedValue )
                 i += 1
             self.dragonfmManager.addText(self.dragonfmManager.getHeaderOffset() - 1, pos, c )
             pos += columnLen
