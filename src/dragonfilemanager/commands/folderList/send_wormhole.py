@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 import time, fcntl, os, subprocess, zipfile
-from sh import wormhole
 
 class command():
     def __init__(self, dragonfmManager):
