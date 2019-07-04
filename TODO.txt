@@ -52,6 +52,10 @@ ______ToDo_Lutz______
 (Todo): add posibility to spawn dialog from threads
 (Todo): add posibiltiy to pass return value back to the thread
 
+#commands (Priority)
+(Todo): compress (zip, gz, lzma, xz, bz2)
+(Todo): uncompress
+
 ______Example_Data______
 
 # example context menu
