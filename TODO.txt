@@ -43,7 +43,7 @@ ______ToDo_Lutz______
 
 # Folder View (Priority)
 (Done): Nice Formatting for column view (align them)
-(WIP): More smart handling in out of space situations in addText
+(Done): More smart handling in out of space situations in addText
 (Todo): Track history
 (Todo): navigate in history (prev, next folder in history)
 
