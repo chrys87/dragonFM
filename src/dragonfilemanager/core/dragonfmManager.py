@@ -144,6 +144,15 @@ class dragonfmManager():
         text = text
         if screen == None:
             screen = self.getScreen()
+        if x < 0:
+            return
+        if x > self.getScreenHeight():
+            return
+        if y > self.getScreenWidth():
+            return
+        if (y + len(text)) > self.getScreenWidth():
+            lastCharPos = len(text) - (y + len(text)- self.getScreenWidth() + 1)
+            text = text[0:lastCharPos] + '$'
         try:
             screen.addstr(x, y, text)
         except:
