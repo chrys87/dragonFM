@@ -150,8 +150,6 @@ class dragonfmManager():
             return
         if y > self.getScreenWidth():
             return
-        if len(text) > self.getScreenWidth():
-            return
         if (y + len(text)) > self.getScreenWidth():
             lastCharPos = len(text) - (y + len(text)- self.getScreenWidth() + 1)
             text = text[0:lastCharPos] + '$'
