@@ -486,7 +486,6 @@ class listManager():
         return self.selection.copy()
     def drawEntryList(self):
         startingIndex = self.getPage() * self.getEntryAreaSize()
-        self.dragonfmManager.incHeaderOffset()
         pos = 0
         for c in self.getColumns():
             columnLen = len(c) + 2
