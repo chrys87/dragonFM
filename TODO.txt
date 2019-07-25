@@ -19,6 +19,10 @@ ______ToDo_Chrys______
 (WIP): It should also be possible to activate the option one wants by pressing a letter which we define as the shortcut letter, just like we do with main menu etc on pdmenu. So in a menu of any kind where you can hear:
 for an example see below in "example context menu"
 
+#commands (Priority)
+(Todo): compress (zip, gz, lzma, xz, bz2)
+(Todo): uncompress
+
 # Search (mid priority)
 (Todo): Find a file containing (Control+Shift+F)
   The first looks for a file based on the filename or filename segment you are prompted to type, and the second does a search for files which contain the string which you are prompted to type. Ideal situation here would be to use Recoll, which is apparently an excellent cli search engine, and is already installed in F123Light, but needs a nice easy way to use it.
@@ -40,10 +44,7 @@ for an example see below in "example context menu"
 (Todo): Lastly, it would be great for us to be able to deal with remote directories, i.e. via sftp, sshFS, etc, in basically the same interface we use for local directories.
 
 ______ToDo_Lutz______
-
 # Folder View (Priority)
-(Done): Nice Formatting for column view (align them)
-(Done): More smart handling in out of space situations in addText
 (Todo): Track history
 (Todo): navigate in history (prev, next folder in history)
 
@@ -51,10 +52,6 @@ ______ToDo_Lutz______
 (Todo): add basic tab completion to location mode in dialog (autocomplete)
 (Todo): add posibility to spawn dialog from threads
 (Todo): add posibiltiy to pass return value back to the thread
-
-#commands (Priority)
-(Todo): compress (zip, gz, lzma, xz, bz2)
-(Todo): uncompress
 
 ______Example_Data______
 
