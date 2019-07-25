@@ -27,7 +27,6 @@ class command():
             return
         listManager = self.dragonfmManager.getCurrListManager()
         location = listManager.getLocation()
-        terminalcmd = terminalcmd.format(shlex.quote(location))
-        self.processManager.startExternal(terminalcmd)
+        self.processManager.startExternal(terminalcmd, location)
         if callback:
             callback()
