@@ -141,7 +141,7 @@ class dragonfmManager():
             return
         if self.getDisabled():
             return
-        text = text
+        text = str(text)
         if screen == None:
             screen = self.getScreen()
         if x < 0:

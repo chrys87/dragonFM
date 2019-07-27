@@ -11,7 +11,26 @@ class command(configShellCommand):
             self.dragonfmManager.setMessage('No files selected for compressing')
             return
 
+        inputDialog = self.dragonfmManager.createInputDialog(description = [_('What format you want to compress the {} elements:').format(len(selected))])
+        inputDialog.setDefaultValue(self.settingsManager.get('compress', 'default'))
+        inputBox.setMultipleChoiceMode(True,['zip', 'tar', 'rar'])
+        exitStatus, answer = inputDialog.show()
+        
+        if not exitStatus:
+            return
+
         fileParameter = self.processManager.convertListToString(selected)
-        super().run('gzip -c {1} > {0}'.format('target.zip', fileParameter))
+
+        super().run('zip {1} {0}'.format(fileParameter, '/tmp/playzone/target.zip'))
         if callback:
             callback()
+
+'''
+inputBox = inputBoxManager(stdscr, description=['Do You realy want?','q = quit','y = yes','n = nope'])
+inputBox.setDefaultValue('test')
+inputBox.setMultipleChoiceMode(True,['q', 'y', 'n'])
+inputBox.setLocationMode(True, '/tmp/playzone',True,True)
+inputBox.setConfirmationMode(True)
+inputBox.setEditable(False)
+inputBox.setInitValue('/tmp/playzone')
+'''
