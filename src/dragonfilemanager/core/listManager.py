@@ -545,7 +545,6 @@ class listManager():
         entryName = self.getCurrentKey()
         self.history.append([location, entryName])
         self.setHistoryIndex(len(self.getHistory()) - 1)
-        self.dragonfmManager.setMessage(str(self.history))
 
     def getHistory(self):
         return self.history

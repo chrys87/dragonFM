@@ -23,7 +23,7 @@ class configShellCommand(command):
             return
         try:
             if self.getInternal():
-                self.processManager.startInternal(cmd)
+                self.processManager.startInternalShell(cmd, name = self.name, description = self.description)
             else:
                 self.processManager.startExternal(cmd)
         except Exception as e:

@@ -1,4 +1,5 @@
-import sys, os, curses, threading
+import sys, os, curses, threading, shlex
+from subprocess import Popen
 
 class processManager():
     def __init__(self, dragonfmManager):
@@ -38,6 +39,13 @@ class processManager():
             else:
                 postProcess()
         self.removeInternal(id)
+    def startInternalShell(self, cmd, name = '', description = '', preProcess = None, postProcess = None):
+        if name == '':
+            name = cmd
+        self.startInternal(name, description, self.InternalShellProcess, cmd, preProcess, postProcess)
+    def InternalShellProcess(self, cmd):
+        proc = Popen(cmd, stdin=None, stdout=None, stderr=None, shell=False)
+        proc.wait()
     def getNewProcessID(self):
         ids = list(self.internalProcesses.keys())
         for id in range(1000000):
