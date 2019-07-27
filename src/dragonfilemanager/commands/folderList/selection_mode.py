@@ -20,5 +20,6 @@ class command():
     def run(self, callback = None):
         listManager = self.dragonfmManager.getCurrListManager()
         listManager.setSelectionMode(1)
+        listManager.selectCurrentEntry()
         if callback:
             callback()

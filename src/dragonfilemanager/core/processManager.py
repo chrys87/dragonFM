@@ -1,5 +1,6 @@
 import sys, os, curses, threading, shlex
 from subprocess import Popen
+from subprocess import DEVNULL
 
 class processManager():
     def __init__(self, dragonfmManager):
@@ -44,8 +45,13 @@ class processManager():
             name = cmd
         self.startInternal(name, description, self.InternalShellProcess, cmd, preProcess, postProcess)
     def InternalShellProcess(self, cmd):
-        proc = Popen(shlex.split(cmd) , stdin=None, stdout=None, stderr=None, shell=False)
-        proc.wait()
+        try:
+            proc = Popen(shlex.split(cmd) , stdin=None, stdout=None, stderr=None, shell=True)
+            proc.wait()
+        except Exception as e:
+            pass
+    def convertListToString(self, sourceList, separator = ' '):
+        return separator.join('"{0}"'.format(e) for e in sourceList)
     def getNewProcessID(self):
         ids = list(self.internalProcesses.keys())
         for id in range(1000000):

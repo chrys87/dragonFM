@@ -29,7 +29,7 @@ class command():
             self.dragonfmManager.setMessage('No files selected for mailing')
             return
 
-        fileParameter = ' '.join('"{0}"'.format(e) for e in selected)
+        fileParameter = self.processManager.convertListToString(selected)
         cmd = self.settingsManager.get('application', 'sendmail')
         cmd = cmd.format(fileParameter)
         self.processManager.startExternal(cmd)
