@@ -16,7 +16,6 @@ class configShellCommand(command):
     def getInternal(self):
         return self.internal
     def run(self, cmd, callback = None):
-        print(cmd)
         if not cmd:
             return
         if cmd == '':

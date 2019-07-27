@@ -44,7 +44,7 @@ class processManager():
             name = cmd
         self.startInternal(name, description, self.InternalShellProcess, cmd, preProcess, postProcess)
     def InternalShellProcess(self, cmd):
-        proc = Popen(cmd, stdin=None, stdout=None, stderr=None, shell=False)
+        proc = Popen(shlex.split(cmd) , stdin=None, stdout=None, stderr=None, shell=False)
         proc.wait()
     def getNewProcessID(self):
         ids = list(self.internalProcesses.keys())
