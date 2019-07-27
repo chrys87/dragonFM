@@ -360,10 +360,10 @@ class listManager():
             self.autoUpdateManager.requestStop()
         except:
             pass
-        # unselect on new location and track history
+        # unselect on new location
         if locationChanged:
-            self.trackHistory()
             self.unselectAllEntries()
+
         # collect data
         collectorParam = self.getCollectorParam()
         collectorParam['path'] = path
@@ -371,12 +371,18 @@ class listManager():
         entries, newPath = self.getCollector()(collectorParam)
 
         locationChanged = newPath != self.getLocation()
+        
         # set new location
         if locationChanged:
             self.setLocation(newPath)
+        
         # do sorting and place cursor
         self.createdSortedEntries(entries)
         self.setCurrentCursor(self.getIndex(), entryName)
+        
+        # track history
+        if locationChanged:
+            self.trackHistory()
         # wait and [re]start watchdog
         try:
             self.autoUpdateManager.waitForStopWatch()
@@ -539,6 +545,8 @@ class listManager():
         entryName = self.getCurrentKey()
         self.history.append([location, entryName])
         self.setHistoryIndex(len(self.getHistory()) - 1)
+        self.dragonfmManager.setMessage(str(self.history))
+
     def getHistory(self):
         return self.history
     def isHistoryEmpty(self):
