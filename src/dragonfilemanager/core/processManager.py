@@ -45,7 +45,6 @@ class processManager():
         self.startInternal(name, description, self.InternalShellProcess, cmd, preProcess, postProcess)
     def InternalShellProcess(self, cmd):
         try:
-            self.dragonfmManager.setMessage(shlex.split(cmd))
             proc = Popen(shlex.split(cmd) , stdin=None, stdout=DEVNULL, stderr=DEVNULL, shell=False)
             proc.wait()
         except Exception as e:

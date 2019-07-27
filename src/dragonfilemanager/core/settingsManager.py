@@ -55,7 +55,7 @@ class settingsManager():
         return False
     def getCategorys(self):
         return self.configParser.sections()
-    def getSettings(self, category):
+    def getSettingsForCategory(self, category):
         return self.configParser.options(category)
     def parseCliArgs(self):
         args = None
