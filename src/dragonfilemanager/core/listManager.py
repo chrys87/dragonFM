@@ -210,7 +210,10 @@ class listManager():
         elif page > maxPage:
             self.setIndex(self.countEentries())
         else:
-            self.setIndex(page * size)
+            try:
+                self.setIndex(page * size)
+            except:
+                self.setIndex(0)
     def countEentries(self):
         return len(self.entries) - 1
     def getPage(self):
