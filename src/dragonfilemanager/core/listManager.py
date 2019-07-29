@@ -198,9 +198,27 @@ class listManager():
         index = self.getIndex()
         size = self.getEntryAreaSize()
         page = int(index / size)
-        if page != self.page:
-            self.page = page
-
+        if page != self.getPage():
+            self.setPage(page)
+    def setPage(self, page):
+        self.page = page
+    def gotoPage(self, page):
+        size = self.getEntryAreaSize()
+        maxPage = int(self.countEentries() / size)
+        if page < 1:
+            self.setIndex(0)
+        elif page > maxPage:
+            self.setIndex(self.countEentries())
+        else:
+            self.setIndex(page * size)
+    def countEentries(self):
+        return len(self.entries) - 1
+    def getPage(self):
+        return self.page
+    def nextPage(self):
+        self.gotoPage(self.getPage() - 1)
+    def prevPage(self):
+        self.gotoPage(self.getPage() + 1)
     def getIndex(self):
         return self.index
     def setIndex(self, index):
@@ -209,7 +227,7 @@ class listManager():
         self.setIndex(0)
     def lastEntry(self):
         if len(self.entries) - 1 >= 0:
-            self.setIndex(len(self.entries) - 1)
+            self.setIndex(self.countEentries())
         else:
             self.setIndex(0)
     def prevEntry(self):
