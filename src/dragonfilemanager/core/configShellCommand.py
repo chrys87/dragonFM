@@ -16,7 +16,7 @@ class configShellCommand(command):
         return self.category
     def getInternal(self):
         return self.internal
-    def run(self, cmd, callback = None, preProcess = None, postProcess = None, pwd = '', preProcessParam = None, postProcessParam = None):
+    def run(self, cmd, preProcess = None, postProcess = None, pwd = '', preProcessParam = None, postProcessParam = None):
         if not cmd:
             return
         if cmd == '':
