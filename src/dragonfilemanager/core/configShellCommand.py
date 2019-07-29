@@ -5,6 +5,7 @@ class configShellCommand(command):
         command.__init__(self, dragonfmManager, name, description)
         self.processManager = self.dragonfmManager.getProcessManager()
         self.selectionManager = self.dragonfmManager.getSelectionManager()
+        self.fileManager = self.dragonfmManager.getFileManager()
         self.category = category
         self.internal = internal
     def setCategory(self, category):
@@ -27,27 +28,3 @@ class configShellCommand(command):
                 self.processManager.startExternal(cmd)
         except Exception as e:
             self.dragonfmManager.setMessage('could not start: {0} Error: {1}'.format(cmd, e))
-
-
-'''
-    def getCmd(self, setting):
-        cmd = None
-        try:
-            cmd = self.settingsManager.get(self.getCategory(), setting)
-        except:
-            return None
-        return cmd
-    def replaceParameters(self, rawCmd):
-        cmd = rawCmd
-        try:
-            selected = self.selectionManager.getSelectionOrCursorCurrentTab()
-            countSelected = len(selected)
-            if countSelected == 0:
-                self.dragonfmManager.setMessage('No files selected')
-                return
-            fileParameter = ' '.join('"{0}"'.format(e) for e in selected)
-            cmd = cmd.format(fileParameter)
-        except:
-            return None
-        return cmd
-'''

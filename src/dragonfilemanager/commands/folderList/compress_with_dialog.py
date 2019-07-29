@@ -3,7 +3,6 @@ from dragonfilemanager.core.configShellCommand import configShellCommand
 class command(configShellCommand):
     def __init__(self, dragonfmManager):
         configShellCommand.__init__(self, dragonfmManager, 'compress', 'compress', ' compress a list of files', True)
-        self.fileManager = self.dragonfmManager.getFileManager()
 
     def run(self, callback = None):
         # Get the files and directories that were selected.
