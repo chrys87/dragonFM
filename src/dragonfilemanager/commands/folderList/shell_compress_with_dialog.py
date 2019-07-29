@@ -19,10 +19,16 @@ class command(configShellCommand):
         for e in availableFormats:
             question.append(e)
 
-        defaultCompression = self.settingsManager.get('application', 'defaultCompression')
-
         inputDialog = self.dragonfmManager.createInputDialog(description = question)
-        inputDialog.setDefaultValue(defaultCompression)
+        
+        try:
+            defaultCompression = self.settingsManager.get('application', 'defaultCompression')
+            if defaultCompression != '':
+                if defaultCompression in availableFormats:
+                    inputDialog.setDefaultValue(defaultCompression)
+        except:
+            pass
+
         inputDialog.setMultipleChoiceMode(True, availableFormats)
         exitStatus, fileFormat = inputDialog.show()
         if not exitStatus:
