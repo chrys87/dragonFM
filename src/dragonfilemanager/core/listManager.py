@@ -449,6 +449,8 @@ class listManager():
         self.dragonfmManager.incHeaderOffset()
         self.dragonfmManager.addText(self.dragonfmManager.getHeaderOffset(), 0, _('Page: {0}').format(self.getPage() + 1))
         self.dragonfmManager.incHeaderOffset()
+        self.dragonfmManager.incHeaderOffset()
+
     def selectEntry(self, key):
         if not key:
             return False

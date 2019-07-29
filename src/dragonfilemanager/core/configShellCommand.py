@@ -21,10 +21,12 @@ class configShellCommand(command):
             return
         if cmd == '':
             return
+        listManager = self.dragonfmManager.getCurrListManager()
+        location = listManager.getLocation()
         try:
             if self.getInternal():
-                self.processManager.startInternalShell(cmd, name = self.name, description = self.description)
+                self.processManager.startInternalShell(cmd, name = self.name, description = self.description, pwd = location)
             else:
-                self.processManager.startExternal(cmd)
+                self.processManager.startExternal(cmd, pwd = location)
         except Exception as e:
             self.dragonfmManager.setMessage('could not start: {0} Error: {1}'.format(cmd, e))

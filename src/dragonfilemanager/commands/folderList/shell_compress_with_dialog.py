@@ -2,7 +2,7 @@ from dragonfilemanager.core.configShellCommand import configShellCommand
 
 class command(configShellCommand):
     def __init__(self, dragonfmManager):
-        configShellCommand.__init__(self, dragonfmManager, 'compress', 'compress', ' compress a list of files', True)
+        configShellCommand.__init__(self, dragonfmManager, 'compress', 'compress', 'compress a list of files', True)
 
     def run(self, callback = None):
         # Get the files and directories that were selected.
@@ -12,8 +12,8 @@ class command(configShellCommand):
             self.dragonfmManager.setMessage('No files selected for compressing')
             return
 
+        # ask for compression type, show list of available compressions
         availableFormats = self.settingsManager.getSettingsForCategory(self.getCategory())
-
         question = []
         question.append(_('What format you want to compress the {} elements:').format(countSelected))
         for e in availableFormats:
@@ -25,9 +25,10 @@ class command(configShellCommand):
         inputDialog.setDefaultValue(defaultCompression)
         inputDialog.setMultipleChoiceMode(True, availableFormats)
         exitStatus, fileFormat = inputDialog.show()
-        
         if not exitStatus:
             return
+
+        # ask for archive filename
         listManager = self.dragonfmManager.getCurrListManager()
         location = listManager.getLocation()
         archiveName = 'archive{0}{1}{2}.'
@@ -37,7 +38,6 @@ class command(configShellCommand):
         inputDialog = self.dragonfmManager.createInputDialog(description = [_('Please enter an Name for the archive:')])
         inputDialog.setInitValue(archiveName)
         exitStatus, filename = inputDialog.show()
-
         if not exitStatus:
             return
 

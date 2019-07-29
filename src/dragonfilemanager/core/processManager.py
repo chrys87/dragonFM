@@ -9,8 +9,8 @@ class processManager():
         self.externalStarted = False
         self.processListLock = threading.RLock()
         self.internalProcesses = {}
-        # process: id, name, description, process, postProcess, preProcess, value
-    def startInternal(self, name, description = '', process = None , value = None, preProcess = None, postProcess = None):
+        # process: id, name, description, process, postProcess, preProcess, processParam
+    def startInternal(self, name, description = '', process = None , processParam = None, preProcess = None, postProcess = None, pwd = '', preProcessParam = None, postProcessParam = None):
         if process == None:
             return
         id = self.getNewProcessID()
@@ -18,31 +18,34 @@ class processManager():
             return
         self.processListLock.acquire(True)
         self.internalProcesses[id] = threading.Thread(
-            target=self.internalProcess, args=[id, name, description, process, value, preProcess, postProcess]
+            target=self.internalProcess, args=[id, name, description, process, processParam, preProcess, postProcess, pwd, preProcessParam, postProcessParam]
         )
         self.processListLock.release()
         self.internalProcesses[id].start()
-    def internalProcess(self, id, name, description, process, value, preProcess, postProcess):
+    def internalProcess(self, id, name, description, process, processParam, preProcess, postProcess, pwd = '', preProcessParam = None, postProcessParam = None):
+        if pwd != '' and os.access(pwd, os.R_OK):
+            os.chdir(pwd)
+
         if preProcess != None:
-            if value != None:
-                preProcess(value)
+            if preProcessParam != None:
+                preProcess(preProcessParam)
             else:
                 preProcess()
         if process != None:
-            if value != None:
-                process(value)
+            if processParam != None:
+                process(processParam)
             else:
                 process()
         if postProcess != None:
-            if value != None:
-                postProcess(value)
+            if postProcessParam != None:
+                postProcess(postProcessParam)
             else:
                 postProcess()
         self.removeInternal(id)
-    def startInternalShell(self, cmd, name = '', description = '', preProcess = None, postProcess = None):
+    def startInternalShell(self, cmd, name = '', description = '', preProcess = None, postProcess = None, pwd = '', preProcessParam = None, postProcessParam = None):
         if name == '':
             name = cmd
-        self.startInternal(name, description, self.InternalShellProcess, cmd, preProcess, postProcess)
+        self.startInternal(name, description, self.InternalShellProcess, cmd, preProcess, postProcess, pwd, preProcessParam, postProcessParam)
     def InternalShellProcess(self, cmd):
         try:
             proc = Popen(shlex.split(cmd) , stdin=None, stdout=DEVNULL, stderr=DEVNULL, shell=False)

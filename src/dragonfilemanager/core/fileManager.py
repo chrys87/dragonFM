@@ -31,7 +31,7 @@ class fileManager():
         valueParam = {}
         valueParam['selection'] = selection
         self.processManager.startInternal('remove', description = '',
-            process = self.deleteSelectionThread, value=valueParam.copy())
+            process = self.deleteSelectionThread, processParam=valueParam.copy())
     def deleteSelectionThread(self, valueParam):
         selection = valueParam['selection']
         self.deleteSelection(selection)
@@ -88,7 +88,7 @@ class fileManager():
         valueParam['fullPath'] = fullPath
         
         self.processManager.startInternal('create link', description = '', 
-            process = self.createLinkThread, value=valueParam.copy())
+            process = self.createLinkThread, processParam=valueParam.copy())
 
     def createFolder(self, fullPath):
         try:
@@ -107,7 +107,7 @@ class fileManager():
         valueParam = {}
         valueParam['fullPath'] = fullPath
         self.processManager.startInternal('create folder', description = '', 
-            process = self.createFolderThread, value=valueParam.copy())
+            process = self.createFolderThread, processParam=valueParam.copy())
     def createFile(self, fullPath):
         try:
             if not os.path.exists(fullPath):
@@ -125,7 +125,7 @@ class fileManager():
         valueParam = {}
         valueParam['fullPath'] = fullPath
         self.processManager.startInternal('create file', description = '', 
-            process = self.createFileThread, value=valueParam.copy())
+            process = self.createFileThread, processParam=valueParam.copy())
 
     def moveEntry(self, fullPath, destination):
             try:
@@ -155,7 +155,7 @@ class fileManager():
         valueParam['newLocation'] = newLocation
 
         self.processManager.startInternal(operation, description = '', 
-            process = self.pasteClipboardThread, value=valueParam.copy())
+            process = self.pasteClipboardThread, processParam=valueParam.copy())
     def pasteClipboard(self, operation, clipboard, newLocation):
         if operation in ['cut']:
             self.clipboardManager.clearClipboard()
@@ -187,6 +187,8 @@ class fileManager():
         name = os.path.basename(fullPath)
         path = os.path.dirname(fullPath)
         entry = {'name': name,
+         'nameOnly': os.path.splitext(name)[0],
+         'ext': ''.join(os.path.splitext(name)[1:]),
          'object': pathObject,
          'full': fullPath,
          'path': path,
