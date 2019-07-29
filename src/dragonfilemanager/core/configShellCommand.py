@@ -16,7 +16,7 @@ class configShellCommand(command):
         return self.category
     def getInternal(self):
         return self.internal
-    def run(self, cmd, callback = None):
+    def run(self, cmd, callback = None, preProcess = None, postProcess = None, pwd = '', preProcessParam = None, postProcessParam = None):
         if not cmd:
             return
         if cmd == '':
@@ -25,7 +25,7 @@ class configShellCommand(command):
         location = listManager.getLocation()
         try:
             if self.getInternal():
-                self.processManager.startInternalShell(cmd, name = self.name, description = self.description, pwd = location)
+                self.processManager.startInternalShell(cmd, self.name,  self.description, preProcess, postProcess, location, preProcessParam, postProcessParam)
             else:
                 self.processManager.startExternal(cmd, pwd = location)
         except Exception as e:
