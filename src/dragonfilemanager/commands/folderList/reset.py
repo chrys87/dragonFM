@@ -24,6 +24,7 @@ class command():
         listManager.unselectAllEntries()
         if listManager.getCollectorLocation() != '':
             listManager.setLocation(listManager.getCollectorLocation())
+        self.dragonfmManager.erase()
         listManager.setCollector()
         listManager.setRequestReload()
         if callback:

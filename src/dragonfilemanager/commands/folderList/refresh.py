@@ -18,6 +18,7 @@ class command():
     def getShortcut(self):
         return None
     def run(self, callback = None):
+        self.dragonfmManager.erase()
         listManager = self.dragonfmManager.getCurrListManager()
         listManager.reloadFolder()
         if callback:
