@@ -69,23 +69,14 @@ class commandManager():
             self.commands[section.upper()] = {}
         commandList = glob.glob(commandFolder+'*')
         for command in commandList:
+            if command == '':
+                continue
+            fileName, fileExtension = os.path.splitext(command)
+            fileName = fileName.split('/')[-1]
             try:
-                if command == '':
-                    continue
-                if not os.path.exists(command):
-                    continue
-                if os.path.isdir(command):
-                    continue
-                if not os.access(command, os.R_OK):
-                    continue
-                fileName, fileExtension = os.path.splitext(command)
-                fileName = fileName.split('/')[-1]
-                if fileName.startswith('__'):
-                    continue
-                if fileExtension.lower() != '.py':
-                    continue
-                command_mod = module_utils.importModule(fileName, command)
-                self.commands[section.upper()][fileName.upper()] = command_mod.command(self.dragonfmManager)
+                loadedCommand = self.loadFile(command)
+                if loadedCommand != None:
+                    self.commands[section.upper()][fileName.upper()] = loadedCommand
             except Exception as e:
                 print('command {0}: {1}'.format(fileName, e))
                 continue
