@@ -135,6 +135,7 @@ class detailManager(menuManager):
             self.setIndex(len(self.entries) - 1)
         else:
             self.setIndex(0)
+    '''
     def prevEntry(self):
         if self.getIndex() > 0:
             self.setIndex( self.getIndex() -1)
@@ -145,6 +146,7 @@ class detailManager(menuManager):
             self.setIndex( self.getIndex() +1)
         else:
             self.lastEntry()
+    '''
     def getEntryAreaSize(self):
         return self.height - self.dragonfmManager.getHeaderOffset()
 
@@ -222,6 +224,7 @@ class detailManager(menuManager):
             if not self.commandManager.isCommandActive('detail', command):
                 return False
             result = self.commandManager.runCommand('detail', command)
+            self.dragonfmManager.setMessage(str(self.getCurrentValue()))
             if debug:
                 self.dragonfmManager.setMessage('debug Sequence: {0} Command: {1} Command Success: {2}'.format(shortcut, command, result))
             return result
@@ -285,7 +288,7 @@ class detailManager(menuManager):
             for c in ['name']:
                 lowerColumn = c.lower()
                 
-                self.dragonfmManager.setMessage(str(e))
+                #self.dragonfmManager.setMessage(str(e))
                 #return
                 formattedValue = self.fileManager.formatColumn(lowerColumn, e)
                 if i + len(formattedValue) < self.width:

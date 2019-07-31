@@ -27,6 +27,8 @@ class menuManager():
             self.resetMenu()
         else:
             self.restoreMenu()
+    def getCurrentMenuSize(self):
+        return len(self.getNestedByPath(self.getMenuDict(), self.currIndex[:-1]))
     def resetMenu(self):
         self.currIndex = None
         if len(self.getMenuDict()) > 0:
@@ -42,7 +44,7 @@ class menuManager():
     def nextEntry(self):
         if self.currIndex == None:
             return False
-        if self.currIndex[len(self.currIndex) - 1] + 1 >= len(self.getNestedByPath(self.getMenuDict(), self.currIndex[:-1])):
+        if self.currIndex[len(self.currIndex) - 1] + 1 >= self.getCurrentMenuSize():
            self.currIndex[len(self.currIndex) - 1] = 0 
         else:
             self.currIndex[len(self.currIndex) - 1] += 1
@@ -54,12 +56,12 @@ class menuManager():
     def lastEntry(self):
         if self.currIndex == None:
             return False
-        self.currIndex[len(self.currIndex) - 1] = len(self.getNestedByPath(self.getMenuDict(), self.currIndex[:-1]))
+        self.currIndex[len(self.currIndex) - 1] = self.getCurrentMenuSize()
     def prevEntry(self):
         if self.currIndex == None:
             return False
         if self.currIndex[len(self.currIndex) - 1] == 0:
-           self.currIndex[len(self.currIndex) - 1] = len(self.getNestedByPath(self.getMenuDict(), self.currIndex[:-1])) - 1
+           self.currIndex[len(self.currIndex) - 1] = self.getCurrentMenuSize() - 1
         else:
             self.currIndex[len(self.currIndex) - 1] -= 1
         return True
@@ -122,15 +124,23 @@ class menuManager():
 
     def getCurrIndex(self):
         if self.currIndex == None:
-            return 0        
+            return False
         return self.currIndex[len(self.currIndex) - 1]
 
     def getCurrentValue(self):
+        if self.currIndex == None:
+            return False
         return self.getValueByPath(self.getMenuDict(), self.currIndex)
 
     def getCurrentKey(self):
-        return self.getKeysByPath(self.getMenuDict(), self.currIndex)[self.currIndex[-1]]
+        if self.currIndex == None:
+            return False
+        return self.getKeyOnIndex(self.currIndex[-1])
 
+    def getKeyOnIndex(self, index):
+        if self.currIndex == None:
+            return False
+        return self.getKeysByPath(self.getMenuDict(), self.currIndex)[index]
     def getNestedByPath(self, complete, path):
         path = path.copy()
         if path != []:
