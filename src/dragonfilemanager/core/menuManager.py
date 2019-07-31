@@ -135,7 +135,7 @@ class menuManager():
 
     def getKeysByPath(self, complete, path):
         if not isinstance(complete, dict):
-            return[]
+            return []
         d = complete
         for i in path[:-1]:
             d = d[list(d.keys())[i]]
