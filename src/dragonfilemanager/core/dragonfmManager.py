@@ -275,6 +275,8 @@ class dragonfmManager():
         return self.clipboardManager
     def getCurrListManager(self):
         return self.viewManager.getCurrentTab().getListManager()
+    def getCurrDetailManager(self):
+        return self.viewManager.getCurrentTab().getDetailManager()
     def getSelectionManager(self):
         return self.selectionManager
     def getProcessManager(self):
