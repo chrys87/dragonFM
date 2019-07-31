@@ -4,9 +4,16 @@ def _(text):
     return text
 
 class menuManager():
-    def __init__(self):
+    def __init__(self, menu = None):
         self.menu = {}
         self.currIndex = None
+        if menu != None:
+            if isinstance(menu, str):
+                self.loadMenuByPath(menu)
+            elif isinstance(menu, list):
+                self.loadMenuByPathList(menu)
+            elif isinstance(menu, dict):
+                self.loadMenuByDict(menu)
     def loadMenuByPath(self, path, reset = True):
         self.loadMenuByPathList([path], reset)
     def loadMenuByPathList(self, pathList, reset = True):

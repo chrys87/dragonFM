@@ -2,8 +2,9 @@ import sys, os, time, threading, curses
 from os.path import expanduser
 from collections import OrderedDict
 from dragonfilemanager.core import favManager
+from dragonfilemanager.core.menuManager import menuManager
 
-class detailManager():
+class detailManager(menuManager):
     def __init__(self, id, dragonfmManager):
         self.dragonfmManager = dragonfmManager
         self.screen = self.dragonfmManager.getScreen()
@@ -12,6 +13,7 @@ class detailManager():
         self.settingsManager = self.dragonfmManager.getSettingsManager()
         self.fileManager = self.dragonfmManager.getFileManager()
         self.commandManager = self.dragonfmManager.getCommandManager()
+        menuManager.__init__(self, '/home/chrys/Projekte/dragonFM/src/dragonfilemanager/commands/detail-menu/')
         self.id = id
         self.details = []
         self.collectorLocation = ''
