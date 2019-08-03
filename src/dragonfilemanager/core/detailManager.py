@@ -16,8 +16,6 @@ class detailManager(menuManager):
         menuManager.__init__(self, '/home/chrys/Projekte/dragonFM/src/dragonfilemanager/commands/detail-menu/')
         self.id = id
         self.details = []
-        self.typeAheadSearch = ''
-        self.lastTypeAheadTime = time.time()
         self.page = 0
         self.columns = []
         self.setColumns(self.settingsManager.get('details', 'columns'))
