@@ -56,7 +56,7 @@ class menuManager():
     def lastEntry(self):
         if self.currIndex == None:
             return False
-        self.currIndex[len(self.currIndex) - 1] = self.getCurrentMenuSize()
+        self.currIndex[len(self.currIndex) - 1] = self.getCurrentMenuSize() - 1
     def prevEntry(self):
         if self.currIndex == None:
             return False
@@ -122,15 +122,25 @@ class menuManager():
                     print(e)
             return menuDict  # note we discontinue iteration trough os.walk
 
-    def getCurrIndex(self):
+    def getIndexCurrLevel(self):
         if self.currIndex == None:
             return False
         return self.currIndex[len(self.currIndex) - 1]
 
-    def getCurrentValue(self):
+    def getCurrentEntry(self):
         if self.currIndex == None:
             return False
-        return self.getValueByPath(self.getMenuDict(), self.currIndex)
+        entry = self.getValueByPath(self.getMenuDict(), self.currIndex)
+        if isinstance(entry, dict):
+            entry = self.getCurrentKey()
+        return entry
+    def getEntryForIndexCurrLevel(self, index):
+        if self.currIndex == None:
+            return False
+        entry = self.getValueByPath(self.getMenuDict(), self.currIndex[:-1] + [index])
+        if isinstance(entry, dict):
+            entry = self.getKeyOnIndex(index)
+        return entry
 
     def getCurrentKey(self):
         if self.currIndex == None:
@@ -165,14 +175,18 @@ class menuManager():
         for i in path:
             d = d[list(d.keys())[i]]
         return d
+'''
 
 m = menuManager()
 m.loadMenuByPath('/home/chrys/Projekte/dragonFM/src/dragonfilemanager/commands/detail-menu/')
 m.printMenu()
-print(m.getCurrentValue())
+print('')
+print(m.getCurrentEntry())
+print('')
+print(m.getEntryForIndexCurrLevel(1))
 m.nextEntry()
-print(m.getCurrentValue())
+print(m.getCurrentEntry())
 m.enterMenu()
-print(m.getCurrentValue())
+print(m.getCurrentEntry())
 print(m.getCurrentKey())
-
+'''
