@@ -19,6 +19,6 @@ class command():
         return None
     def run(self, callback = None):
         detailManager = self.dragonfmManager.getCurrDetailManager()
-        detailManager.enterMenu()
+        detailManager.activateCurrentEntry()
         if callback:
             callback()

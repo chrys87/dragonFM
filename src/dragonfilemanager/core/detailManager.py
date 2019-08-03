@@ -1,7 +1,5 @@
-import sys, os, time, threading, curses
+import sys, os, time, curses
 from os.path import expanduser
-from collections import OrderedDict
-from dragonfilemanager.core import favManager
 from dragonfilemanager.core.menuManager import menuManager
 
 class detailManager(menuManager):
@@ -13,7 +11,8 @@ class detailManager(menuManager):
         self.settingsManager = self.dragonfmManager.getSettingsManager()
         self.fileManager = self.dragonfmManager.getFileManager()
         self.commandManager = self.dragonfmManager.getCommandManager()
-        menuManager.__init__(self, '/home/chrys/Projekte/dragonFM/src/dragonfilemanager/commands/detail-menu/')
+        self.menuPath = '/home/chrys/Projekte/dragonFM/src/dragonfilemanager/commands/detail-menu/'
+        menuManager.__init__(self, self.menuPath, fileFunction = self.commandManager.loadFile)
         self.id = id
         self.details = []
         self.page = 0
@@ -91,6 +90,19 @@ class detailManager(menuManager):
         return self.details
     def setDetails(self, details = []):
         self.details = details
+    def activateCurrentEntry(self):
+        entry = self.getCurrentEntry()
+        if entry == None:
+            return
+        if isinstance(entry, str):
+            self.enterMenu()
+        else:
+            try:
+                entry.run()
+                tabManager = self.dragonfmManager.getViewManager().getCurrentTab()
+                tabManager.changeMode(0) # list
+            except:
+                pass
     def drawHeader(self):
         # paint header
         self.dragonfmManager.addText(self.dragonfmManager.getHeaderOffset(), 0, _('Tab: {0} Detail').format(self.getID()))
@@ -138,10 +150,18 @@ class detailManager(menuManager):
                 break
             key = startingIndex + i
             e = self.getEntryForIndexCurrLevel(key)
+            entryName = ''
+            try:
+                entryName = e.getName()
+            except:
+                try:
+                    entryName = e
+                except:
+                    entryName = 'FailToLoad'
             pos = 0
             for c in ['name']:
                 lowerColumn = c.lower()
-                formattedValue = self.fileManager.formatColumn(lowerColumn, e)
+                formattedValue = self.fileManager.formatColumn(lowerColumn, entryName)
                 if i + len(formattedValue) < self.width:
                     self.dragonfmManager.addText(i + self.dragonfmManager.getHeaderOffset(), pos, formattedValue )
                     pos += len(formattedValue) + 2

@@ -2,11 +2,17 @@ import os
 
 def _(text):
     return text
+def loadFolderFunction(text):
+    return text + ' ' + _('Menu')
+def loadFileFunction(text):
+    return text + ' ' + _('Action')
 
 class menuManager():
-    def __init__(self, menu = None):
+    def __init__(self, menu = None, fileFunction = loadFileFunction, folderFunction = loadFolderFunction):
         self.menu = {}
         self.currIndex = None
+        self.loadFolderFunction = folderFunction
+        self.loadFileFunction = fileFunction
         if menu != None:
             if isinstance(menu, str):
                 self.loadMenuByPath(menu)
@@ -27,6 +33,14 @@ class menuManager():
             self.resetMenu()
         else:
             self.restoreMenu()
+    def setLoadFolderFunction(self, func):
+        self.loadFolderFunction = func
+    def setLoadFileFunction(self, func):
+        self.loadFileFunction = func
+    def getLoadFolderFunction(self):
+        return self.loadFolderFunction
+    def getLoadFileFunction(self):
+        return self.loadFileFunction
     def getCurrentMenuSize(self):
         return len(self.getNestedByPath(self.getMenuDict(), self.currIndex[:-1]))
     def resetMenu(self):
@@ -84,9 +98,6 @@ class menuManager():
             return False
         self.currIndex = self.currIndex[:len(self.currIndex) - 1]
         return True
-    def activateCurrentEntry(self):
-        if self.currIndex == None:
-            return
     def getMenuDict(self):
         return self.menu
     def printMenu(self):
@@ -107,7 +118,8 @@ class menuManager():
                 try:
                     if d.startswith('__'):
                         continue
-                    menuDict.update({d + ' ' + _('Menu'): self.FsTreeToDict(os.path.join(root, d)) })
+                    entryName = self.getLoadFolderFunction()(d)
+                    menuDict.update({entryName: self.FsTreeToDict(os.path.join(root, d)) })
                 except Exception as e:
                     print(e)
             for f in files:
@@ -116,7 +128,7 @@ class menuManager():
                     fileName = fileName.split('/')[-1]
                     if fileName.startswith('__'):
                         continue
-                    command = fileName + ' ' + _('Action') + ' Command'
+                    command = self.getLoadFileFunction()(root+'/'+f)
                     menuDict.update({fileName + ' ' + _('Action'): command})
                 except Exception as e:
                     print(e)
@@ -134,6 +146,7 @@ class menuManager():
         if isinstance(entry, dict):
             entry = self.getCurrentKey()
         return entry
+
     def getEntryForIndexCurrLevel(self, index):
         if self.currIndex == None:
             return False
