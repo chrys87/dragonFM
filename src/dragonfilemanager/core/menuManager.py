@@ -1,4 +1,4 @@
-import os
+import os, time
 
 def _(text):
     return text
@@ -13,6 +13,8 @@ class menuManager():
     def __init__(self, menu = None, loadFileFunction = _, loadFolderFunction = _, loadFolderNameFunction = getName, loadFileNameFunction = getName, loadFolderVisibleFunction = getVisible, loadFileVisibleFunction = getVisible):
         self.menu = []
         self.currIndex = None
+        self.typeAheadSearch = ''
+        self.lastTypeAheadTime = time.time()
         self.loadFolderFunction = loadFolderFunction
         self.loadFileFunction = loadFileFunction
         self.loadFolderNameFunction = loadFolderNameFunction
@@ -63,6 +65,59 @@ class menuManager():
         return self.loadFolderVisibleFunction
     def getLoadFileVisibleFunction(self):
         return self.loadFileVisibleFunction
+    # type ahead
+    def resetTypeAheadSearch(self, force = False):
+        if (time.time() - self.lastTypeAheadTime > 1.5) or force:
+            self.typeAheadSearch = ''
+    def doTypeAheadSearch(self, key):
+        # useful for type ahead search?
+        if self.currIndex == None:
+            return False
+        if key == None:
+            return False
+        if not isinstance(key, str):
+            return False
+        if len(key) != 1:
+            return False
+        key = key.lower()
+        if not key in '.-_0123456789abcdefghijklmnopqrstuvwxyz':
+            return False
+        menuLen = self.getCurrentMenuSize()
+        if menuLen < 2:
+            return False
+        # then search
+        if self.typeAheadSearch != key:
+            self.typeAheadSearch += key
+
+        startIndex = self.getIndexCurrLevel()
+        searchIndex = startIndex
+
+        searchString = '{0}'.format(self.typeAheadSearch)
+        while True:
+            if len(self.typeAheadSearch) == 1:
+                # jump always to next match if only one first letter nav (==1)
+                searchIndex += 1
+                if searchIndex >= menuLen:
+                    searchIndex = 0
+                if searchIndex == startIndex:
+                    return False
+            # search by name column
+            entry = self.getEntryForIndexCurrLevel(searchIndex)
+            if entry['name'].lower().startswith(searchString):
+                self.currIndex[len(self.currIndex) - 1] = searchIndex
+                self.lastTypeAheadTime = time.time()
+                return True
+            elif len(self.typeAheadSearch) > 1:
+                # keep current match until its not matching 
+                # anymore for type ahead search (> 1)
+                searchIndex += 1
+                if searchIndex >= menuLen:
+                    searchIndex = 0
+                if searchIndex == startIndex:
+                    return False
+    def resetTypeAheadSearch(self, force = False):
+        if (time.time() - self.lastTypeAheadTime > 1.5) or force:
+            self.typeAheadSearch = ''
 
     def getCurrentMenuSize(self):
         d = self.getMenu().copy()

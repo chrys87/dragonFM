@@ -68,9 +68,12 @@ class detailManager(menuManager):
     def handleDetailsInput(self, shortcut):
         command = self.settingsManager.getShortcut('detail-keyboard', shortcut)
         debug = self.settingsManager.getBool('debug', 'input')
+        self.resetTypeAheadSearch(command != '')
         if command == '':
             if debug:
                 self.dragonfmManager.setMessage('debug Sequence: {0}'.format(shortcut))
+            if self.doTypeAheadSearch(shortcut):
+                return True
             return False
         try:
             if not self.commandManager.isCommandActive('detail', command):
