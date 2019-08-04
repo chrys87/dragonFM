@@ -12,7 +12,7 @@ class detailManager(menuManager):
         self.fileManager = self.dragonfmManager.getFileManager()
         self.commandManager = self.dragonfmManager.getCommandManager()
         self.menuPath = '/home/chrys/Projekte/dragonFM/src/dragonfilemanager/commands/detail-menu/'
-        menuManager.__init__(self, self.menuPath, fileFunction = self.commandManager.loadFile)
+        menuManager.__init__(self, menu = self.menuPath, loadFileFunction = self.commandManager.loadFile, loadFileNameFunction = self.commandManager.getCommandName)
         self.id = id
         self.details = []
         self.page = 0
@@ -94,11 +94,15 @@ class detailManager(menuManager):
         entry = self.getCurrentEntry()
         if entry == None:
             return
-        if isinstance(entry, str):
+        try:
+            e = entry['type']
+        except:
+            return
+        if entry['type'] == 'menu':
             self.enterMenu()
-        else:
+        elif entry['type'] == 'action':
             try:
-                entry.run()
+                entry['value'].run()
                 tabManager = self.dragonfmManager.getViewManager().getCurrentTab()
                 tabManager.changeMode(0) # list
             except:
@@ -152,12 +156,9 @@ class detailManager(menuManager):
             e = self.getEntryForIndexCurrLevel(key)
             entryName = ''
             try:
-                entryName = e.getName()
+                entryName = e['name']
             except:
-                try:
-                    entryName = e
-                except:
-                    entryName = 'FailToLoad'
+                entryName = 'FailToLoad'
             pos = 0
             for c in ['name']:
                 lowerColumn = c.lower()

@@ -50,7 +50,11 @@ class commandManager():
             print(e)
             pass
         return None
-
+    def getCommandName(self, fullPath, command):
+        try:
+            return command.getName()
+        except:
+            return ''
     def loadCommands(self, section ,commandPath=''):
         if commandPath =='':
             commandPath = self.dragonfmManager.getDragonFmPath() + '/commands/'
