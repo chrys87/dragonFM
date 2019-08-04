@@ -11,9 +11,7 @@ It is essential that whatever we use be Unicode-compatible, because we will have
 ______ToDo_Chrys______
 # general (Priority)
 # Context menu (Priority)
-(WIP): Context menu: Shift+F10 should give you menu of things you can do to current file or directory, like rename, compress, uncompress, zip and email, open-with, etc. It should vary according to file type.
-(Todo): Shift+F10 usually gives you options like compressing file or directory, open, open-with, e-mailing as an attachment, uncompressing, etc. It should be different depending on file type, and we need to be able to modify this on a conf file or something.
-(WIP): Shift+F10 be accessible. After pressing Shift+F10, Fenrir should read each option, and nothing else, when we move it up and down with arrow keys.
+(WIP): Shift+F10 usually gives you options like compressing file or directory, open, open-with, e-mailing as an attachment, uncompressing, etc. It should be different depending on file type, and we need to be able to modify this on a conf file or something.
 (WIP): It should also be possible to activate the option one wants by pressing a letter which we define as the shortcut letter, just like we do with main menu etc on pdmenu. So in a menu of any kind where you can hear:
 for an example see below in "example context menu"
 
