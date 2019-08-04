@@ -147,18 +147,20 @@ class detailManager(menuManager):
             pos += len(c) + 3
         self.dragonfmManager.incHeaderOffset()
 
+
     def drawEntryList(self):
         startingIndex = self.getPage() * self.getEntryAreaSize()
         maxIndex = self.getCurrentMenuSize()
-        for i in range(self.getEntryAreaSize()):
-            if i == self.height:
-                break
-            if startingIndex + i >= maxIndex:
-                break
-            key = startingIndex + i
-            e = self.getEntryForIndexCurrLevel(key)
-            pos = 0
-            for c in ['name', 'type']:
+        pos = 0
+        for c in ['name', 'type']:
+            columnLen = len(c) + 2
+            for i in range(self.getEntryAreaSize()):
+                if i == self.height:
+                    break
+                if startingIndex + i >= maxIndex:
+                    break
+                key = startingIndex + i
+                e = self.getEntryForIndexCurrLevel(key)
                 content = ''
                 try:
                     content = e[c]
@@ -166,7 +168,9 @@ class detailManager(menuManager):
                     content = 'FailToLoad'
                 lowerColumn = c.lower()
                 formattedValue = self.fileManager.formatColumn(lowerColumn, content)
-                if i + len(formattedValue) < self.width:
-                    self.dragonfmManager.addText(i + self.dragonfmManager.getHeaderOffset(), pos, formattedValue )
-                    pos += len(formattedValue) + 2
-            i += 1
+                if columnLen < len(formattedValue) + 2:
+                    columnLen = len(formattedValue) + 2
+                self.dragonfmManager.addText(i + self.dragonfmManager.getHeaderOffset(), pos, formattedValue )
+                i += 1
+            self.dragonfmManager.addText(self.dragonfmManager.getHeaderOffset() - 1, pos, c )
+            pos += columnLen
