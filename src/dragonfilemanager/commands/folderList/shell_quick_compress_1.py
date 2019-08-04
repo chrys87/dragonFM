@@ -38,5 +38,9 @@ class command(configShellCommand):
         cmd = self.settingsManager.get(self.getCategory(), quickCompress2)
 
         super().run(cmd.format(fileParameter, filename))
+
+        if listManager.getSelectionMode() != 0:
+            listManager.setSelectionMode(0)
+
         if callback:
             callback()
