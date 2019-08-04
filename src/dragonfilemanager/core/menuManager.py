@@ -242,11 +242,10 @@ class menuManager():
                 d = d[i]
         return d
 
-
+'''
 m = menuManager()
 m.loadMenuByPath('/home/chrys/Projekte/dragonFM/src/dragonfilemanager/commands/detail-menu/')
 m.printMenu()
-'''
 
 print(m.getCurrentEntry()['name'])
 m.nextEntry()
