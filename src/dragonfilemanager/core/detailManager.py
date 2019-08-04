@@ -11,7 +11,7 @@ class detailManager(menuManager):
         self.settingsManager = self.dragonfmManager.getSettingsManager()
         self.fileManager = self.dragonfmManager.getFileManager()
         self.commandManager = self.dragonfmManager.getCommandManager()
-        self.menuPath = '/home/chrys/Projekte/dragonFM/src/dragonfilemanager/commands/detail-menu/'
+        self.menuPath = self.dragonfmManager.getDragonFmPath() + '/commands/detail-menu/'
         menuManager.__init__(self, menu = self.menuPath, loadFileFunction = self.commandManager.loadFile, loadFileNameFunction = self.commandManager.getCommandName)
         self.id = id
         self.details = []
