@@ -136,6 +136,8 @@ class menuManager():
         self.currIndex = None
         if len(self.getMenu()) > 0:
             self.currIndex = [0]
+    def setIndexCurrLevel(self, index):
+        self.currIndex[len(self.currIndex) - 1] = index
     def restoreMenu(self):
         if self.currIndex != None:
             try:
@@ -147,26 +149,30 @@ class menuManager():
     def nextEntry(self):
         if self.currIndex == None:
             return False
-        if self.currIndex[len(self.currIndex) - 1] + 1 >= self.getCurrentMenuSize():
-           self.currIndex[len(self.currIndex) - 1] = 0 
+        if self.getIndexCurrLevel() + 1 >= self.getCurrentMenuSize():
+           self.firstEntry()
         else:
-            self.currIndex[len(self.currIndex) - 1] += 1
+            self.setIndexCurrLevel( self.getIndexCurrLevel() + 1)
         return True
     def firstEntry(self):
         if self.currIndex == None:
             return False
-        self.currIndex[len(self.currIndex) - 1] = 0
+        self.setIndexCurrLevel(0)
+        return True
+
     def lastEntry(self):
         if self.currIndex == None:
             return False
-        self.currIndex[len(self.currIndex) - 1] = self.getCurrentMenuSize() - 1
+        self.setIndexCurrLevel(self.getCurrentMenuSize() - 1)
+        return True
+
     def prevEntry(self):
         if self.currIndex == None:
             return False
-        if self.currIndex[len(self.currIndex) - 1] == 0:
-           self.currIndex[len(self.currIndex) - 1] = self.getCurrentMenuSize() - 1
+        if self.getIndexCurrLevel() == 0:
+           self.lastEntry()
         else:
-            self.currIndex[len(self.currIndex) - 1] -= 1
+            self.setIndexCurrLevel( self.getIndexCurrLevel() - 1)
         return True
 
     def enterMenu(self):
