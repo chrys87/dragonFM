@@ -157,15 +157,15 @@ class detailManager(menuManager):
                 break
             key = startingIndex + i
             e = self.getEntryForIndexCurrLevel(key)
-            entryName = ''
-            try:
-                entryName = e['name']
-            except:
-                entryName = 'FailToLoad'
             pos = 0
-            for c in ['name']:
+            for c in ['name', 'type']:
+                content = ''
+                try:
+                    content = e[c]
+                except:
+                    content = 'FailToLoad'
                 lowerColumn = c.lower()
-                formattedValue = self.fileManager.formatColumn(lowerColumn, entryName)
+                formattedValue = self.fileManager.formatColumn(lowerColumn, content)
                 if i + len(formattedValue) < self.width:
                     self.dragonfmManager.addText(i + self.dragonfmManager.getHeaderOffset(), pos, formattedValue )
                     pos += len(formattedValue) + 2
