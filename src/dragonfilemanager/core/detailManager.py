@@ -167,6 +167,9 @@ class detailManager(menuManager):
                 except:
                     content = 'FailToLoad'
                 lowerColumn = c.lower()
+                # dont print the word action
+                if c == 'type' and lowerColumn == 'action':
+                    continue
                 formattedValue = self.fileManager.formatColumn(lowerColumn, content)
                 if columnLen < len(formattedValue) + 2:
                     columnLen = len(formattedValue) + 2
