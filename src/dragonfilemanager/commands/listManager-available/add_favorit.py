@@ -10,9 +10,9 @@ class command():
     def shutdown(self):
         pass
     def getName(self):
-        return _('Create Link')
+        return _('Add Favorite')
     def getDescription(self):
-        return _('Create a link to the current entry')
+        return _('Add current Entry to Favorites')
     def active(self):
         return True
     def visible(self):

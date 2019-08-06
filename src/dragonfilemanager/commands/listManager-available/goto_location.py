@@ -8,9 +8,9 @@ class command():
     def shutdown(self):
         pass
     def getName(self):
-        return _('Goto Home')
+        return _('Goto Location')
     def getDescription(self):
-        return _('Goto Home folder')
+        return _('Open an dialog and goto location')
     def active(self):
         return True
     def visible(self):
