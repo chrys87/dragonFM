@@ -21,6 +21,7 @@ class command():
     def run(self, callback = None):
         tabManager = self.dragonfmManager.getViewManager().getCurrentTab()
         detailManager = tabManager.getDetailManager()
+        detailManager.resetMenu()
         elements = self.selectionManager.getSelectionOrCursorCurrentTab()
         detailManager.setDetails(elements)
         tabManager.changeMode(1) # details
