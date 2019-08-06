@@ -2,7 +2,7 @@ from dragonfilemanager.core.configShellCommand import configShellCommand
 
 class command(configShellCommand):
     def __init__(self, dragonfmManager):
-        configShellCommand.__init__(self, dragonfmManager, 'compress', 'compress', 'compress a list of files', True)
+        configShellCommand.__init__(self, dragonfmManager, 'compress', 'quick compress 2', 'compress a list of files with quick compress 2', True)
 
     def run(self, callback = None):
         # Get the files and directories that were selected.
@@ -12,33 +12,20 @@ class command(configShellCommand):
             self.dragonfmManager.setMessage('No files selected for compressing')
             return
 
-        # ask for compression type, show list of available compressions
         availableFormats = self.settingsManager.getSettingsForCategory(self.getCategory())
-        question = []
-        question.append(_('What format you want to compress the {} elements:').format(countSelected))
-        for e in availableFormats:
-            question.append(e)
 
-        inputDialog = self.dragonfmManager.createInputDialog(description = question)
-        
-        try:
-            defaultCompression = self.settingsManager.get('application', 'defaultCompression')
-            if defaultCompression != '':
-                if defaultCompression in availableFormats:
-                    inputDialog.setDefaultValue(defaultCompression)
-        except:
-            pass
-
-        inputDialog.setMultipleChoiceMode(True, availableFormats)
-        exitStatus, fileFormat = inputDialog.show()
-        if not exitStatus:
+        quickCompress2 = self.settingsManager.get('application', 'quickCompress2')
+        if quickCompress2 != '':
+            if not quickCompress2 in availableFormats:
+                return
+        else:
             return
 
         # ask for archive filename
         listManager = self.dragonfmManager.getCurrListManager()
         location = listManager.getLocation()
         archiveName = 'archive{0}{1}{2}.'
-        archiveName += defaultCompression
+        archiveName += quickCompress2
         archiveName = self.fileManager.getInitName(location, archiveName, '_')
 
         inputDialog = self.dragonfmManager.createInputDialog(description = [_('Please enter an Name for the archive:')])
@@ -48,8 +35,12 @@ class command(configShellCommand):
             return
 
         fileParameter = self.processManager.convertListToString(selected)
-        cmd = self.settingsManager.get(self.getCategory(), fileFormat)
+        cmd = self.settingsManager.get(self.getCategory(), quickCompress2)
 
         super().run(cmd.format(fileParameter, filename))
+
+        if listManager.getSelectionMode() != 0:
+            listManager.setSelectionMode(0)
+
         if callback:
             callback()

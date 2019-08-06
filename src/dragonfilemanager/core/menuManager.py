@@ -233,7 +233,10 @@ class menuManager():
                         continue
                     fullPath = os.path.join(root, f)
                     entry = self.createActionEntry(fullPath)
-                    menu.update({fileName: entry})
+                    if isinstance(menu, dict):
+                        menu.update({fileName: entry})
+                    elif isinstance(menu, list):
+                        menu.append(entry)
                 except Exception as e:
                     print(e)
             return menu  # note we discontinue iteration trough os.walk
