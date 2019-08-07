@@ -6,8 +6,15 @@ class command(baseConfigShellCommand):
     def active(self):
         # only allowed for mimetypes it could handle
         allowedMimeTypes = []
+        # coded as own setting in settings file
+        #try:
+        #    allowedMimeTypes = self.settingsManager.get('folder', #'shell_decompress_mimetypes_allowed').lower().split(',')
+        #except Exception as e:
+        #    allowedMimeTypes = []
+        
+        # for this case we can get it from decompress category
         try:
-            allowedMimeTypes = self.settingsManager.get('folder', 'shell_decompress_mimetypes_allowed').lower().split(',')
+            allowedMimeTypes = self.settingsManager.getSettingsForCategory('decompress')
         except Exception as e:
             allowedMimeTypes = []
         return self.commandManager.isCommandValidForFileOperation(minSelection = 1, writePerm = True, mimeTypes=allowedMimeTypes)
