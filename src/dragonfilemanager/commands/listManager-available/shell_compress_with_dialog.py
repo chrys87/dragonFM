@@ -3,7 +3,8 @@ from dragonfilemanager.core.baseConfigShellCommand import baseConfigShellCommand
 class command(baseConfigShellCommand):
     def __init__(self, dragonfmManager):
         baseConfigShellCommand.__init__(self, dragonfmManager, 'compress', 'compress', 'compress a list of files', True)
-
+    def active(self):
+        return self.commandManager.isCommandValidForFileOperation(minSelection = 1, writePerm = True)
     def run(self, callback = None):
         # Get the files and directories that were selected.
         selected = self.selectionManager.getSelectionOrCursorCurrentTab()
