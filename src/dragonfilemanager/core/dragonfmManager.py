@@ -40,6 +40,7 @@ class dragonfmManager():
         self.viewManager = None
         self.inputManager = None
         self.commandManager = commandManager.commandManager(self)
+        self.commandManager.loadAllCommands()
         self.runningLock = threading.RLock()
         self.disabledLock = threading.RLock()
         self.updateLock = threading.RLock()

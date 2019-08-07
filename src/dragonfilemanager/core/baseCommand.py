@@ -1,8 +1,9 @@
-class command():
+class baseCommand():
     def __init__(self, dragonfmManager, name = '', description = ''):
         self.dragonfmManager = dragonfmManager
         self.screen = self.dragonfmManager.getScreen()
         self.settingsManager = self.dragonfmManager.getSettingsManager()
+        self.commandManager = self.dragonfmManager.getCommandManager()
         self.name = name
         self.description = description
     def shutdown(self):

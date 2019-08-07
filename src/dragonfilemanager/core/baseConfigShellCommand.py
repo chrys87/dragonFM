@@ -1,8 +1,8 @@
-from dragonfilemanager.core.command import command
+from dragonfilemanager.core.baseCommand import baseCommand
 
-class configShellCommand(command):
+class baseConfigShellCommand(baseCommand):
     def __init__(self, dragonfmManager,  category, name = '', description = '', internal = True):
-        command.__init__(self, dragonfmManager, name, description)
+        baseCommand.__init__(self, dragonfmManager, name, description)
         self.processManager = self.dragonfmManager.getProcessManager()
         self.selectionManager = self.dragonfmManager.getSelectionManager()
         self.fileManager = self.dragonfmManager.getFileManager()

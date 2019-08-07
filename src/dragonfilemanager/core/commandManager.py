@@ -7,6 +7,9 @@ class commandManager():
         self.dragonfmManager = dragonfmManager
         self.screen = self.dragonfmManager.getScreen()
         self.settingsManager = self.dragonfmManager.getSettingsManager()
+        self.selectionManager = self.dragonfmManager.getSelectionManager()
+        self.fileManager = self.dragonfmManager.getFileManager()
+    def loadAllCommands(self):
         self.commands = {}
         # defaults
         self.loadCommands('application')
@@ -55,6 +58,11 @@ class commandManager():
             return command.getName()
         except:
             return ''
+    def getCommandActive(self, fullPath, command):
+        try:
+            return command.active()
+        except:
+            return False
     def loadCommands(self, section ,commandPath=''):
         if commandPath =='':
             commandPath = self.dragonfmManager.getDragonFmPath() + '/commands/'
@@ -110,13 +118,40 @@ class commandManager():
         except Exception as e:
             print(e)
         return False
+    def isCommandValidForFileOperation(self, minSelection = 0, maxSelection = None, mimeTypes = None, writePerm = False, force = False):
+        if force:
+            return True
+        selected = self.selectionManager.getSelectionOrCursorCurrentTab()
+        countSelection = len(selected)
+        if countSelection < minSelection:
+            return False
+        if maxSelection != None:
+            if countSelection > maxSelection:
+                return False
+        if mimeTypes != None:
+            mimeCheckCounter = 0
+            maxMimeCheckCounter = 3
+            for currCursor in selected:
+                mimeCheckCounter += 1
+                fileInfo = self.fileManager.getInfo(currCursor)
+                fileMimeType = fileInfo['mime']
+                if not fileMimeType in mimeTypes:
+                    return False
+                if mimeCheckCounter > maxMimeCheckCounter:
+                    return False
+        if writePerm:
+            listManager = self.dragonfmManager.getCurrListManager()
+            location = listManager.getLocation()
+            if not os.access(location, os.W_OK):
+                return False
+        return True
     def runCommand(self, section, command, callback = None):
-        #self.dragonfmManager.leave()
-
         if not self.commandExist(section, command):
             return False
         c = self.getCommand(section, command)
         try:
+            if not c.active():
+                return True
             c.run(callback)
             return True
         except Exception as e:

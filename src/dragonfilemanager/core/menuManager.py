@@ -6,11 +6,16 @@ def _(text):
 def getName(fullPath, text):
     return os.path.basename(fullPath)
 
-def getVisible(fullPath, entry):
+def getFileVisible(fullPath, entry):
     return True
 
+def getFolderVisible(fullPath, entry):
+    if not entry:
+        return False
+    return entry != {}
+
 class menuManager():
-    def __init__(self, menu = None, loadFileFunction = _, loadFolderFunction = _, loadFolderNameFunction = getName, loadFileNameFunction = getName, loadFolderVisibleFunction = getVisible, loadFileVisibleFunction = getVisible):
+    def __init__(self, menu = None, loadFileFunction = _, loadFolderFunction = _, loadFolderNameFunction = getName, loadFileNameFunction = getName, loadFolderVisibleFunction = getFolderVisible, loadFileVisibleFunction = getFileVisible):
         self.menu = []
         self.currIndex = None
         self.typeAheadSearch = ''
@@ -29,7 +34,7 @@ class menuManager():
     def loadMenuByPath(self, path, reset = True):
         self.loadMenuByPathList([path], reset)
     def loadMenuByPathList(self, pathList, reset = True):
-        menu = {}
+        menu = []
         for path in pathList:
             menu = self.FsTreeToMenu(path, baseMenu = [])
         self.loadMenuByValue(menu, reset)
@@ -219,10 +224,11 @@ class menuManager():
                         continue
                     fullPath = os.path.join(root, d)
                     entry = self.createMenuEntry(fullPath)
-                    if isinstance(menu, dict):
-                        menu.update({d: entry})
-                    elif isinstance(menu, list):
-                        menu.append(entry)
+                    if entry['visible']:
+                        if isinstance(menu, dict):
+                            menu.update({d: entry})
+                        elif isinstance(menu, list):
+                            menu.append(entry)
                 except Exception as e:
                     print(e)
             for f in files:
@@ -233,10 +239,11 @@ class menuManager():
                         continue
                     fullPath = os.path.join(root, f)
                     entry = self.createActionEntry(fullPath)
-                    if isinstance(menu, dict):
-                        menu.update({fileName: entry})
-                    elif isinstance(menu, list):
-                        menu.append(entry)
+                    if entry['visible']:
+                        if isinstance(menu, dict):
+                            menu.update({fileName: entry})
+                        elif isinstance(menu, list):
+                            menu.append(entry)
                 except Exception as e:
                     print(e)
             return menu  # note we discontinue iteration trough os.walk
@@ -309,6 +316,7 @@ class menuManager():
 '''
 m = menuManager()
 m.loadMenuByPath('/home/chrys/Projekte/dragonFM/src/dragonfilemanager/commands/detail-menu/')
+
 m.printMenu()
 
 print(m.getCurrentEntry()['name'])

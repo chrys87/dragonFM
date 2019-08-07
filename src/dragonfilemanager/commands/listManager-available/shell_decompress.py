@@ -1,8 +1,8 @@
-from dragonfilemanager.core.configShellCommand import configShellCommand
+from dragonfilemanager.core.baseConfigShellCommand import baseConfigShellCommand
 
-class command(configShellCommand):
+class command(baseConfigShellCommand):
     def __init__(self, dragonfmManager):
-        configShellCommand.__init__(self, dragonfmManager, 'decompress', 'decompress', 'decompress a archive', True)
+        baseConfigShellCommand.__init__(self, dragonfmManager, 'decompress', 'decompress', 'decompress a archive', True)
 
     def run(self, callback = None):
         # Get the current cursor 

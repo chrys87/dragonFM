@@ -12,7 +12,7 @@ class detailManager(menuManager):
         self.fileManager = self.dragonfmManager.getFileManager()
         self.commandManager = self.dragonfmManager.getCommandManager()
         self.menuPath = self.dragonfmManager.getDragonFmPath() + '/commands/detail-menu/'
-        menuManager.__init__(self, menu = self.menuPath, loadFileFunction = self.commandManager.loadFile, loadFileNameFunction = self.commandManager.getCommandName)
+        menuManager.__init__(self)
         self.id = id
         self.details = []
         self.page = 0
@@ -20,7 +20,11 @@ class detailManager(menuManager):
         self.setColumns(self.settingsManager.get('details', 'columns'))
     def shutdown(self):
         pass
-
+    def loadMenu(self):
+        self.setLoadFileFunction(self.commandManager.loadFile)
+        self.setLoadFileNameFunction(self.commandManager.getCommandName)
+        self.setLoadFileVisibleFunction(self.commandManager.getCommandActive)
+        self.loadMenuByPath(self.menuPath)
     def setColumns(self, colums):
         if isinstance(colums, str):
             colums = colums.lower().split(',')

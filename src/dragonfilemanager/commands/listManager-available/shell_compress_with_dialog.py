@@ -1,8 +1,8 @@
-from dragonfilemanager.core.configShellCommand import configShellCommand
+from dragonfilemanager.core.baseConfigShellCommand import baseConfigShellCommand
 
-class command(configShellCommand):
+class command(baseConfigShellCommand):
     def __init__(self, dragonfmManager):
-        configShellCommand.__init__(self, dragonfmManager, 'compress', 'compress', 'compress a list of files', True)
+        baseConfigShellCommand.__init__(self, dragonfmManager, 'compress', 'compress', 'compress a list of files', True)
 
     def run(self, callback = None):
         # Get the files and directories that were selected.

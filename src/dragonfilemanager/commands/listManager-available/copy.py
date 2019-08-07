@@ -1,26 +1,17 @@
-#!/usr/bin/env python
+from dragonfilemanager.core.baseCommand import baseCommand
 
-class command():
+class command(baseCommand):
     def __init__(self, dragonfmManager):
+        baseCommand.__init__(self, dragonfmManager)
+        self.setName('Copy')
+        self.setDescription('Copy current entry or selection')
         self.dragonfmManager = dragonfmManager
         self.screen = self.dragonfmManager.getScreen()
         self.settingsManager = self.dragonfmManager.getSettingsManager()
         self.selectionManager = self.dragonfmManager.getSelectionManager()
         self.clipboardManager = self.dragonfmManager.getClipboardManager()
-    def shutdown(self):
-        pass
-    def getName(self):
-        return _('Copy')
-    def getDescription(self):
-        return _('Copy current entry or selection')
     def active(self):
-        return True
-    def visible(self):
-        return True
-    def getValue(self):
-        return None
-    def getShortcut(self):
-        return None
+        return self.commandManager.isCommandValidForFileOperation(minSelection = 1)
     def run(self, callback = None):
         listManager = self.dragonfmManager.getCurrListManager()
 
