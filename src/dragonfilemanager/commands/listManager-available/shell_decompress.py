@@ -4,7 +4,13 @@ class command(baseConfigShellCommand):
     def __init__(self, dragonfmManager):
         baseConfigShellCommand.__init__(self, dragonfmManager, 'decompress', 'decompress', 'decompress a archive', True)
     def active(self):
-        return self.commandManager.isCommandValidForFileOperation(minSelection = 1, writePerm = True)
+        # only allowed for mimetypes it could handle
+        allowedMimeTypes = []
+        try:
+            allowedMimeTypes = self.settingsManager.get('folder', 'shell_decompress_mimetypes_allowed').lower().split(',')
+        except Exception as e:
+            allowedMimeTypes = []
+        return self.commandManager.isCommandValidForFileOperation(minSelection = 1, writePerm = True, mimeTypes=allowedMimeTypes)
     def run(self, callback = None):
         # Get the current cursor 
         currCursor = self.selectionManager.getCursorCurrentTab()

@@ -137,7 +137,7 @@ class commandManager():
                 fileMimeType = fileInfo['mime']
                 if not fileMimeType in mimeTypes:
                     return False
-                if mimeCheckCounter > maxMimeCheckCounter:
+                if mimeCheckCounter >= maxMimeCheckCounter:
                     return False
         if writePerm:
             listManager = self.dragonfmManager.getCurrListManager()
