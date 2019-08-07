@@ -125,6 +125,11 @@ class commandManager():
         countSelection = len(selected)
         if countSelection < minSelection:
             return False
+        if writePerm:
+            listManager = self.dragonfmManager.getCurrListManager()
+            location = listManager.getLocation()
+            if not os.access(location, os.W_OK):
+                return False
         if maxSelection != None:
             if countSelection > maxSelection:
                 return False
@@ -139,11 +144,6 @@ class commandManager():
                     return False
                 if mimeCheckCounter >= maxMimeCheckCounter:
                     return False
-        if writePerm:
-            listManager = self.dragonfmManager.getCurrListManager()
-            location = listManager.getLocation()
-            if not os.access(location, os.W_OK):
-                return False
         return True
     def runCommand(self, section, command, callback = None):
         if not self.commandExist(section, command):

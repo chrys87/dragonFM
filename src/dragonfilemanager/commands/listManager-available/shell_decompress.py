@@ -16,7 +16,7 @@ class command(baseConfigShellCommand):
         try:
             allowedMimeTypes = self.settingsManager.getSettingsForCategory('decompress')
         except Exception as e:
-            allowedMimeTypes = []
+            pass
         return self.commandManager.isCommandValidForFileOperation(minSelection = 1, writePerm = True, mimeTypes=allowedMimeTypes)
     def run(self, callback = None):
         # Get the current cursor 
