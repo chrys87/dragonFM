@@ -1,23 +1,16 @@
-class command():
+from dragonfilemanager.core.baseCommand import baseCommand
+
+class command(baseCommand):
     def __init__(self, dragonfmManager):
+        baseCommand.__init__(self, dragonfmManager)
         self.dragonfmManager = dragonfmManager
         self.screen = self.dragonfmManager.getScreen()
         self.settingsManager = self.dragonfmManager.getSettingsManager()
         self.selectionManager = self.dragonfmManager.getSelectionManager()
-    def shutdown(self):
-        pass
-    def getName(self):
-        return _('Open Details')
-    def getDescription(self):
-        return _('Opens the Details')
+        self.setName('Open Details')
+        self.setDescription('Opens the Details')
     def active(self):
-        return True
-    def visible(self):
-        return True
-    def getValue(self):
-        return None
-    def getShortcut(self):
-        return None
+        return self.commandManager.isCommandValidForFileOperation(minSelection = 1)
     def run(self, callback = None):
         tabManager = self.dragonfmManager.getViewManager().getCurrentTab()
         detailManager = tabManager.getDetailManager()
