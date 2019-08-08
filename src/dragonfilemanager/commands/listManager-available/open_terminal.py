@@ -1,26 +1,17 @@
-
+from dragonfilemanager.core.baseCommand import baseCommand
 import shlex
 
-class command():
+class command()baseCommand:
     def __init__(self, dragonfmManager):
+        baseCommand.__init__(self, dragonfmManager)
         self.dragonfmManager = dragonfmManager
         self.screen = self.dragonfmManager.getScreen()
         self.settingsManager = self.dragonfmManager.getSettingsManager()
         self.processManager = self.dragonfmManager.getProcessManager()
-    def shutdown(self):
-        pass
-    def getName(self):
-        return _('Open Terminal')
-    def getDescription(self):
-        return _('Open current location in terminal')
+        self.setName('Open Terminal')
+        self.setDescription('Open current location in terminal')
     def active(self):
-        return True
-    def visible(self):
-        return True
-    def getValue(self):
-        return None
-    def getShortcut(self):
-        return None
+        return self.commandManager.isCommandValidForFileOperation()
     def run(self, callback = None):
         terminalcmd = self.settingsManager.get('application', 'commandline')
         if terminalcmd == '':
