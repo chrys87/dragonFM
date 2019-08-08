@@ -6,7 +6,7 @@ class command(baseCommand):
         self.dragonfmManager = dragonfmManager
         self.screen = self.dragonfmManager.getScreen()
         self.settingsManager = self.dragonfmManager.getSettingsManager()
-        self.setname('Next History Entry')
+        self.setName('Next History Entry')
         self.setDescription('Goto next Entry in navigation history')
     def active(self):
         return self.commandManager.isCommandValidForFileOperation()

@@ -8,7 +8,7 @@ class command(baseCommand):
         self.dragonfmManager = dragonfmManager
         self.settingsManager = self.dragonfmManager.getSettingsManager()
         self.fileManager = self.dragonfmManager.getFileManager()
-        self.setname('Search')
+        self.setName('Search')
         self.setDescription('Search for file or folder')
     def active(self):
         return self.commandManager.isCommandValidForFileOperation()

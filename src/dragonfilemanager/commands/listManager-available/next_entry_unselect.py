@@ -6,7 +6,7 @@ class command(baseCommand):
         self.dragonfmManager = dragonfmManager
         self.screen = self.dragonfmManager.getScreen()
         self.settingsManager = self.dragonfmManager.getSettingsManager()
-        self.setname('Next Entry')
+        self.setName('Next Entry')
         self.setDescription('Move Cursor to next entry')
     def active(self):
         return self.commandManager.isCommandValidForFileOperation()

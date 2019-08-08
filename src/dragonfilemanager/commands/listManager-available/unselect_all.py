@@ -6,7 +6,7 @@ class command(baseCommand):
         self.dragonfmManager = dragonfmManager
         self.screen = self.dragonfmManager.getScreen()
         self.settingsManager = self.dragonfmManager.getSettingsManager()
-        self.setname('Unselect All')
+        self.setName('Unselect All')
         self.setDescription('Unselect all entries')
     def active(self):
         return self.commandManager.isCommandValidForFileOperation(minSelection = 1)
