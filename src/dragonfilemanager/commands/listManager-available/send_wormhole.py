@@ -1,25 +1,18 @@
-#!/usr/bin/env python
+from dragonfilemanager.core.baseCommand import baseCommand
 import time, fcntl, os, subprocess, zipfile
 
 class command():
+    baseCommand.__init__(self, dragonfmManager)
     def __init__(self, dragonfmManager):
         self.dragonfmManager = dragonfmManager
         self.screen = self.dragonfmManager.getScreen()
         self.settingsManager = self.dragonfmManager.getSettingsManager()
         self.selectionManager = self.dragonfmManager.getSelectionManager()
         self.clipboardManager = self.dragonfmManager.getClipboardManager()
-    def shutdown(self):
-        pass
-    def getName(self):
-        return _('Wormhole')
-    def getDescription(self):
-        return _('Wormhole current entry or selection')
+        self.setName('Wormhole')
+        self.setDescription('Wormhole current entry or selection')
     def active(self):
-        return True
-    def getValue(self):
-        return None
-    def getShortcut(self):
-        return None
+        return self.commandManager.isCommandValidForFileOperation(minSelection = 1, maxSelection = 1)
     def run(self, callback = None):
         listManager = self.dragonfmManager.getCurrListManager()
 
@@ -33,7 +26,7 @@ class command():
         else:
             filename = '{0}.zip'.format('/tmp/wh')
             self.zipFileList(selected, filename)
-        # wromhole writes to stderr ?!
+        # wormhole writes to stderr ?!
         proc = subprocess.Popen(['wormhole', 'send', filename], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 
         stdoutdata = None
