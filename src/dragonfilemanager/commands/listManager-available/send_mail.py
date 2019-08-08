@@ -1,26 +1,17 @@
-#!/usr/bin/env python
+from dragonfilemanager.core.baseCommand import baseCommand
 
 class command():
+    baseCommand.__init__(self, dragonfmManager)
     def __init__(self, dragonfmManager):
         self.dragonfmManager = dragonfmManager
         self.screen = self.dragonfmManager.getScreen()
         self.settingsManager = self.dragonfmManager.getSettingsManager()
         self.selectionManager = self.dragonfmManager.getSelectionManager()
         self.processManager = self.dragonfmManager.getProcessManager()
-    def shutdown(self):
-        pass
-    def getName(self):
-        return _('Email')
-    def getDescription(self):
-        return _('Send selected files as email attachements.')
+        self.setName('Email')
+        self.setDescription('Send selected files as e-mail attachments.')
     def active(self):
-        return True
-    def visible(self):
-        return True
-    def getValue(self):
-        return None
-    def getShortcut(self):
-        return None
+        return self.commandManager.isCommandValidForFileOperation(minSelection = 1)
     def run(self, callback = None):
         # Get the files and directories that were selected.
         selected = self.selectionManager.getSelectionOrCursorCurrentTab()
