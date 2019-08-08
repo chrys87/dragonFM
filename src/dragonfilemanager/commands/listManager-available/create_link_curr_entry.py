@@ -1,9 +1,9 @@
 from dragonfilemanager.core.baseCommand import baseCommand
 import os
 
-class command():
-    baseCommand.__init__(self, dragonfmManager)
+class command(baseCommand):
     def __init__(self, dragonfmManager):
+        baseCommand.__init__(dragonfmManager)
         self.dragonfmManager = dragonfmManager
         self.settingsManager = self.dragonfmManager.getSettingsManager()
         self.selectionManager = self.dragonfmManager.getSelectionManager()
@@ -11,7 +11,7 @@ class command():
         self.setName('Create Link')
         self.setDescription('Create a link to the current entry')
     def active(self):
-        return self.commandManager.isCommandValidForFileOperation(minSelection = 1)
+        return self.commandManager.isCommandValidForFileOperation(minSelection = 1, writePerm = True)
     def run(self, callback = None):   
         listManager = self.dragonfmManager.getCurrListManager()
         
