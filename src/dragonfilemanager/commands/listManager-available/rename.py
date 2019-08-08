@@ -3,7 +3,7 @@ import os
 
 class command(baseCommand):
     def __init__(self, dragonfmManager):
-        baseCommand.__init__(dragonfmManager)
+        baseCommand.__init__(self, dragonfmManager)
         self.dragonfmManager = dragonfmManager
         self.settingsManager = self.dragonfmManager.getSettingsManager()
         self.selectionManager = self.dragonfmManager.getSelectionManager()
