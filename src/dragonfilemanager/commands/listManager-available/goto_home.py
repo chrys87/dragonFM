@@ -1,24 +1,16 @@
+from dragonfilemanager.core.baseCommand import baseCommand
 from os.path import expanduser
 
-class command():
+class command(baseCommand):
     def __init__(self, dragonfmManager):
+        baseCommand.__init__(self, dragonfmManager)
         self.dragonfmManager = dragonfmManager
         self.screen = self.dragonfmManager.getScreen()
         self.settingsManager = self.dragonfmManager.getSettingsManager()
-    def shutdown(self):
-        pass
-    def getName(self):
-        return _('Goto Home')
-    def getDescription(self):
-        return _('Goto Home folder')
+        self.setName('Goto Home')
+        self.setDescription('Goto Home folder')
     def active(self):
-        return True
-    def visible(self):
-        return True
-    def getValue(self):
-        return None
-    def getShortcut(self):
-        return None
+        return self.commandManager.isCommandValidForFileOperation()
     def run(self, callback = None):
         listManager = self.dragonfmManager.getCurrListManager()
         listManager.gotoFolder(expanduser("~"))
