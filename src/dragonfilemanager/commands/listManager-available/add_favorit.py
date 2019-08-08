@@ -1,26 +1,17 @@
-#!/usr/bin/env python
+from dragonfilemanager.core.baseCommand import baseCommand
 import os
 from dragonfilemanager.core import favManager
 
-class command():
+class command(baseCommand):
     def __init__(self, dragonfmManager):
+        baseCommand.__init__(self, dragonfmManager)
         self.dragonfmManager = dragonfmManager
         self.favManager = favManager.favManager(self.dragonfmManager)
 
-    def shutdown(self):
-        pass
-    def getName(self):
-        return _('Add Favorite')
-    def getDescription(self):
-        return _('Add current Entry to Favorites')
+        self.setName('Add Favorite')
+        self.setDescription('Add current Entry to Favorites')
     def active(self):
-        return True
-    def visible(self):
-        return True
-    def getValue(self):
-        return None
-    def getShortcut(self):
-        return None
+        return self.commandManager.isCommandValidForFileOperation(minSelection = 1, maxSelection = 1)
     def run(self, callback = None):   
         listManager = self.dragonfmManager.getCurrListManager()
         location = listManager.getLocation()
