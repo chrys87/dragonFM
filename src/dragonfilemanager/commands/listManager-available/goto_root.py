@@ -10,8 +10,6 @@ class command(baseCommand):
         self.viewManager = None
         self.setName('Goto Root')
         self.setDescription('Goto root folder')
-    def active(self):
-        return self.commandManager.isCommandValidForFileOperation()
     def run(self, callback = None):
         listManager = self.dragonfmManager.getCurrListManager()
         listManager.gotoFolder('/')

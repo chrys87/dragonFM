@@ -8,8 +8,6 @@ class command(baseCommand):
         self.settingsManager = self.dragonfmManager.getSettingsManager()
         self.setName('Next Entry use mode')
         self.setDescription('Move Cursor to next entry using current mode')
-    def active(self):
-        return self.commandManager.isCommandValidForFileOperation(minSelection = 1)
     def run(self, callback = None):
         listManager = self.dragonfmManager.getCurrListManager()
         listManager.nextEntry()

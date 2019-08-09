@@ -8,8 +8,6 @@ class command(baseCommand):
         self.settingsManager = self.dragonfmManager.getSettingsManager()
         self.setName('Leave entry')
         self.setDescription('Go to parent')
-    def active(self):
-        return self.commandManager.isCommandValidForFileOperation()
     def run(self, callback = None):
         listManager = self.dragonfmManager.getCurrListManager()
         listManager.parentEntry()

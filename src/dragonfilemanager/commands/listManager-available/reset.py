@@ -8,8 +8,6 @@ class command(baseCommand):
         self.settingsManager = self.dragonfmManager.getSettingsManager()
         self.setName('Reset')
         self.setDescription('Reset All')
-    def active(self):
-        return self.commandManager.isCommandValidForFileOperation()
     def run(self, callback = None):
         listManager = self.dragonfmManager.getCurrListManager()
         listManager.setSelectionMode(0)

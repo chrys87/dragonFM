@@ -9,8 +9,6 @@ class command(baseCommand):
         self.settingsManager = self.dragonfmManager.getSettingsManager()
         self.setName('Goto Location')
         self.setDescription('Open an dialog and goto location')
-    def active(self):
-        return self.commandManager.isCommandValidForFileOperation()
     def run(self, callback = None):
         listManager = self.dragonfmManager.getCurrListManager()
         location = listManager.getLocation()

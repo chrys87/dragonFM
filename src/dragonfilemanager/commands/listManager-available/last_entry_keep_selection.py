@@ -8,8 +8,6 @@ class command(baseCommand):
         self.settingsManager = self.dragonfmManager.getSettingsManager()
         self.setName('Last Entry')
         self.setDescription('Move cursor to last entry and keep selection')
-    def active(self):
-        return self.commandManager.isCommandValidForFileOperation(minSelection = 1)
     def run(self, callback = None):
         listManager = self.dragonfmManager.getCurrListManager()
         listManager.lastEntry()

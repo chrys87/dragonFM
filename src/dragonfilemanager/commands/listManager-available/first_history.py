@@ -8,8 +8,6 @@ class command(baseCommand):
         self.settingsManager = self.dragonfmManager.getSettingsManager()
         self.setName('First History Entry')
         self.setDescription('Goto first Entry in navigation history')
-    def active(self):
-        return self.commandManager.isCommandValidForFileOperation()
     def run(self, callback = None):
         listManager = self.dragonfmManager.getCurrListManager()
         listManager.firstHistory()

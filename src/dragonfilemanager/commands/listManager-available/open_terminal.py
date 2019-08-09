@@ -10,8 +10,6 @@ class command(baseCommand):
         self.processManager = self.dragonfmManager.getProcessManager()
         self.setName('Open Terminal')
         self.setDescription('Open current location in terminal')
-    def active(self):
-        return self.commandManager.isCommandValidForFileOperation()
     def run(self, callback = None):
         terminalcmd = self.settingsManager.get('application', 'commandline')
         if terminalcmd == '':

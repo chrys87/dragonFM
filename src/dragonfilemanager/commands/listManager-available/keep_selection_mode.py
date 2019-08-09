@@ -9,8 +9,6 @@ class command(baseCommand):
         self.settingsManager = self.dragonfmManager.getSettingsManager()
         self.setName('Keep Selection Mode')
         self.setDescription('Keep Selection while navigating')
-    def active(self):
-        return self.commandManager.isCommandValidForFileOperation(minSelection = 1)
     def run(self, callback = None):
         listManager = self.dragonfmManager.getCurrListManager()
         listManager.setSelectionMode(2)

@@ -9,8 +9,6 @@ class command(baseCommand):
         self.fileManager = self.dragonfmManager.getFileManager()
         self.setName('Search')
         self.setDescription('Search for file or folder')
-    def active(self):
-        return self.commandManager.isCommandValidForFileOperation()
     def run(self, callback = None):   
         listManager = self.dragonfmManager.getCurrListManager()
         location = listManager.getLocation()

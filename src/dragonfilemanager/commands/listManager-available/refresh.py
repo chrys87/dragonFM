@@ -8,8 +8,6 @@ class command(baseCommand):
         self.settingsManager = self.dragonfmManager.getSettingsManager()
         self.setName('Refresh')
         self.setDescription('Refresh current folder')
-    def active(self):
-        return self.commandManager.isCommandValidForFileOperation()
     def run(self, callback = None):
         self.dragonfmManager.erase()
         listManager = self.dragonfmManager.getCurrListManager()

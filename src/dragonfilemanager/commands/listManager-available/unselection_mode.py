@@ -8,8 +8,6 @@ class command(baseCommand):
         self.settingsManager = self.dragonfmManager.getSettingsManager()
         self.setName('Unselection Mode')
         self.setDescription('Unselect on navigation')
-    def active(self):
-        return self.commandManager.isCommandValidForFileOperation(minSelection = 1)
     def run(self, callback = None):
         listManager = self.dragonfmManager.getCurrListManager()
         listManager.setSelectionMode(0)

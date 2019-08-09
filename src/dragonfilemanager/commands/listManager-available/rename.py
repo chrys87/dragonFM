@@ -11,7 +11,7 @@ class command(baseCommand):
         self.setName('Rename')
         self.setDescription('Rename a file or folder')
     def active(self):
-        return self.commandManager.isCommandValidForFileOperation(minSelection = 1, writePerm = True)
+        return self.commandManager.isCommandValidForFileOperation(minSelection = 1, maxSelection = 1, writePerm = True)
     def run(self, callback = None):   
         listManager = self.dragonfmManager.getCurrListManager()
         location = listManager.getLocation()

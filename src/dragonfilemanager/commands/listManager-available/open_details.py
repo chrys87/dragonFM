@@ -9,8 +9,6 @@ class command(baseCommand):
         self.selectionManager = self.dragonfmManager.getSelectionManager()
         self.setName('Open Details')
         self.setDescription('Opens the Details')
-    def active(self):
-        return self.commandManager.isCommandValidForFileOperation(minSelection = 1)
     def run(self, callback = None):
         tabManager = self.dragonfmManager.getViewManager().getCurrentTab()
         detailManager = tabManager.getDetailManager()

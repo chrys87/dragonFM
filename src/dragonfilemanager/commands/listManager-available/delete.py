@@ -10,7 +10,7 @@ class command(baseCommand):
         self.setName('Delete')
         self.setDescription('Delete current entry or selection')
     def active(self):
-        return self.commandManager.isCommandValidForFileOperation(minSelection = 1)
+        return self.commandManager.isCommandValidForFileOperation(minSelection = 1, writePerm = True)
     def run(self, callback = None):   
         listManager = self.dragonfmManager.getCurrListManager()
 
