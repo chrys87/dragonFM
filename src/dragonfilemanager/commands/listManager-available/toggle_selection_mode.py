@@ -8,7 +8,7 @@ class command(baseCommand):
         self.settingsManager = self.dragonfmManager.getSettingsManager()
         self.setName('Toggle Selection Mode')
         self.setDescription('Toggles Selection Mode')
-     def run(self, callback = None):
+    def run(self, callback = None):
         listManager = self.dragonfmManager.getCurrListManager()
         listManager.nextSelectionMode()
         if callback:

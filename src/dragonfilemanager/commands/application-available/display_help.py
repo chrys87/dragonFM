@@ -1,20 +1,12 @@
-class command():
+from dragonfilemanager.core.baseCommand import baseCommand
+
+class command(baseCommand):
     def __init__(self, dragonfmManager):
-        self.dragonfmManager = dragonfmManager
+        baseCommand.__init__(self, dragonfmManager)
+        self.setName('Display Help')
+        self.setDescription('Documentation for the Dragon File Manager.')
         self.screen = self.dragonfmManager.getScreen()
         self.processManager = self.dragonfmManager.getProcessManager()
-    def shutdown(self):
-        pass
-    def getName(self):
-        return _('Display Help')
-    def getDescription(self):
-        return _('Documentation for the Dragon File Manager.')
-    def active(self):
-        return True
-    def visible(self):
-        return True
-    def getValue(self):
-        return None
     def getShortcut(self):
         return "F1"
     def run(self, callback = None):
