@@ -1,22 +1,12 @@
-class command():
+from dragonfilemanager.core.baseCommand import baseCommand
+
+class command(baseCommand):
     def __init__(self, dragonfmManager):
-        self.dragonfmManager = dragonfmManager
+        baseCommand.__init__(self, dragonfmManager)
+        self.setName('Last Entry')
+        self.setDescription('Move cursor to last entry')
         self.screen = self.dragonfmManager.getScreen()
         self.settingsManager = self.dragonfmManager.getSettingsManager()
-    def shutdown(self):
-        pass
-    def getName(self):
-        return _('Last Entry')
-    def getDescription(self):
-        return _('Move cursor to last entry')
-    def active(self):
-        return True
-    def visible(self):
-        return True
-    def getValue(self):
-        return None
-    def getShortcut(self):
-        return None
     def run(self, callback = None):
         detailManager = self.dragonfmManager.getCurrDetailManager()
         detailManager.lastEntry()
