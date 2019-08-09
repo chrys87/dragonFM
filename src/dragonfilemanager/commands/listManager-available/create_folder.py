@@ -1,6 +1,6 @@
 from dragonfilemanager.core.baseCommand import baseCommand
 
-class command(baseCommand
+class command(baseCommand):
     def __init__(self, dragonfmManager):
         baseCommand.__init__(self, dragonfmManager)
         self.dragonfmManager = dragonfmManager
@@ -9,7 +9,7 @@ class command(baseCommand
         self.setName('Create Folder')
         self.setDescription('Create a new folder')
     def active(self):
-        return self.commandManager.isCommandValidForFileOperation()
+        return self.commandManager.isCommandValidForFileOperation(writePerm = True)
     def run(self, callback = None):   
         listManager = self.dragonfmManager.getCurrListManager()
         location = listManager.getLocation()

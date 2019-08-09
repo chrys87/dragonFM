@@ -6,7 +6,7 @@ class command(baseCommand):
         self.dragonfmManager = dragonfmManager
         self.screen = self.dragonfmManager.getScreen()
         self.settingsManager = self.dragonfmManager.getSettingsManager()
-        self.setName _('Leave entry')
+        self.setName('Leave entry')
         self.setDescription('Go to parent')
     def active(self):
         return self.commandManager.isCommandValidForFileOperation()

@@ -9,7 +9,7 @@ class command(baseCommand):
         self.setName('Create File')
         self.setDescription('Create a new file')
     def active(self):
-        return self.commandManager.isCommandValidForFileOperation()
+        return self.commandManager.isCommandValidForFileOperation(writePerm = True)
     def run(self, callback = None):   
         listManager = self.dragonfmManager.getCurrListManager()
         location = listManager.getLocation()

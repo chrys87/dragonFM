@@ -1,6 +1,6 @@
 from dragonfilemanager.core.baseCommand import baseCommand
 
-lass command(baseCommand):
+class command(baseCommand):
     def __init__(self, dragonfmManager):
         baseCommand.__init__(self, dragonfmManager)
         self.dragonfmManager = dragonfmManager
