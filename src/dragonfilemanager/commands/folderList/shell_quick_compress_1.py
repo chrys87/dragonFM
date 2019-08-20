@@ -1,0 +1,1 @@
+../listManager-available/shell_quick_compress_1.py

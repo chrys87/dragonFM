@@ -30,6 +30,9 @@ class listManager():
         self.selection = []
         self.typeAheadSearch = ''
         self.lastTypeAheadTime = time.time()
+        self.history = []
+        self.historyIndex = -1
+        self.isHistoryTracking = True
         self.requestReload = False
         self.requestReloadLock = threading.RLock()
         self.selectionMode = 0 # 0 = unselect on navigation, 1 = select on navigation, 2 = ignore
@@ -195,9 +198,30 @@ class listManager():
         index = self.getIndex()
         size = self.getEntryAreaSize()
         page = int(index / size)
-        if page != self.page:
-            self.page = page
-
+        if page != self.getPage():
+            self.setPage(page)
+    def setPage(self, page):
+        self.page = page
+    def gotoPage(self, page):
+        size = self.getEntryAreaSize()
+        maxPage = int(self.countEentries() / size)
+        if page < 1:
+            self.setIndex(0)
+        elif page > maxPage:
+            self.setIndex(self.countEentries())
+        else:
+            try:
+                self.setIndex(page * size)
+            except:
+                self.setIndex(0)
+    def countEentries(self):
+        return len(self.entries) - 1
+    def getPage(self):
+        return self.page
+    def nextPage(self):
+        self.gotoPage(self.getPage() - 1)
+    def prevPage(self):
+        self.gotoPage(self.getPage() + 1)
     def getIndex(self):
         return self.index
     def setIndex(self, index):
@@ -206,7 +230,7 @@ class listManager():
         self.setIndex(0)
     def lastEntry(self):
         if len(self.entries) - 1 >= 0:
-            self.setIndex(len(self.entries) - 1)
+            self.setIndex(self.countEentries())
         else:
             self.setIndex(0)
     def prevEntry(self):
@@ -368,12 +392,18 @@ class listManager():
         entries, newPath = self.getCollector()(collectorParam)
 
         locationChanged = newPath != self.getLocation()
+        
         # set new location
         if locationChanged:
             self.setLocation(newPath)
+        
         # do sorting and place cursor
         self.createdSortedEntries(entries)
         self.setCurrentCursor(self.getIndex(), entryName)
+        
+        # track history
+        if locationChanged:
+            self.trackHistory()
         # wait and [re]start watchdog
         try:
             self.autoUpdateManager.waitForStopWatch()
@@ -440,6 +470,8 @@ class listManager():
         self.dragonfmManager.incHeaderOffset()
         self.dragonfmManager.addText(self.dragonfmManager.getHeaderOffset(), 0, _('Page: {0}').format(self.getPage() + 1))
         self.dragonfmManager.incHeaderOffset()
+        self.dragonfmManager.incHeaderOffset()
+
     def selectEntry(self, key):
         if not key:
             return False
@@ -486,7 +518,6 @@ class listManager():
         return self.selection.copy()
     def drawEntryList(self):
         startingIndex = self.getPage() * self.getEntryAreaSize()
-        self.dragonfmManager.incHeaderOffset()
         pos = 0
         for c in self.getColumns():
             columnLen = len(c) + 2
@@ -524,3 +555,74 @@ class listManager():
         if self.isSelected(entry):
             return 'selected'
         return ''
+    # History Tracking
+    def getIsHistoryTracking(self):
+        return self.isHistoryTracking
+    def setIsHistoryTracking(self, isTracking):
+        self.isHistoryTracking = isTracking
+    def trackHistory(self):
+        if not self.getIsHistoryTracking():
+            return
+        self.history = self.getHistory()[:self.getHistoryIndex() + 1]
+        location = self.getLocation()
+        entryName = self.getCurrentKey()
+        self.history.append([location, entryName])
+        self.setHistoryIndex(len(self.getHistory()) - 1)
+
+    def getHistory(self):
+        return self.history
+    def isHistoryEmpty(self):
+        return len(self.getHistory()) == 0
+    def firstHistory(self):
+        if self.isHistoryEmpty():
+            return
+        self.setIsHistoryTracking(False)
+        self.setHistoryIndex(0)
+        historyEntry = self.getCurrHistoryEntry()
+        location = historyEntry[0]
+        entryName = historyEntry[1]
+        self.gotoFolder(location, entryName)
+        self.setIsHistoryTracking(True)
+    def lastHistory(self):
+        if self.isHistoryEmpty():
+            return
+        self.setIsHistoryTracking(False)
+        self.setHistoryIndex( len(self.getHistory()) - 1)
+        historyEntry = self.getCurrHistoryEntry()
+        location = historyEntry[0]
+        entryName = historyEntry[1]
+        self.gotoFolder(location, entryName)
+        self.setIsHistoryTracking(True)
+    def prevHistory(self):
+        if self.isHistoryEmpty():
+            return
+        self.setIsHistoryTracking(False)
+        if self.getHistoryIndex() - 1 < 0:
+            self.firstHistory()
+        else:
+            self.setHistoryIndex(self.historyIndex - 1)
+            historyEntry = self.getCurrHistoryEntry()
+            location = historyEntry[0]
+            entryName = historyEntry[1]
+            self.gotoFolder(location, entryName)
+        self.setIsHistoryTracking(True)
+    def nextHistory(self):
+        if self.isHistoryEmpty():
+            return
+        self.setIsHistoryTracking(False)
+        if self.getHistoryIndex() + 1 >= len(self.getHistory()) -1:
+            self.lastHistory()
+        else:
+            self.setHistoryIndex(self.historyIndex + 1)
+            historyEntry = self.getCurrHistoryEntry()
+            location = historyEntry[0]
+            entryName = historyEntry[1]
+            self.gotoFolder(location, entryName)
+        self.setIsHistoryTracking(True)
+
+    def getCurrHistoryEntry(self):
+        return self.getHistory()[self.getHistoryIndex()]
+    def setHistoryIndex(self, index):
+        self.historyIndex = index
+    def getHistoryIndex(self):
+        return self.historyIndex

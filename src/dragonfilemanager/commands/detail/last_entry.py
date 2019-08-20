@@ -1,0 +1,1 @@
+../detailManager-available/last_entry.py

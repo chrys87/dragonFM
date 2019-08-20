@@ -40,6 +40,7 @@ class dragonfmManager():
         self.viewManager = None
         self.inputManager = None
         self.commandManager = commandManager.commandManager(self)
+        self.commandManager.loadAllCommands()
         self.runningLock = threading.RLock()
         self.disabledLock = threading.RLock()
         self.updateLock = threading.RLock()
@@ -141,7 +142,7 @@ class dragonfmManager():
             return
         if self.getDisabled():
             return
-        text = text
+        text = str(text)
         if screen == None:
             screen = self.getScreen()
         if x < 0:
@@ -275,6 +276,8 @@ class dragonfmManager():
         return self.clipboardManager
     def getCurrListManager(self):
         return self.viewManager.getCurrentTab().getListManager()
+    def getCurrDetailManager(self):
+        return self.viewManager.getCurrentTab().getDetailManager()
     def getSelectionManager(self):
         return self.selectionManager
     def getProcessManager(self):

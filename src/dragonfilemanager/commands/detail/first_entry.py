@@ -1,0 +1,1 @@
+../detailManager-available/first_entry.py

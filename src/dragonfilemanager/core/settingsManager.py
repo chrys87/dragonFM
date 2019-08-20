@@ -53,7 +53,10 @@ class settingsManager():
         except:
             pass
         return False
-
+    def getCategorys(self):
+        return self.configParser.sections()
+    def getSettingsForCategory(self, category):
+        return self.configParser.options(category)
     def parseCliArgs(self):
         args = None
         self.argParser = argparse.ArgumentParser(description="dragonFM Help")

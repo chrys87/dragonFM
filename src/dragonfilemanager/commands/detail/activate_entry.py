@@ -1,0 +1,1 @@
+../detailManager-available/activate_entry.py

@@ -1,0 +1,1 @@
+../detailManager-available/prev_entry.py
