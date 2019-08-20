@@ -380,8 +380,32 @@ class inputBoxManager:
             else:
                 self.win.move(self.headerOffset, 0)
             self.win.clrtoeol()
+            tabcount = 0
+            lineInput = ''
+            actualLineValue = ''
             while True:
                 ch = self.win.getch()
+                if ch == 10 or ch == 13:
+                    lineInput = ''
+                    actualLineValue = ''
+                    tabcount = 0
+                if not ch in range(30):
+                    lineInput += chr(ch)
+                if ch == 47:
+                    lineInput = actualLineValue + '/'
+                if ch == 9:     # 9 is ASCII Code for TAB
+                    if not '/' in lineInput:
+                        subfolders = [f.name for f in os.scandir(self.location) if f.is_dir() and lineInput in f.name[0:len(lineInput)]]
+                    else:
+                        slashIndex = lineInput.rfind('/')
+                        subfolders = [f.name for f in os.scandir(self.location + lineInput[0:slashIndex]) if f.is_dir() and lineInput[slashIndex + 1:] in f.name[0:len(lineInput[slashIndex + 1:])]]
+                    if tabcount >= len(subfolders):
+                        tabcount = 0
+                    if subfolders != []:
+                        actualLineValue = lineInput[0:lineInput.rfind('/') + 1] + subfolders[tabcount]
+                        self.win.addstr(self.headerOffset, 0, actualLineValue)
+                        self.win.clrtoeol()
+                    tabcount += 1
                 if validate:
                     ch = validate(ch)
                 if not ch:
@@ -404,10 +428,10 @@ if __name__ == '__main__':
         inputBox = inputBoxManager(stdscr, description=['Do You realy want?','q = quit','y = yes','n = nope'])
         inputBox.setDefaultValue('test')
         #inputBox.setMultipleChoiceMode(True,['q', 'y', 'n'])
-        #inputBox.setLocationMode(True, '/tmp/playzone',True,True)
-        #inputBox.setConfirmationMode(True)
+        inputBox.setLocationMode(True, '/tmp/playzone',True,True)
+        inputBox.setConfirmationMode(True)
         #inputBox.setEditable(False)
-        ##inputBox.setInitValue('/tmp/playzone')
+        #inputBox.setInitValue('/tmp/playzone')
         status, text = inputBox.show()
         stdscr.erase()
         stdscr.addstr(0, ulx, "Parent Window")
