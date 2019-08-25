@@ -47,9 +47,10 @@ class AutoComplete:
             self.index = 0
         if self.choices != []:
             actualLineValue = self.base[0:self.base.rfind('/') + 1] + self.choices[self.index]
-        self.index += 1
+            self.index += 1
+            return True, actualLineValue, actualLineValue[len(self.base):]
         
-        return True, actualLineValue, actualLineValue[len(self.base):]
+        return False, self.base, ''
 
 
 
