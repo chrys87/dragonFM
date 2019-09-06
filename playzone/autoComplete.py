@@ -43,11 +43,16 @@ class AutoComplete:
         # Value = '/home'
         # completedValue = 'me'
         
-        if self.index >= len(self.choices):
-            self.index = 0
         if self.choices != []:
-            actualLineValue = self.base[0:self.base.rfind('/') + 1] + self.choices[self.index]
-            self.index += 1
+            while 1:
+                if self.index >= len(self.choices):
+                    self.index = 0
+                if self.base in self.base[0:self.base.rfind('/') + 1] + str(self.choices[self.index])[0:len(self.base)]:
+                    actualLineValue = self.base[0:self.base.rfind('/') + 1] + self.choices[self.index]
+                    self.index += 1
+                    break
+                self.index += 1
+                
             return True, actualLineValue, actualLineValue[len(self.base):]
         
         return False, self.base, ''
@@ -73,11 +78,21 @@ ok, value, compValue = c.complete()
 print(value)
 c.resetChoices()
 c.setBase('')
-c.addChoice('help')
-c.addChoice('?help')
-c.addChoice('?version')
-c.addChoice('?author')
+c.addChoice('help1')
+c.addChoice('help2')
+c.addChoice('version')
+c.addChoice('help3')
 print('-----------------------------')
+ok, value, compValue = c.complete()
+print(value)
+ok, value, compValue = c.complete()
+print(value)
+ok, value, compValue = c.complete()
+print(value)
+ok, value, compValue = c.complete()
+print(value)
+print('-----------------------------')
+c.setBase('he')
 ok, value, compValue = c.complete()
 print(value)
 ok, value, compValue = c.complete()
