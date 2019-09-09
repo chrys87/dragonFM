@@ -28,7 +28,7 @@ projectName="dragonfm"
 if [[ -f "${projectName}.pot" ]]; then
     echo "${projectName}.pot already exists, remove it to regenerate it."
 else
-    xgettext -o ${projectName}.pot -d ${projectName} -L python $(find ../src -iname "*.py")
+    xgettext -o ${projectName}.pot -d ${projectName} -L python $(find ../src -type f -iname "*.py")
 fi
 
 if [[ $# -eq 1 ]]; then
