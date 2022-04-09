@@ -320,6 +320,8 @@ class fileManager():
             exitStatus, application = inputDialog.show()
             if not exitStatus:
                 return
+            if application != '' and application.find('{0}') == -1:
+                application += ' {0}'
         if application == '':
             try:
                 application = self.settingsManager.get('mime', entry['mime'])
