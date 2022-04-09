@@ -1,0 +1,1 @@
+../listManager-available/open_entry_with_shell.py
