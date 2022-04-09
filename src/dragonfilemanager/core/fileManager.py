@@ -315,8 +315,8 @@ class fileManager():
         if not entry:
             return
         if dialog:
-            initValue = self.settingsManager.get('folder', 'openWithInitValue')
-            inputDialog = self.dragonfmManager.createInputDialog(description = ['Open with command:'], initValue = initValue)
+            initValue = self.settingsManager.get('folder', 'openWithShellInitValue')
+            inputDialog = self.dragonfmManager.createInputDialog(description = ['Open with shell command:'], initValue = initValue)
             exitStatus, application = inputDialog.show()
             if not exitStatus:
                 return
