@@ -258,7 +258,7 @@ class listManager():
             return False
         self.openEntry(path, location)
         return True
-    def openEntry(self, path, entryName=None, entry = None):
+    def openEntry(self, path, entryName=None, entry = None, application = '', dialog = False):
         if not path:
             return
         if path == '':
@@ -270,7 +270,7 @@ class listManager():
             self.setCollector()
             self.gotoFolder(path, entryName)
         else:
-            self.fileManager.openFile(entry, self.getLocation())
+            self.fileManager.openFile(entry, self.getLocation(), application=application, dialog=dialog)
     
     def getCurrentEntry(self):
         try:

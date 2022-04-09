@@ -311,21 +311,28 @@ class fileManager():
         except:
             pass
         return entry.copy()
-    def openFile(self, entry, pwd = ''):
+    def openFile(self, entry, pwd = '', application = '', dialog = False):
         if not entry:
             return
-        try:
-            application = self.settingsManager.get('mime', entry['mime'])
-            if application == '':
-                slashpos = entry['mime'].find('/')
-                if slashpos != -1:
-                    category = entry['mime'][:slashpos] + '/*'
-                    application = self.settingsManager.get('mime', category)
-            if application == '':
-                category = '*'
-                application = self.settingsManager.get('mime', category)  
-        except:
-            return
+        if dialog:
+            initValue = self.settingsManager.get('folder', 'openWithInitValue')
+            inputDialog = self.dragonfmManager.createInputDialog(description = ['Open with command:'], initValue = initValue)
+            exitStatus, application = inputDialog.show()
+            if not exitStatus:
+                return
+        if application == '':
+            try:
+                application = self.settingsManager.get('mime', entry['mime'])
+                if application == '':
+                    slashpos = entry['mime'].find('/')
+                    if slashpos != -1:
+                        category = entry['mime'][:slashpos] + '/*'
+                        application = self.settingsManager.get('mime', category)
+                if application == '':
+                    category = '*'
+                    application = self.settingsManager.get('mime', category)  
+            except:
+                return
         application = application.format(shlex.quote(entry['full']))
         application = os.path.expandvars(application)
         self.processManager.startExternal(application, pwd=pwd)
