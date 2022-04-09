@@ -11,7 +11,7 @@ dragonFM is plugin driven and fully configurable and supports:
 - search
 - simple keybindings (similar to GUI filemanagers)
 - history tracking
-- favorits
+- favorites
 - compress / decompress
 - flexible plugin architecture
 - copy/ cut/ paste/ delete/ rename
@@ -23,6 +23,9 @@ dragonFM is plugin driven and fully configurable and supports:
 - advanced selection handling
 - open terminal
 - goto [root,home,location]
+
+# More information
+https://www.patreon.com/posts/64904217
 
 # Binding help
 showkey -a
