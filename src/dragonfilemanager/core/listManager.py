@@ -360,7 +360,7 @@ class listManager():
         if path == '':
             return False
         if not self.getCollector():
-            return False     
+            return False
         path = expanduser(path)
         if path.endswith('/') and path != '/':
             path = path[:-1]

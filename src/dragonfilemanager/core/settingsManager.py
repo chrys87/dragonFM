@@ -73,42 +73,44 @@ class settingsManager():
         self.settings = self.getDefaultSettings()
 
     def set(self, section, setting, value):
+        testValue = None
         try:
-            t = self.settings[section][setting]
-        except:
+            testValue = self.configParser.get(section, setting)
+        except Exception as e:
             print(section, setting, 'not found')
             return
         try:
-            if isinstance(self.settings[section][setting], str):
+            if isinstance(testValue, str):
                 v = str(value)
-            elif isinstance(self.settings[section][setting], bool):
+            elif isinstance(testValue, bool):
                 if not value in ['True','False']:
                     raise ValueError('could not convert string to bool: '+ value)
-            elif isinstance(self.settings[section][setting], int):
+            elif isinstance(testValue, int):
                 v = int(value)
-            elif isinstance(self.settings[section][setting], float):
+            elif isinstance(testValue, float):
                 v = float(value)
-            self.settingArgDict[section][setting] = str(value)
+            try:
+                testSection = self.settings[section]
+            except KeyError:
+                self.settings[section] = {}
+            self.settings[section][setting] = str(value)
         except Exception as e:
             print('settingsManager:set:Datatype missmatch: '+ section + '#' + setting + '=' +  value + ' Error:' +  str(e))
             return
     def get(self, section, setting):
         value = ''
         try:
+            value = str(self.settings[section][setting])
+        except KeyError:
             value = self.configParser.get(section, setting)
-        except Exception as e:
-            try:
-                value = str(self.settings[section][setting])
-            except Exception as e:
-                return ''
         return value
     def getShortcut(self, section, setting):
         value = ''
         try:
-            value = self.configParser.get(section, setting)
-        except:
+            value = str(self.settings[section][setting])
+        except KeyError:
             try:
-                value = str(self.settings[section][setting])    
+                value = self.configParser.get(section, setting)
             except:
                 pass
         return value
@@ -116,27 +118,26 @@ class settingsManager():
     def getInt(self, section, setting):
         value = 0
         try:
-            value = self.configParser.getint(section, setting)
+            value = int(self.settings[section][setting])
         except:
-            value = self.settings[section][setting]
+            value = self.configParser.getint(section, setting)
         return value
 
     def getFloat(self, section, setting):
         value = 0.0
         try:
-            value = self.configParser.getfloat(section, setting)
+            value = float(self.settings[section][setting])
         except:
-            value = self.settings[section][setting]
+            value = self.configParser.getfloat(section, setting)
         return value
 
     def getBool(self, section, setting):
         value = False
         try:
+            value = self.settings[section][setting] == 'True'
+        except KeyError:
             value = self.configParser.getboolean(section, setting)
-        except:
-            value = self.settings[section][setting]
         return value
     def getDefaultSettings(self):
         return {
         }.copy()
-                           
