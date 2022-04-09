@@ -1,0 +1,1 @@
+/home/chrys/Projekte/dragonFM/dragonFM/src/dragonfilemanager/commands/listManager-available/open_entry_with_shell.py
