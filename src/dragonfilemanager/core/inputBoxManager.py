@@ -136,9 +136,9 @@ class inputBoxManager:
                 return True
             if y < self.maxy or x < self.maxx:
                 self._insert_printable_char(ch)
-        elif ch == curses.ascii.SOH:                           # ^a
+        elif ch in (curses.ascii.SOH, curses.KEY_HOME):                           # ^a, KEY_HOME
             self.win.move(y, 0)
-        elif ch in (curses.ascii.STX,curses.KEY_LEFT, curses.ascii.BS,curses.KEY_BACKSPACE, curses.ascii.DEL):
+        elif ch in (curses.ascii.STX, curses.KEY_LEFT, curses.ascii.BS, curses.KEY_BACKSPACE, curses.ascii.DEL):
             if x > 0:
                 self.win.move(y, x-1)
             elif y == self.headerOffset:
@@ -155,7 +155,7 @@ class inputBoxManager:
             if not self.getEditable():
                 return True
             self.win.delch()
-        elif ch == curses.ascii.ENQ:                           # ^e
+        elif ch in (curses.ascii.ENQ, curses.KEY_END):                           # ^e, KEY_END
             if self.stripspaces:
                 self.win.move(y, self._end_of_line(y))
             else:
