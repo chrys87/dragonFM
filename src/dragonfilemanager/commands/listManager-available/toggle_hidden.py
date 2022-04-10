@@ -16,6 +16,10 @@ class command(baseCommand):
         else:
             self.settingsManager.set('folder', 'showHidden', 'True')
         listManager.reloadFolder()
-
+        showHidden = not showHidden
+        if showHidden:
+            self.dragonfmManager.setMessage('{} hidden elements'.format('show'))
+        else:
+            self.dragonfmManager.setMessage('{} hidden elements'.format('hide'))
         if callback:
             callback()
