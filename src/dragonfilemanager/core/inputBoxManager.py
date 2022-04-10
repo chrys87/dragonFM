@@ -2,6 +2,7 @@ import os
 from os.path import expanduser
 import curses
 import curses.ascii
+from dragonfilemanager.core import autoComplete
 
 def rectangle(win, uly, ulx, lry, lrx):
     """Draw a rectangle with corners at the provided upper-left
@@ -64,6 +65,7 @@ class inputBoxManager:
         self.editable = True
         self.defaultValue = ''
         self.parentWindow = None
+        self.autoComplete = None
         self.exitStatus = None # None = error, True = ok, False = cancle
     def setParentWindow(self, parentWindow):
         self.parentWindow = parentWindow
@@ -204,24 +206,51 @@ class inputBoxManager:
         elif ch == curses.ascii.TAB: # autocompletion
             if not self.getEditable():
                 return True
-            pass
+            #if self.autoComplete:
+            #    currValue = self.gather(startLine=y,endLine=y+1)
+            #    if len(currValue) > 0:
+            #        currValue = currValue[:x+1]
+            #    self.autoComplete.setBase(currValue)
+            #    ok, value, compValue = self.autoComplete.complete()
+            #    #ok, value, compValue = self.autoComplete.complete()
+            #    print(currValue, compValue, value)
+
         elif ch in (curses.ascii.DLE, curses.KEY_UP):          # ^p
             if y > self.headerOffset:
                 self.win.move(y-1, x)
                 if x > self._end_of_line(y-1):
                     self.win.move(y-1, self._end_of_line(y-1))
+        #if self.autoComplete:
+        #    (y, x) = self.win.getyx()
+        #    currValue = chr(curses.ascii.ascii(self.win.inch(y, x)))
+        #    if currValue == '/':
+        #        self.resetChoices()
+        #        self.autoComplete.addFolderChoice(self.gather(startLine=y,endLine=y))
+
         return True
 
-    def gather(self):
+    def gather(self, startLine = None, endLine = None, minColum = None, maxColumn = None):
         "Collect and return the contents of the window."
         result = ""
         self._update_max_yx()
-        for y in range(self.headerOffset, self.maxy+1):
+        minY = self.headerOffset
+        maxY = self.maxy+1
+        if startLine != None:
+            minY = startLine
+        if endLine != None:
+            maxY = endLine
+        minX = 1
+        maxX = self.maxx+1
+        if minColum != None:
+            minX = minColum
+        if maxColumn != None:
+            maxX = maxColumn
+        for y in range(minY, maxY):
             self.win.move(y, 0)
             stop = self._end_of_line(y)
             if stop == 0 and self.stripspaces:
                 continue
-            for x in range(self.maxx+1):
+            for x in range(maxX):
                 if self.stripspaces and x >= stop:
                     break
                 result = result + chr(curses.ascii.ascii(self.win.inch(y, x)))
@@ -233,20 +262,27 @@ class inputBoxManager:
     def setConfirmationMode(self, mode):
         if not mode:
             self.setMultipleChoiceMode(mode)
+            self.autoComplete = None
         else:
             answers = ['yes', 'y', '1', # yes
                        'no', 'n', '0', # no
                        'quit', 'cancel', 'q', 'c' # quit
                       ]
             self.setMultipleChoiceMode(mode, answers)
+            self.autoComplete = autoComplete.AutoComplete()
+            self.autoComplete.addChoice(answers)
+
         self.confirmationMode = mode
     def getConfirmationMode(self):
         return self.confirmationMode
     def setMultipleChoiceMode(self, mode, validValues = []):
         if mode:
             self.validValues = validValues
+            self.autoComplete = autoComplete.AutoComplete()
+            self.autoComplete.addChoice(validValues)
         else:
             self.validValues = []
+            self.autoComplete = None
         self.multipleChoiceMode = mode
     def getMultipleChoiceMode(self):
         return self.multipleChoiceMode
@@ -255,10 +291,14 @@ class inputBoxManager:
             self.acceptFolders = False
             self.acceptFiles = False
             self.location = ''
+            self.autoComplete = None
         else:
             self.acceptFolders = acceptFolders
             self.acceptFiles = acceptFiles
             self.location = expanduser(location)
+            self.autoComplete = autoComplete.AutoComplete()
+            self.autoComplete.addFolderChoice(self.location)
+
         self.locationMode = mode
     def getLocationMode(self):
         return self.locationMode
@@ -266,6 +306,8 @@ class inputBoxManager:
         return self.location
     def setEditable(self, editable):
         self.editable = editable
+        if not editable:
+            self.autoComplete = None
     def getEditable(self):
         return self.editable
     def setDefaultValue(self, defaultValue):
@@ -401,18 +443,19 @@ if __name__ == '__main__':
         stdscr.addstr(0, 0, "Parent Window")
         stdscr.refresh()
         stdscr.getch()
-        inputBox = inputBoxManager(stdscr, description=['Do You realy want?','q = quit','y = yes','n = nope'])
+        #inputBox = inputBoxManager(stdscr, description=['Do You realy want?','q = quit','y = yes','n = nope'])
+        inputBox = inputBoxManager(stdscr)
         inputBox.setDefaultValue('test')
         #inputBox.setMultipleChoiceMode(True,['q', 'y', 'n'])
-        #inputBox.setLocationMode(True, '/tmp/playzone',True,True)
+        inputBox.setLocationMode(True, '/usr/',True,True)
         #inputBox.setConfirmationMode(True)
         #inputBox.setEditable(False)
         ##inputBox.setInitValue('/tmp/playzone')
         status, text = inputBox.show()
-        stdscr.erase()
-        stdscr.addstr(0, ulx, "Parent Window")
-        stdscr.addstr(1, ulx, "Dialog was closed                      ")
-        stdscr.addstr(2, ulx, 'Staus: {}; Value: {}'.format(status,text))
-        stdscr.getch()
+        #stdscr.erase()
+        #stdscr.addstr(0, ulx, "Parent Window")
+        #stdscr.addstr(1, ulx, "Dialog was closed                      ")
+        #stdscr.addstr(2, ulx, 'Staus: {}; Value: {}'.format(status,text))
+        #stdscr.getch()
 
     curses.wrapper(test_editbox)

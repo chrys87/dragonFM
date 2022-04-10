@@ -1,6 +1,5 @@
 #!/bin/python
-import time
-import os
+import time, os
 from os.path import expanduser
 
 class AutoComplete:
@@ -30,7 +29,9 @@ class AutoComplete:
             self.choices.extend(l)
         else:
             self.choices.append(l)
-    def addFolderChoices(self, location):
+    def addFolderChoice(self, location):
+        if not os.path.isdir(location):
+            return
         subfolders = []
         if not '/' in self.base:
             subfolders = [f.name for f in os.scandir(location) if f.is_dir() and self.base in f.name[0:len(self.base)]]
@@ -61,8 +62,8 @@ class AutoComplete:
 
 
 c = AutoComplete()
-c.addFolderChoices('./tmp/playzone')
-c.setBase('/')
+c.addFolderChoice('/usr/')
+c.setBase('li')
 ok, value, compValue = c.complete()
 print(value)
 ok, value, compValue = c.complete()
