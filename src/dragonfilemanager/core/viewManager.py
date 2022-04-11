@@ -42,20 +42,18 @@ class viewManager():
     def closeTab(self, id):
         if self.mode != 0:
             return
-        try:
-            oldIndex = self.getIndexForID(id)
-            newIndex = oldIndex
-            if newIndex >= len(self.tabList) - 1:
-                newIndex = len(self.tabList) - 2
-            self.tabList.remove(id)
-            newID = self.tabList[newIndex]
-            self.changeTab(newID)
-            del self.tabs[id]
-        except Exception as e:
-            print(e)
-            pass
+        oldIndex = self.getIndexForID(id)
+        newIndex = oldIndex
+        if newIndex >= len(self.tabList) - 1:
+            newIndex = len(self.tabList) - 2
+        self.tabList.remove(id)
         if len(self.tabList) == 0:
             self.dragonfmManager.stop()
+            return
+        newID = self.tabList[newIndex]
+        del self.tabs[id]
+        self.changeTab(newID)
+
     def getCurrentIndex(self):
         return self.getIndexForID(self.currentID)
     def getIndexForID(self, id):
@@ -107,7 +105,12 @@ class viewManager():
         if self.currentID != -1:
             if self.currentID == id:
                 return
-            self.tabs[self.currentID].leave()
+            try:
+                self.tabs[self.currentID].leave()
+            except KeyError:
+                # previouse tab was closed, this invokes leave as well
+                # needed since simple_inotify
+                pass
         # new
         self.currentID = id
         self.tabs[self.currentID].enter()
