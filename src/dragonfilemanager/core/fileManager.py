@@ -330,11 +330,13 @@ class fileManager():
                     if slashpos != -1:
                         category = entry['mime'][:slashpos] + '/*'
                         application = self.settingsManager.get('mime', category)
-                if application == '':
-                    category = '*'
-                    application = self.settingsManager.get('mime', category)  
             except:
-                return
+                pass
+        if application == '':
+            category = '*'
+            application = self.settingsManager.get('mime', category)
+        if application == '':
+            return
         application = application.format(shlex.quote(entry['full']))
         application = os.path.expandvars(application)
         self.processManager.startExternal(application, pwd=pwd)
