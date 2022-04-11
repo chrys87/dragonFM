@@ -48,7 +48,7 @@ class viewManager():
         #if len(self.tabList) > 1:
         tabIndex = -1
         try:
-            oldIndex = self.tabList.index(id)
+            oldIndex = self.getIndexForID(id)
             newIndex = oldIndex
             if newIndex >= len(self.tabList) - 1:
                 newIndex = len(self.tabList) - 2
@@ -104,7 +104,6 @@ class viewManager():
         if id == None:
             return
         self.changeTab(id)
-        return
     def changeTab(self, id):
         if self.mode != 0:
             return
@@ -117,7 +116,7 @@ class viewManager():
             self.tabs[self.currentID].leave()
         # new
         self.currentID = id
-        self.tabs[id].enter()
+        self.tabs[self.currentID].enter()
     def getCurrentTab(self):
         return self.getTab(self.getCurrentIndex())
     def getTab(self, id):
@@ -130,7 +129,7 @@ class viewManager():
             self.getCurrentTab().update()
         elif self.mode == 1:
             self.mainMenuManager.update()
-        #self.screen.addstr(8, 0, str(self.tabList))
+        #self.screen.addstr(8, 0, 'index:{}, tablist: {}'.format(self.getCurrentIndex(),self.tabList))
         #self.screen.addstr(9, 0, str(self.tabs.keys()))
 
     def handleVeiwInput(self, shortcut):
