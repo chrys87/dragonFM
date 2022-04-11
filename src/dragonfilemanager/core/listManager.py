@@ -42,9 +42,11 @@ class listManager():
         self.sorting = []
         self.reverseSorting = False
         self.caseSensitiveSorting = False
+        self.hiddenFirst = False
+        self.setHiddenFirst(self.settingsManager.get('folder', 'hiddenFirst'))
         self.setSorting(self.settingsManager.get('folder', 'sorting'))
         self.setReverseSorting(self.settingsManager.getBool('folder', 'reverse'))
-        self.setCaseSensitiveSorting(self.settingsManager.getBool('folder', 'casesensitive'))
+        self.setCaseSensitiveSorting(self.settingsManager.getBool('folder', 'caseSensitive'))
         self.setCollector()
         self.initLocation(pwd)
     def shutdown(self):
@@ -112,7 +114,7 @@ class listManager():
         return self.columns
     def setSorting(self, sorting):
         if isinstance(sorting, str):
-            self.sorting = sorting.split(',')
+            sorting = sorting.split(',')
         self.sorting = sorting
         if self.sorting == []:
             self.sorting = ['name']
@@ -128,15 +130,15 @@ class listManager():
             mode = 0
         self.setSelectionMode(mode)
     def setReverseSorting(self, reverseSorting):
-        try:
-            self.reverseSorting = reverseSorting
-        except:
-            pass
+        self.reverseSorting = reverseSorting
+    def setHiddenFirst(self, hiddenFirst):
+        self.hiddenFirst = hiddenFirst
+    def getHiddenFirst(self):
+        return self.hiddenFirst
     def setCaseSensitiveSorting(self, caseSensitiveSorting):
-        try:
-            self.caseSensitiveSorting = caseSensitiveSorting
-        except:
-            pass
+        self.caseSensitiveSorting = caseSensitiveSorting
+    def getCaseSensitiveSorting(self):
+        return self.caseSensitiveSorting
     def initLocation(self, pwd):
         currFolder = expanduser(pwd)
         if (currFolder == '') or not os.access(currFolder, os.R_OK):
@@ -422,14 +424,16 @@ class listManager():
         sortingKey = []
         try:
             for column in self.sorting:
-                if isinstance(element[1][column], str):
-                    if self.caseSensitiveSorting:
-                        sortingKey.append(element[1][column])
-                    else:
-                        sortingKey.append(element[1][column].lower())
-                else:
-                    sortingKey.append(element[1][column])
-        except:
+                currValue = element[1][column]
+                if isinstance(currValue, str):
+                    if not self.getCaseSensitiveSorting():
+                        currValue = currValue.lower()
+                    if not self.getHiddenFirst():
+                        if column in ('name', 'nameOnly'):
+                            if currValue.startswith('.'):
+                                currValue = currValue[1:]
+                sortingKey.append(currValue)
+        except KeyError:
             return element[0]
         return sortingKey
     def handleFolderInput(self, shortcut):
