@@ -118,7 +118,7 @@ class viewManager():
         self.currentID = id
         self.tabs[self.currentID].enter()
     def getCurrentTab(self):
-        return self.getTab(self.getCurrentIndex())
+        return self.getTab(self.currentID)
     def getTab(self, id):
         try:
             return self.tabs[id]
