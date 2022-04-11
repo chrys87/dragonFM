@@ -45,23 +45,20 @@ class viewManager():
     def closeTab(self, id):
         if self.mode != 0:
             return
-        #if len(self.tabList) > 1:
-        tabIndex = -1
         try:
             oldIndex = self.getIndexForID(id)
             newIndex = oldIndex
             if newIndex >= len(self.tabList) - 1:
                 newIndex = len(self.tabList) - 2
-            newID = self.tabList[0]
-            #newID = self.tabList[newIndex]
+            self.tabList.remove(id)
+            newID = self.tabList[newIndex]
             self.changeTab(newID)
             del self.tabs[id]
-            self.tabList.remove(id)
         except Exception as e:
             print(e)
             pass
-        #else:
-        #    self.dragonfmManager.stop()
+        if len(self.tabList) == 0:
+            self.dragonfmManager.stop()
     def getCurrentIndex(self):
         return self.getIndexForID(self.currentID)
     def getIndexForID(self, id):
