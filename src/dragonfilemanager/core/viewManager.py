@@ -1,6 +1,3 @@
-import sys,os
-import curses
-
 from dragonfilemanager.core import mainMenuManager
 from dragonfilemanager.core import tabManager
 
