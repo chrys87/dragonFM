@@ -100,7 +100,7 @@ class autoUpdateManager():
                 self.watchdogLock.release()
                 return
             #events = self.watchdog.event_gen(yield_nones=False, timeout_s=0.1)
-            events = self.watchdog.read(timeout=0.01, read_delay=0.001)
+            events = self.watchdog.read(timeout=0.1, read_delay=0.02)
             self.watchdogLock.release()
             if events == None:
                 events = []
