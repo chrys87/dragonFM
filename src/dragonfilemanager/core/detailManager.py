@@ -1,4 +1,4 @@
-import sys, os, time, curses
+import os
 from os.path import expanduser
 from dragonfilemanager.core.menuManager import menuManager
 

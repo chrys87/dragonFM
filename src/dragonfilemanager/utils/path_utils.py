@@ -1,4 +1,3 @@
-import sys, os
 from os.path import expanduser
 
 def normalizePath(location, withSlash = True):

@@ -1,4 +1,4 @@
-import sys, os, curses, inotify, threading, time
+import inotify, threading, time
 import inotify.adapters
 
 '''

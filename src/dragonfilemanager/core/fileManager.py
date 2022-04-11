@@ -1,4 +1,4 @@
-import sys, os, pwd, grp, curses, mimetypes, shlex, shutil, datetime, stat
+import os, pwd, grp, mimetypes, shlex, shutil, datetime, stat
 from pathlib import Path
 from distutils.dir_util import copy_tree
 

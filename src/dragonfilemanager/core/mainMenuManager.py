@@ -1,6 +1,3 @@
-import sys, os
-import curses
-
 class mainMenuManager():
     def __init__(self, dragonfmManager):
         self.dragonfmManager = dragonfmManager

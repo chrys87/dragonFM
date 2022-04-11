@@ -1,5 +1,3 @@
-import sys, os, curses
-
 class clipboardManager():
     def __init__(self, dragonfmManager):
         self.dragonfmManager = dragonfmManager

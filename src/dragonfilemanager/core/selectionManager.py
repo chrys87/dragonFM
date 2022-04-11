@@ -1,5 +1,3 @@
-import sys, os, curses
-
 class selectionManager():
     def __init__(self, dragonfmManager):
         self.dragonfmManager = dragonfmManager

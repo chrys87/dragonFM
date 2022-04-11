@@ -1,5 +1,3 @@
-import sys, os, curses
-
 from dragonfilemanager.core import detailManager
 from dragonfilemanager.core import listManager
 

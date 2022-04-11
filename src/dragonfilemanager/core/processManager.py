@@ -1,4 +1,4 @@
-import sys, os, curses, threading, shlex
+import os, threading, shlex
 from subprocess import Popen, PIPE, STDOUT, DEVNULL
 
 class processManager():

@@ -1,4 +1,4 @@
-import os, sys 
+import os 
 from os.path import expanduser
 from dragonfilemanager.utils import path_utils
 
