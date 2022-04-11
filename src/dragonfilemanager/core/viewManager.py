@@ -108,15 +108,16 @@ class viewManager():
     def changeTab(self, id):
         if self.mode != 0:
             return
+        if not id in self.tabList:
+            return
         # old
         if self.currentID != -1:
             if self.currentID == id:
                 return
             self.tabs[self.currentID].leave()
         # new
-        self.tabs[self.getIndexForID(id)].enter()
         self.currentID = id
-        return
+        self.tabs[id].enter()
     def getCurrentTab(self):
         return self.getTab(self.getCurrentIndex())
     def getTab(self, id):
