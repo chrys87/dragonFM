@@ -6,7 +6,7 @@ from shutil import copyfile
 from setuptools import find_packages
 from setuptools import setup
 
-dragonFileManagerVersion = '0.0.1'
+dragonFileManagerVersion = '1.0.0'
 packageVersion = 'post1'
 
 # handle flags for package manager like aurman and pacaur.
@@ -78,7 +78,8 @@ setup(
     install_requires=[
         "setuptools",
         "sh",
-        "inotify"
+        "inotify",
+        'inotify-simple'
     ],
 )
 

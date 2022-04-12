@@ -5,9 +5,6 @@ It is essential that whatever we use be Unicode-compatible, because we will have
 # Needs Research = needs research to complete
 # Conzept = Conzept is done
 
-# known bugs
-(BUG): Control+w to close current tab if there are multiple tabs opened, or close entire file manager if just one tab is opened, just like Firefox.
-
 ______ToDo_Chrys______
 # general (Priority)
 # Context menu (Priority)

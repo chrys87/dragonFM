@@ -1,3 +1,4 @@
 setuptools
 inotify
+inotify-simple
 sh
