@@ -325,16 +325,23 @@ class fileManager():
         if application == '':
             try:
                 application = self.settingsManager.get('mime', entry['mime'])
-                if application == '':
+            except:
+                pass
+            if application == '':
+                try:
                     slashpos = entry['mime'].find('/')
                     if slashpos != -1:
                         category = entry['mime'][:slashpos] + '/*'
                         application = self.settingsManager.get('mime', category)
-            except:
-                pass
+                except:
+                    pass
         if application == '':
             category = '*'
-            application = self.settingsManager.get('mime', category)
+            try:
+                application = self.settingsManager.get('mime', category)
+            except:
+                pass
+
         if application == '':
             return
         application = application.format(shlex.quote(entry['full']))
